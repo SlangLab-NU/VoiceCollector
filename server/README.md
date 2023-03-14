@@ -7,6 +7,29 @@ The application structure of this starter kit is loosely inspired by the API cha
 [Flask Web Development (Second Edition)](http://oreilly.com/catalog/0636920089056) book,
 with the companion repo at https://github.com/miguelgrinberg/flasky
 
+## Setup guide for VoiceCollector
+
+Install dependencies
+
+```bash
+conda create -n voice-collector python=3.7.16
+conda activate voice-collector
+pip install -r requirements-dev.txt
+```
+
+To run the app in debug mode,
+
+```bash
+flask run --debug
+```
+
+Use the URL `http://127.0.0.1:5000/api/v1/` in your browser to verify if the app is running. You should see the output,
+
+```bash
+{
+"msg": "Welcome to VoiceCollector backend API."
+}
+```
 
 ## Scope of this starter kit
 
