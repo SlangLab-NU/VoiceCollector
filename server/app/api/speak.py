@@ -1,5 +1,5 @@
 """
-Hello API route handlers
+Speak API route handlers. They handle requests related to reference text, recording, receiving audio file and so on.
 
 """
 from flask import Blueprint, jsonify
@@ -15,4 +15,16 @@ def speak():
     Returns:
         _type_: _description_
     """
-    return jsonify(dict(texts=["I am happy to meet you.", "The cat sat on the mat."]))
+    return jsonify(dict())
+
+
+@blueprint.route('/get_reference')
+def get_reference():
+    """Get all reference texts
+
+    Args:
+
+    Returns:
+        _type_: _description_
+    """
+    return jsonify(dict(texts=["The cat sat on the mat.", ]))
