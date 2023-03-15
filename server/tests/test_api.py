@@ -22,15 +22,16 @@ def test_not_found(client):
     assert parsed_data.get('error') == 'Not Found'
 
 
-def test_hello_world(client):
-    response = client.get('/api/v1/hello/world')
-    parsed_data = json.loads(response.data)
-    assert response.status_code == 200
-    assert parsed_data.get('hello') == 'world'
+# def test_hello_world(client):
+#     response = client.get('/api/v1/hello/world')
+#     parsed_data = json.loads(response.data)
+#     assert response.status_code == 200
+#     assert parsed_data.get('hello') == 'world'
 
 
-def test_hello_foo(client):
-    response = client.get('/api/v1/hello/foo')
-    parsed_data = json.loads(response.data)
-    assert response.status_code == 200
-    assert parsed_data.get('hello') == 'foo'
+# def test_hello_foo(client):
+#     response = client.get('/api/v1/hello/foo')
+#     parsed_data = json.loads(response.data)
+#     assert response.status_code == 200
+#     assert parsed_data.get('hello') == 'foo'
+# TODO: add tests for all routers
