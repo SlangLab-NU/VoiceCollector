@@ -8,13 +8,13 @@ blueprint = Blueprint('intel', __name__, url_prefix="/intel")
 
 class Model:
     def __init__(self) -> None:
-        print("MODEL created")
+        pass
     
     def __del__(self):
-        print("Model destroyed")
+        pass
     
     def inference(self):
-        print("Model infer")
+        pass
 
 model = Model()
 
