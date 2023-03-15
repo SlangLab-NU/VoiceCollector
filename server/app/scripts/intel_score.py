@@ -1,5 +1,6 @@
 """
-This script contains implementations of several intelligibility scoring functions.
+This script contains implementations of several intelligibility scoring functions. The score is a float within the range [0, 1]. 
+A higher score indicates better intelligibility. 
 
 Some readings:
 - String metric From Wikipedia (https://en.wikipedia.org/wiki/String_metric#:~:text=In%20mathematics%20and%20computer%20science)
@@ -22,14 +23,14 @@ def evaluate(y_pred: Union[Sequence[str], str], y_true: Union[Sequence[str], str
         raise TypeError("y_pred and y_true should have same types.")
     elif isinstance(y_pred, str) and isinstance(y_true, str):
         return {
-            "sequence_matcher_diff": sequence_matcher_diff(y_pred, y_true),
+            "sequence_matcher": sequence_matcher(y_pred, y_true),
             "cer": cer(y_pred, y_true),
             "metaphone_match": metaphone_match(y_pred, y_true) 
         }
     elif isinstance(y_pred, Sequence) and isinstance(y_true, Sequence):
         assert len(y_pred) == len(y_true)
         return {
-            "sequence_matcher_diff": [sequence_matcher_diff(pred, label) for (pred, label) in zip(y_pred, y_true)],
+            "sequence_matcher": [sequence_matcher(pred, label) for (pred, label) in zip(y_pred, y_true)],
             "cer": [cer(pred, label) for (pred, label) in zip(y_pred, y_true)],
             "metaphone_match": [metaphone_match(pred, label) for (pred, label) in zip(y_pred, y_true)]
         }
@@ -43,24 +44,29 @@ def normalize(s: str):
     """
     return re.sub("[^a-zA-Z]+", " ", s.lower())
 
+# TODO: unify the score with intelligibility or severity
 
-def sequence_matcher_diff(y_pred, y_true):
+def sequence_matcher(y_pred, y_true):
     """
     Sequence matcher
     https://docs.python.org/3/library/difflib.html#difflib.SequenceMatcher
     """
     y_pred, y_true = normalize(y_pred), normalize(y_true)
     s = SequenceMatcher(None, y_pred, y_true)
-    return 1 - s.ratio()
+    return s.ratio()
 
 
 def cer(y_pred, y_true):
     """
     Character error rate (CER)
 
-    https://github.com/jonatasgrosman/huggingsound/blob/8178f8e5b332bdc2a6a2f36431a5f66f6cb10d05/huggingsound/metrics.py
+    https://torchmetrics.readthedocs.io/en/stable/text/char_error_rate.html#char-error-rate
+    https://github.com/jitsi/jiwer#usage
     """
-    return jiwer.cer(y_pred, y_true)
+    cer_score = jiwer.cer(y_pred, y_true)
+    # Trim the score to [0, 1] since cer score can be greater than 1
+    cer_score = min(cer_score, 1)
+    return 1 - cer_score
 
 
 def metaphone_match(y_pred, y_true):
@@ -72,4 +78,6 @@ def metaphone_match(y_pred, y_true):
     y_pred_meta = " ".join([doublemetaphone(x)[0] for x in y_pred.split()])
     y_true_meta = " ".join([doublemetaphone(x)[0] for x in y_true.split()])
 
-    return jiwer.cer(y_pred_meta, y_true_meta)
+    cer_score = jiwer.cer(y_pred_meta, y_true_meta)
+    cer_score = min(cer_score, 1)
+    return 1 - cer_score
