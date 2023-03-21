@@ -155,3 +155,7 @@ dmypy.json
 
 # Editors/IDEs
 .idea/
+
+# TORGO data
+F
+F.tar
