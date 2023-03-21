@@ -1,7 +1,7 @@
 import React from 'react';
 import data from '../data.js';
 
-export default function RecordPage() {
+export default function Record() {
   const initialPromptNum = 0;
   const [item, setItem] = React.useState(data[initialPromptNum]);
   const isRecorded = false;
