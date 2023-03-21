@@ -13,7 +13,7 @@ const buttons = [
 ];
 
 
-function Home() {
+function Hero() {
     return (
         <div style={{
             display: 'flex',
@@ -40,5 +40,5 @@ function Home() {
 
 }
 
-export default Home;
+export default Hero;
 
