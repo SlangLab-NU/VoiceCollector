@@ -7,3 +7,6 @@ transformers==4.26.1
 huggingsound==0.1.6
 jiwer==2.5.1
 metaphone==0.6
+PyMySQL
+python-dotenv
+
