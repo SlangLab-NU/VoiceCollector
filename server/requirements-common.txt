@@ -12,4 +12,6 @@ pydub==0.25.1
 gevent==22.10.2
 PyMySQL
 python-dotenv
+PyMySQL==1.0.2
+python-dotenv==1.0.0
 
