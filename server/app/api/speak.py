@@ -2,8 +2,20 @@
 Speak API route handlers. They handle requests related to reference text, recording, receiving audio file and so on.
 
 """
+# import os
+# import sys
+
+# # Add the parent directory of app to sys.path
+# parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+# sys.path.append(parent_dir)
+
+# # Now you can import the conn variable from app/__init__.py
+# from app import conn
+
 from flask import Blueprint, jsonify
-from .. import conn 
+from scripts import db_helper
+
+conn = db_helper.connect_to_ec2()
 
 blueprint = Blueprint('speak', __name__, url_prefix="/speak")
 
