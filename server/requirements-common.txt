@@ -14,4 +14,6 @@ PyMySQL
 python-dotenv
 PyMySQL==1.0.2
 python-dotenv==1.0.0
+PyMySQL
+python-dotenv
 

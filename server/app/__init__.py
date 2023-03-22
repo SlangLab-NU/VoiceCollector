@@ -20,27 +20,7 @@ def create_app():
     add_error_handlers(app)
     return app
 
-# connect to mysql
-# Load environment variables from .env file in root directory
-dotenv_path = os.path.join(os.path.dirname(__file__), '..','.env')
-load_dotenv(dotenv_path)
 
-# Read MySQL configuration from environment variables
-mysql_host = os.environ.get('MYSQL_HOST')
-mysql_port = os.environ.get('MYSQL_PORT')
-mysql_user = os.environ.get('MYSQL_USER')
-mysql_password = os.environ.get('MYSQL_PASSWORD')
-mysql_db = os.environ.get('MYSQL_DB')
-
-# Create a MySQL connection
-conn = pymysql.connect(
-    host=mysql_host,
-    port=int(mysql_port),
-    user=mysql_user,
-    password=mysql_password,
-    db=mysql_db,
-    cursorclass=pymysql.cursors.DictCursor
-)
 
 # Create a Flask app instance
 application = create_app()
