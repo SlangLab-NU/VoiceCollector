@@ -43,18 +43,7 @@ conn = pymysql.connect(
 )
 
 # Create a Flask app instance
-#app = Flask(__name__)
 application = create_app()
-
-# Create a route to fetch reference table from the database
-@application.route('/prompts')
-def get_data():
-    with conn.cursor() as cursor:
-        # cursor.execute('SELECT * FROM reference')
-        cursor.execute('use voicecollector')
-        cursor.execute('select * from reference')
-        result = cursor.fetchall()
-        return jsonify(result)
 
 # # Run the Flask app
 # if __name__ == '__main__':
