@@ -12,7 +12,7 @@ with the companion repo at https://github.com/miguelgrinberg/flasky
 Install dependencies
 
 ```bash
-conda create -n voice-collector python=3.7.16
+conda create -n voice-collector python=3.9.4
 conda activate voice-collector
 pip install -r requirements-dev.txt
 ```
