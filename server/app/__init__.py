@@ -9,10 +9,6 @@ from .api import api as api_blueprint
 from .errors import add_error_handlers
 
 
-import pymysql
-from dotenv import load_dotenv
-import os
-
 def create_app():
     app = Flask(__name__)
     CORS(app, resources={r'/*': {'origins': '*'}})
@@ -20,11 +16,5 @@ def create_app():
     add_error_handlers(app)
     return app
 
-
-
 # Create a Flask app instance
 application = create_app()
-
-# # Run the Flask app
-# if __name__ == '__main__':
-#     application.run()
