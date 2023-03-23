@@ -43,7 +43,7 @@ def get_reference():
         _type_: _description_
     """
     with conn.cursor() as cursor:
-        cursor.execute('use voicecollector')
+        cursor.execute('use voice_collector')
         cursor.execute('select * from reference')
         result = cursor.fetchall()
         return jsonify(result)
