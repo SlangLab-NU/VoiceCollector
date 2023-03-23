@@ -13,13 +13,4 @@ werkzeug==2.2.2
 webrtcvad-wheels==2.0.11.post1
 pydub==0.25.1
 gevent==22.10.2
-PyMySQL
-python-dotenv
-PyMySQL==1.0.2
-python-dotenv==1.0.0
-PyMySQL
-python-dotenv
-PyMySQL==1.0.2
-python-dotenv==1.0.0
-jsonschema==4.17.3
 
