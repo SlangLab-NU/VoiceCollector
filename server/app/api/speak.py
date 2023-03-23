@@ -12,8 +12,10 @@ Speak API route handlers. They handle requests related to reference text, record
 # # Now you can import the conn variable from app/__init__.py
 # from app import conn
 
+
+
 from flask import Blueprint, jsonify
-from scripts import db_helper
+from ..scripts import db_helper
 
 conn = db_helper.connect_to_ec2()
 
@@ -41,9 +43,7 @@ def get_reference():
         _type_: _description_
     """
     with conn.cursor() as cursor:
-        # cursor.execute('SELECT * FROM reference')
         cursor.execute('use voicecollector')
         cursor.execute('select * from reference')
         result = cursor.fetchall()
         return jsonify(result)
-    #return jsonify(dict(texts=["The cat sat on the mat.", ]))

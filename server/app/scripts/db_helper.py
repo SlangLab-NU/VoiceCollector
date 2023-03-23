@@ -8,7 +8,9 @@ from dotenv import load_dotenv
 import os
 
 def connect_to_ec2():
-    # connect to mysql
+    """
+    Connect to mysql in EC2 and return the connection.
+    """
     # Load environment variables from .env file in root directory
     dotenv_path = os.path.join(os.path.dirname(__file__), '..','.env')
     load_dotenv(dotenv_path)
@@ -31,22 +33,6 @@ def connect_to_ec2():
     )
     return conn
 
-    # # Define the MySQL connection as a global variable
-    # conn = None
-
-    # def create_mysql_connection():
-    #     global conn
-    #     conn = pymysql.connect(
-    #         host=mysql_host,
-    #         port=int(mysql_port),
-    #         user=mysql_user,
-    #         password=mysql_password,
-    #         db=mysql_db,
-    #         cursorclass=pymysql.cursors.DictCursor
-    #     )
-
-    # # Call the function to create the connection
-    # create_mysql_connection()
 
 def write_record(record):
     """
