@@ -9,4 +9,5 @@ jiwer==2.5.1
 metaphone==0.6
 PyMySQL==1.0.2
 python-dotenv==1.0.0
+jsonschema==4.17.3
 
