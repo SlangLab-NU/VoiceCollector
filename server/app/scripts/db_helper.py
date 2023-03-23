@@ -6,6 +6,7 @@ Functions that performs CRUD operations in database and handles file storage.
 import pymysql
 from dotenv import load_dotenv
 import os
+import datetime
 
 def connect_to_ec2():
     """
@@ -34,11 +35,30 @@ def connect_to_ec2():
     return conn
 
 
-def write_record(record):
+def write_record(record, conn):
     """
     Write a record into the database.
     """
-    pass
+    # Get the required data from the dictionary
+    audio_id = record["audio_id"]
+    user_id = record["user_id"]
+    url = record["url"]
+    date = record["Date"]
+    validated = record["validated"]
+    ref_id = record["ref_id"]
+    sequence_matcher_score = record["sequence_matcher_score"]
+    cer_score = record["cer_score"]
+    metaphone_match_score = record["metaphone_match_score"]
+    # Convert date string to a datetime object
+    date_obj = datetime.datetime.strptime(date, '%Y-%m-%d %H:%M:%S')
+    # Create the SQL query to insert the record into the database
+    query = f"""INSERT INTO reference (audio_id, user_id, url, Date, validated, ref_id, sequence_matcher_score, cer_score, metaphone_match_score)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+    # Insert the record into the database
+    with conn.cursor() as cursor:
+        cursor.execute(query, (audio_id, user_id, url, date_obj, validated, ref_id, sequence_matcher_score, cer_score, metaphone_match_score))
+    conn.commit()
+    
 
 def write_file():
     """

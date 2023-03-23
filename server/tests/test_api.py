@@ -66,5 +66,28 @@ def test_validate_json_schema(client):
     # If the JSON data is valid against the schema, the test passes
     assert True
 
-
+def test__write_record_route(client):
+    # Test data
+    record_data = {
+        "audio_id": 1,
+        "user_id": 1,
+        "url": "http://example.com/audio.mp3",
+        "Date": "2023-03-23 12:34:56",
+        "validated": True,
+        "ref_id": 3,
+        "sequence_matcher_score": 0.9,
+        "cer_score": 0.8,
+        "metaphone_match_score": 0.7
+    }
+    # Send a POST request with the test data
+    response = client.post(
+        "/api/v1/speak/write_record",
+        data=json.dumps(record_data),
+        content_type="application/json"
+    )
+    # Check if the response has a success status code (200)
+    assert response.status_code == 200
+    # Check if the response JSON has the expected result
+    response_data = json.loads(response.data)
+    assert response_data["result"] == "success"
     
