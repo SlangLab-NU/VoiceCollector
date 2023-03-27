@@ -13,10 +13,16 @@ from flask import Blueprint, jsonify, request, flash
 from ..scripts import silence_check, volume_check, length_check
 import wave
 import contextlib
+import json
+import pathlib
+import soundfile as sf
 
 blueprint = Blueprint('validate', __name__, url_prefix="/validate")
 
-vad = 3
+current_dir = pathlib.Path(__file__).parent.resolve()
+config_path = current_dir / ".." / "config.json"
+with open(config_path, "r") as f:
+    config = json.load(f)
 
 @blueprint.route('/',methods=["GET"])
 def validate():
@@ -33,6 +39,21 @@ def validate():
 
 @blueprint.route('/format',methods=['GET', 'POST'])
 def validate_format():
+    if request.method == 'POST' :
+        if 'file' not in request.files:
+            return jsonify(dict(msg="Error: No audio files in request"))
+    
+        else:
+            file = request.files['file']
+            with sf.SoundFile(file) as f:
+                sample_rate_check = (f.samplerate == config['sample_rate'])
+                channel_check = (f.channels == config['channels'])
+                subtype_check = (f.subtype == config['subtype'])
+                if sample_rate_check and channel_check and subtype_check:
+                    return jsonify(result=True)
+                else:
+                    return jsonify(result=False)
+    
     return jsonify(dict(msg="/validate/format"))
 
 
@@ -46,15 +67,17 @@ def validate_volume_pause():
         else: 
             file = request.files['file']
             with contextlib.closing(wave.open(file,'rb')) as wf:
+                # length check
                 duration = length_check.get_audio_length(wf)
-                if duration < 0.15:
+                if duration < config['shortest_length_for_sentence']:
                     # failed at length check
                     return jsonify(result=False)
-                silence_ratio = silence_check.is_valid_speech(vad,wf)
+
+                # volume and pause check
+                silence_ratio = silence_check.is_valid_speech(config['vad_mode'],wf)
                 volume = volume_check.get_volume(file)
-                print("volume: %f", volume)
                 # print("silence_ratio: %f", silence_ratio)
-                if  silence_ratio > 0.9 and volume < -18:
+                if  silence_ratio > config['silence_ratio'] and volume < config['lowest_dBFS']:
                     return jsonify(result=False)
                 else:
                     return jsonify(result=True)
