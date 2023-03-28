@@ -68,11 +68,11 @@ def test_validate_json_schema(client):
 
 def test__write_record_route(client):
     # Test data
-    record_data = {
-        "audio_id": 1,
+    data = {
+        "audio_id": 4,
         "user_id": 1,
         "url": "http://example.com/audio.mp3",
-        "Date": "2023-03-23 12:34:56",
+        "date": "2023-03-23 12:34:56",
         "validated": True,
         "ref_id": 3,
         "sequence_matcher_score": 0.9,
@@ -82,7 +82,7 @@ def test__write_record_route(client):
     # Send a POST request with the test data
     response = client.post(
         "/api/v1/speak/write_record",
-        data=json.dumps(record_data),
+        data=json.dumps(data),
         content_type="application/json"
     )
     # Check if the response has a success status code (200)

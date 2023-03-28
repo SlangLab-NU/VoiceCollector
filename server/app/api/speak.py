@@ -13,7 +13,6 @@ Speak API route handlers. They handle requests related to reference text, record
 # from app import conn
 
 
-
 from flask import Blueprint, jsonify, request
 from ..scripts import db_helper
 import json
@@ -51,13 +50,20 @@ def get_reference():
     
 @blueprint.route('/write_record', methods=['POST'])
 def write_record_route():
+    data = request.json
+    # data = {
+    #     "audio_id": 3,
+    #     "user_id": 1,
+    #     "url": "http://example.com/audio3.mp3",
+    #     "date": "2023-03-23 12:34:56",
+    #     "validated": True,
+    #     "ref_id": 5,
+    #     "sequence_matcher_score": 0.9,
+    #     "cer_score": 0.8,
+    #     "metaphone_match_score": 0.7
+    # }
     try:
-        #db_helper.write_record(json.dumps(record), conn)
-        query = """INSERT INTO audio (audio_id, user_id, url, date, validated, ref_id, sequence_matcher_score, cer_score, metaphone_match_score)
-                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
-        with conn.cursor() as cursor:
-            cursor.execute(query, (1,1,"http://example.com/audio.mp3", '2020-01-03 00:00:00', True, 1, 0.5, 0.5, 0.5))
-        conn.commit()
+        db_helper.write_record(data, conn)
         return jsonify({"result": "success"})
     except Exception as e:
         return jsonify({"result": "error", "message": str(e)}), 400
