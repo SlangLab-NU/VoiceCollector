@@ -45,7 +45,11 @@ def validate_format():
     
         else:
             file = request.files['file']
+            
             filename_format_check = (file.filename.split(".")[-1] == config['major_format'].lower())
+            if not filename_format_check:
+                return jsonify(result=False)
+
             with sf.SoundFile(file) as f:
                 major_format_check = (f.format == config['major_format'])
                 sample_rate_check = (f.samplerate == config['sample_rate'])
