@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Button, Typography, Container, Paper, Stack } from "@mui/material";
 // import { makeStyles } from '@mui/styles';
 import MicIcon from "@mui/icons-material/Mic";
+import SendIcon from '@mui/icons-material/Send';
+import FastForwardIcon from '@mui/icons-material/FastForward';
+import FastRewindIcon from '@mui/icons-material/FastRewind';
 import MicOffIcon from "@mui/icons-material/MicOff";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import StopIcon from "@mui/icons-material/Stop";
@@ -9,11 +12,34 @@ import data from '../data.js';
 
 
 export default function RecordMUI() {
-  const [promptNum, setPromptNum] = useState("");
+  const [promptNum, setPromptNum] = useState(0);
   const [section, setSection] = useState("");
+  const [prompt, setPrompt] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [audioUrl, setAudioUrl] = useState(null);
+
+  useEffect(() => {
+    setSection(data[promptNum].section);
+    setPrompt(data[promptNum].prompt);
+  }, [])
+  
+
+  function onSkip() {
+    if (promptNum < data.length - 1) {
+      setPromptNum(promptNum + 1);
+      setSection(data[promptNum + 1].section);
+      setPrompt(data[promptNum + 1].prompt);
+    }
+  }
+
+  function onPrev() {
+    if (promptNum > 0) {
+      setPromptNum(promptNum - 1);
+      setSection(data[promptNum - 1].section);
+      setPrompt(data[promptNum - 1].prompt);
+    }
+  }
 
   const handleStartRecording = () => {
     setIsRecording(true);
@@ -43,14 +69,14 @@ export default function RecordMUI() {
         }}
       >
         <Typography variant="h6" align="center" gutterBottom>
-          Prompt 1/7
+          Prompt {promptNum + 1}/{data.length}
         </Typography>
         <Box>
           <Typography sx={{display: "inline", marginRight: 1}} variant="h6" align="center" gutterBottom>
             Section 
           </Typography>
           <Typography sx={{display: "inline", backgroundColor: "#E7EBF0"}} variant="h6" align="center" gutterBottom>
-            Sentences 
+            {section}
           </Typography>
         </Box>
       </Box>
@@ -72,53 +98,64 @@ export default function RecordMUI() {
         </Typography>
 
         <Paper sx={{height: 200, overflowY: "auto", padding: 1}} elevation={3}>
-          <Typography variant="subtitle1" align="left">
-            You wished to know all about my grandfather. Well, he is nearly
-            ninety-three years old. He dresses himself in an ancient black frock
-            coat, usually minus several buttons; yet he still thinks as swiftly
-            as ever. A long, flowing beard clings to his chin, giving those who
-            observe him a pronounced feeling of the utmost respect. When he
-            speaks his voice is just a bit cracked and quivers a trifle. Twice
-            each day he plays skillfully and with zest upon our small organ.
-            Except in the winter when the ooze or snow or ice prevents, he
-            slowly takes a short walk in the open air each day. We have often
-            urged him to walk more and smoke less, but he always answers,
-            “Banana Oil!” Grandfather likes to be modern in his language.
+          <Typography variant="h6" align="left">
+            {prompt}
           </Typography>
         </Paper>
       </Box>
 
-      <Box>
-      <Button
-        variant="contained"
-        sx={{marginRight: 4}}
-        color="primary"
-        startIcon={isRecording ? <MicOffIcon /> : <MicIcon />}
-        onClick={() =>
-          isRecording ? handleStopRecording() : handleStartRecording()
-        }
-      >
-        {isRecording ? "Stop Recording" : "Start Recording"}
-      </Button>
-      <Button
-        variant="contained"
-        color="secondary"
-      >
-        Skip
-      </Button>
-      {audioUrl && (
+      <Box sx={{flexDirection: "row"}}>
+        <Button
+          variant="outlined"
+          color="secondary"
+          startIcon={<FastRewindIcon />}
+          sx={{ml: 4, mr: 2}}
+          onClick={onPrev}
+        >
+          Previous
+        </Button>
+
         <Button
           variant="contained"
-          color="secondary"
-          startIcon={isPlaying ? <StopIcon /> : <PlayArrowIcon />}
+          sx={{ml: 4, mr: 4}}
+          color="primary"
+          startIcon={isRecording ? <MicOffIcon /> : <MicIcon />}
           onClick={() =>
-            isPlaying ? handleStopPlaying() : handleStartPlaying()
+            isRecording ? handleStopRecording() : handleStartRecording()
           }
         >
-          {isPlaying ? "Stop Playback" : "Start Playback"}
+          {isRecording ? "Stop Recording" : "Start Recording"}
         </Button>
-      )}
-      {audioUrl && <audio src={audioUrl} controls />}
+        {/* {audioUrl && (
+          <Button
+            variant="contained"
+            color="secondary"
+            startIcon={isPlaying ? <StopIcon /> : <PlayArrowIcon />}
+            onClick={() =>
+              isPlaying ? handleStopPlaying() : handleStartPlaying()
+            }
+          >
+            {isPlaying ? "Stop Playback" : "Start Playback"}
+          </Button>
+        )} */}
+        {audioUrl && <audio src={audioUrl} controls />}
+        <Button
+          sx={{ml: 4, mr: 2}}
+          variant="outlined"
+          color="secondary"
+          endIcon={<FastForwardIcon />}
+          onClick={onSkip}
+        >
+          Skip
+        </Button>
+        <Button
+          variant="contained" 
+          endIcon={<SendIcon />}
+          sx={{ml: 2, mr: 4}}
+        >
+          Submit
+        </Button>
+
       </Box>
     </Container>
   );
