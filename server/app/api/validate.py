@@ -45,12 +45,13 @@ def validate_format():
     
         else:
             file = request.files['file']
-            major_format_check = (file.filename.split(".")[-1] == config['major_format'])
+            filename_format_check = (file.filename.split(".")[-1] == config['major_format'].lower())
             with sf.SoundFile(file) as f:
+                major_format_check = (f.format == config['major_format'])
                 sample_rate_check = (f.samplerate == config['sample_rate'])
                 channel_check = (f.channels == config['channels'])
                 subtype_check = (f.subtype == config['subtype'])
-                if major_format_check and sample_rate_check and channel_check and subtype_check:
+                if filename_format_check and major_format_check and sample_rate_check and channel_check and subtype_check:
                     return jsonify(result=True)
                 else:
                     return jsonify(result=False)
