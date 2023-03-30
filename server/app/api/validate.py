@@ -37,7 +37,7 @@ def validate():
     return jsonify(dict(msg="/validate"))
 
 
-@blueprint.route('/format',methods=['GET', 'POST'])
+@blueprint.route('/format',methods=['POST'])
 def validate_format():
     if request.method == 'POST' :
         if 'file' not in request.files:
@@ -57,7 +57,7 @@ def validate_format():
     return jsonify(dict(msg="/validate/format"))
 
 
-@blueprint.route('/volume_pause',methods=['GET', 'POST'])
+@blueprint.route('/volume_pause',methods=['POST'])
 def validate_volume_pause():
     global vad, target_dbfs
     if request.method == 'POST' :
@@ -81,9 +81,6 @@ def validate_volume_pause():
                     return jsonify(result=False)
                 else:
                     return jsonify(result=True)
-    if request.method == 'GET':
-            return jsonify(dict(msg="/validate/volume_pause/GET"))
-
 
 
 
