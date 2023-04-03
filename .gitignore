@@ -159,3 +159,9 @@ dmypy.json
 # TORGO data
 F
 F.tar
+
+.vscode
+
+.expo
+
+yarn.lock
