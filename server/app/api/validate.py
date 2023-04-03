@@ -45,20 +45,38 @@ def validate_format():
     
         else:
             file = request.files['file']
-            
-            filename_format_check = (file.filename.split(".")[-1] == config['major_format'].lower())
+            expected_format = config['major_format'].lower()
+            actual_format = file.filename.split(".")[-1]
+            filename_format_check = (actual_format == expected_format)
             if not filename_format_check:
-                return jsonify(result=False)
+                return jsonify(filename_format={"expected": expected_format, "actual": actual_format}, result=False)
 
             with sf.SoundFile(file) as f:
-                major_format_check = (f.format == config['major_format'])
-                sample_rate_check = (f.samplerate == config['sample_rate'])
-                channel_check = (f.channels == config['channels'])
-                subtype_check = (f.subtype == config['subtype'])
-                if filename_format_check and major_format_check and sample_rate_check and channel_check and subtype_check:
-                    return jsonify(result=True)
-                else:
-                    return jsonify(result=False)
+                result = True
+                response = {}
+                for SoundFile_attr, check_name  in zip(
+                    [
+                        "format",
+                        "samplerate",
+                        "channels",
+                        "subtype",
+                    ],
+                    [
+                        "major_format",
+                        "sample_rate",
+                        "channels",
+                        "subtype",
+                    ],
+                    
+                ):
+                    actual = getattr(f, SoundFile_attr)
+                    expected = config[check_name]
+                    if actual != expected:
+                        if result:
+                            result = False
+                        response[check_name] = {"expected": expected, "actual": actual}
+
+                return jsonify(**response, result=result)
     
     return jsonify(dict(msg="/validate/format"))
 
@@ -77,16 +95,17 @@ def validate_volume_pause():
                 duration = length_check.get_audio_length(wf)
                 if duration < config['shortest_length_for_sentence']:
                     # failed at length check
-                    return jsonify(result=False)
+                    return jsonify(shortest_length_for_sentence={"expected": config['shortest_length_for_sentence'], "actual": duration}, result=False)
 
                 # volume and pause check
-                silence_ratio = silence_check.is_valid_speech(config['vad_mode'],wf)
+                voiced_count, total_count, silence_ratio = silence_check.is_valid_speech(config['vad_mode'], wf)
                 volume = volume_check.get_volume(file)
-                # print("silence_ratio: %f", silence_ratio)
                 if  silence_ratio > config['silence_ratio'] and volume < config['lowest_dBFS']:
-                    return jsonify(result=False)
+                    return jsonify(silence_ratio={"expected": "< " + str(config['silence_ratio']), "actual": silence_ratio}, 
+                                    volume={"expected": "> " + str(config['lowest_dBFS']), "actual": volume},  
+                                    result=False)
                 else:
-                    return jsonify(result=True)
+                    return jsonify(silence_ratio=silence_ratio, volume=volume ,result=True)
 
 
 
