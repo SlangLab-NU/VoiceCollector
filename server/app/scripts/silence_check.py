@@ -5,7 +5,7 @@ import wave
 
 import webrtcvad
 
-vaild_speech_count = 0
+voiced_count = 0
 total_count = 0
 
 def read_wave(wf):
@@ -96,13 +96,13 @@ def vad_collector(sample_rate, frame_duration_ms,
     triggered = False
 
     voiced_frames = []
-    global total_count,vaild_speech_count
+    global total_count, voiced_count
 
     for frame in frames:
         is_speech = vad.is_speech(frame.bytes, sample_rate)
         total_count += 1
         if is_speech:
-          vaild_speech_count += 1
+          voiced_count += 1
         sys.stdout.write('1' if is_speech else '0')
         if not triggered:
             ring_buffer.append((frame, is_speech))
@@ -144,19 +144,24 @@ def vad_collector(sample_rate, frame_duration_ms,
 
 
 def is_valid_speech(vad, f):
+    global total_count, voiced_count
+    total_count, voiced_count = 0, 0
+
     audio, sample_rate = read_wave(f)
     vad = webrtcvad.Vad()
     frames = frame_generator(30, audio, sample_rate)
     frames = list(frames)
-    s = vad_collector(sample_rate, 30, 300, vad, frames)
-    next(s)
-    # for i, segment in enumerate(segments):
+    segments = vad_collector(sample_rate, 30, 300, vad, frames)
+    for i, segment in enumerate(segments):
         # path = 'drive/MyDrive/Capstone/chunk-%002d.wav' % (i,)
         # print(' Writing %s' % (path,))
         # write_wave(path, segment, sample_rate)
-    print("valid_speech_count: %d", vaild_speech_count)
-    print("total_count: %d", total_count)
-    return 1 - vaild_speech_count/total_count
+        pass
+    print("Voiced frames count: ", voiced_count)
+    print("Total frames count: ", total_count)
+    silence_ratio = 1 - voiced_count / total_count
+    print("Silence ratio: ", round(silence_ratio, 2))
+    return voiced_count, total_count, silence_ratio
     # if vaild_speech_count/total_count >= 0.1:
     #   print("Speech pause check passed")
     #   return True
