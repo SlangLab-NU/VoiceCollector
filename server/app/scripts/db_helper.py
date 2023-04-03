@@ -6,6 +6,7 @@ Functions that performs CRUD operations in database and handles file storage.
 import pymysql
 from dotenv import load_dotenv
 import os
+import boto3
 
 def connect_to_ec2():
     """
@@ -33,6 +34,28 @@ def connect_to_ec2():
     )
     return conn
 
+def connect_to_s3():
+    """
+    Connect to S3 and return the bucket that stores audio files.
+    """
+    # Load environment variables from .env file in root directory
+    dotenv_path = os.path.join(os.path.dirname(__file__), '..','.env')
+    load_dotenv(dotenv_path)
+
+    # Read S3 configuration from environment variables
+    s3_access_key = os.environ.get('S3_ACCESS_KEY')
+    s3_secret_key = os.environ.get('S3_SECRET_KEY')
+    s3_bucket = os.environ.get('S3_BUCKET')
+    region_name = os.environ.get('REGION_NAME')
+
+    # Create a S3 connection
+    s3 = boto3.resource(
+        service_name='s3',
+        region_name=region_name,
+        aws_access_key_id=s3_access_key,
+        aws_secret_access_key=s3_secret_key
+    )
+    return s3.Bucket(s3_bucket)
 
 def write_record(data, conn):
     """
@@ -65,17 +88,4 @@ def write_file():
     """
     pass
 
-def get_all_records():
-    """
-    """
-    pass
 
-def update_record(record_id):
-    """
-    """
-    pass
-
-def delete_record(record_id):
-    """
-    """
-    pass

@@ -5,32 +5,18 @@ Speak API route handlers. They handle requests related to reference text, record
 # import os
 # import sys
 
-# # Add the parent directory of app to sys.path
-# parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
-# sys.path.append(parent_dir)
 
-# # Now you can import the conn variable from app/__init__.py
-# from app import conn
-
-
+import logging
+from botocore.exceptions import ClientError
 from flask import Blueprint, jsonify, request
 from ..scripts import db_helper
-import json
+
 
 conn = db_helper.connect_to_ec2()
+s3 = db_helper.connect_to_s3()
+
 
 blueprint = Blueprint('speak', __name__, url_prefix="/speak")
-
-@blueprint.route('/')
-def speak():
-    """Get all reference texts
-
-    Args:
-
-    Returns:
-        _type_: _description_
-    """
-    return jsonify(dict())
 
 
 @blueprint.route('/get_reference')
@@ -47,6 +33,14 @@ def get_reference():
         cursor.execute('select * from reference')
         result = cursor.fetchall()
         return jsonify(result)
+
+@blueprint.route('/get_all_user_id', methods=['GET'])
+def get_all_user_id_route():
+    with conn.cursor() as cursor:
+        cursor.execute('use voice_collector')
+        cursor.execute('select distinct user_id from audio')
+        result = cursor.fetchall()
+        return jsonify(result)
     
 @blueprint.route('/write_record', methods=['POST'])
 def write_record_route():
@@ -54,7 +48,7 @@ def write_record_route():
     # data = {
     #     "audio_id": 3,
     #     "user_id": 1,
-    #     "url": "http://example.com/audio3.mp3",
+    #     "url": "audio_id_user_id_ref_id.mp3",
     #     "date": "2023-03-23 12:34:56",
     #     "validated": True,
     #     "ref_id": 5,
@@ -67,3 +61,18 @@ def write_record_route():
         return jsonify({"result": "success"})
     except Exception as e:
         return jsonify({"result": "error", "message": str(e)}), 400
+    
+@blueprint.route('/write_file/<url>', methods=['POST'])
+def write_file_route(url):
+    # data = request.json
+    data = "test_recording.mp3"
+    # Upload file to S3 bucket
+    try:
+        # data: the path of audio file that needs to be uploaded. 
+        # url: the name of the file in S3, must be the same as url in audio table.
+        response = s3.upload_file(data, Key=f'{url}') # <Response 5 bytes [200 OK]>
+    except ClientError as e:
+        response = logging.error(e)
+    return jsonify(response)
+
+
