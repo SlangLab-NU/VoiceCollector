@@ -143,7 +143,7 @@ def vad_collector(sample_rate, frame_duration_ms,
         yield b''.join([f.bytes for f in voiced_frames])
 
 
-def is_valid_speech(vad, f):
+def get_silence_ratio(vad, f):
     global total_count, voiced_count
     total_count, voiced_count = 0, 0
 

@@ -98,7 +98,7 @@ def validate_volume_pause():
                     return jsonify(shortest_length_for_sentence={"expected": config['shortest_length_for_sentence'], "actual": duration}, result=False)
 
                 # volume and pause check
-                voiced_count, total_count, silence_ratio = silence_check.is_valid_speech(config['vad_mode'], wf)
+                voiced_count, total_count, silence_ratio = silence_check.get_silence_ratio(config['vad_mode'], wf)
                 volume = volume_check.get_volume(file)
                 if  silence_ratio > config['silence_ratio'] and volume < config['lowest_dBFS']:
                     return jsonify(silence_ratio={"expected": "< " + str(config['silence_ratio']), "actual": silence_ratio}, 
