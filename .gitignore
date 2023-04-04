@@ -160,8 +160,6 @@ dmypy.json
 F
 F.tar
 
-.vscode
-
 .expo
-
+.vscode
 yarn.lock
