@@ -57,9 +57,9 @@ def test_predict_scores(client):
         data.add("ref", ref)
 
     response = client.post(
-        "/api/v1/intel",
+        "/api/v1/intel/",
         data=data,
     )
     assert response.status_code == 200
     parsed_data = json.loads(response.data)
-    assert str(parsed_data) == '{ "cer": [ 0.9393939393939394, 0.9090909090909091 ], "metaphone_match": [ 1.0, 1.0 ], "sequence_matcher": [ 0.9850746268656716, 0.9705882352941176 ] }'
+    assert str(parsed_data) == "{'cer': [0.9393939393939394, 0.9090909090909091], 'metaphone_match': [1.0, 1.0], 'sequence_matcher': [0.9850746268656716, 0.9705882352941176]}"
