@@ -1,6 +1,7 @@
 import './App.css';
 import Home from './pages/Home';
-import RecordMUI from './pages/RecordMUI';
+import Record from './pages/Record';
+import AudioRecorder from './components/AudioRecorder';
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 
 
@@ -10,8 +11,8 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path ="/" element={<Home />}/>
-          <Route path ="/record" element={<RecordMUI />}/>
-
+          <Route path ="/record" element={<Record />}/>
+          <Route path ="/audio_recorder" element={<AudioRecorder />}/>
         </Routes>
       </BrowserRouter>
 
