@@ -1,7 +1,7 @@
 import './App.css';
 import Home from './pages/Home';
 import Record from './pages/Record';
-import AudioRecorder from './components/AudioRecorder';
+import AudioRecorder from './components/AudioRecorderCommon';
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 
 
