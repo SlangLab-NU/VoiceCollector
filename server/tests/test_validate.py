@@ -47,10 +47,10 @@ def test_silence_check_pass(client):
         "low_voice_very_long_silence.wav",
     ]
     results = [
-        "{'result': True, 'silence_ratio': 0.3928571428571429, 'volume': -29.117730341169}",
-        "{'result': True, 'silence_ratio': 0.7074235807860262, 'volume': -41.00134167022599}",
-        "{'result': True, 'silence_ratio': 0.8668639053254438, 'volume': -42.668657847696984}",
-        "{'result': True, 'silence_ratio': 0.7418224299065421, 'volume': -41.61762061851039}"
+        "{'result': True, 'silence_ratio': 0.6734693877551021, 'volume': -29.117730341169}",
+        "{'result': True, 'silence_ratio': 0.8660844250363902, 'volume': -41.00134167022599}",
+        "{'result': False, 'silence_ratio': {'actual': 0.9482248520710059, 'expected': '< 0.9'}, 'volume': {'actual': -42.668657847696984, 'expected': '> -18'}}",
+        "{'result': False, 'silence_ratio': {'actual': 0.9883177570093458, 'expected': '< 0.9'}, 'volume': {'actual': -41.61762061851039, 'expected': '> -18'}}"
     ]
 
     for fname, result in zip(filenames, results):

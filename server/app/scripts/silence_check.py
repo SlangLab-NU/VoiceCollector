@@ -143,12 +143,13 @@ def vad_collector(sample_rate, frame_duration_ms,
         yield b''.join([f.bytes for f in voiced_frames])
 
 
-def get_silence_ratio(vad, f):
+def get_silence_ratio(vad_mode_from_config, f):
     global total_count, voiced_count
     total_count, voiced_count = 0, 0
 
     audio, sample_rate = read_wave(f)
     vad = webrtcvad.Vad()
+    vad.set_mode(vad_mode_from_config)
     frames = frame_generator(30, audio, sample_rate)
     frames = list(frames)
     segments = vad_collector(sample_rate, 30, 300, vad, frames)
