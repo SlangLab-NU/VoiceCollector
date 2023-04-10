@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Box, Button, Typography, Container, Paper, Stack } from "@mui/material";
+import { Box, Button, Typography, Container, Paper, Stack, Grid } from "@mui/material";
 // import { makeStyles } from '@mui/styles';
-import MicIcon from "@mui/icons-material/Mic";
+
 import SendIcon from '@mui/icons-material/Send';
 import FastForwardIcon from '@mui/icons-material/FastForward';
 import FastRewindIcon from '@mui/icons-material/FastRewind';
-import MicOffIcon from "@mui/icons-material/MicOff";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import StopIcon from "@mui/icons-material/Stop";
 import data from '../data.js';
+import AudioRecorder from "../components/AudioRecorderCommon.js";
 
 
 export default function RecordMUI() {
@@ -18,15 +18,18 @@ export default function RecordMUI() {
   const [isRecording, setIsRecording] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [audioUrl, setAudioUrl] = useState(null);
+  // Force to initialize a new audio_recorder
+  const [key, setKey] = useState(0);
 
   useEffect(() => {
     setSection(data[promptNum].section);
     setPrompt(data[promptNum].prompt);
   }, [])
-  
+
 
   function onSkip() {
     if (promptNum < data.length - 1) {
+      setKey(key + 1);
       setPromptNum(promptNum + 1);
       setSection(data[promptNum + 1].section);
       setPrompt(data[promptNum + 1].prompt);
@@ -35,6 +38,7 @@ export default function RecordMUI() {
 
   function onPrev() {
     if (promptNum > 0) {
+      setKey(key + 1);
       setPromptNum(promptNum - 1);
       setSection(data[promptNum - 1].section);
       setPrompt(data[promptNum - 1].prompt);
@@ -49,7 +53,7 @@ export default function RecordMUI() {
 
   const handleStopRecording = (blob) => {
     setIsRecording(false);
-    setAudioUrl(URL.createObjectURL(blob));
+    // setAudioUrl(URL.createObjectURL(blob));
   };
 
   const handleStartPlaying = () => {
@@ -72,10 +76,10 @@ export default function RecordMUI() {
           Prompt {promptNum + 1}/{data.length}
         </Typography>
         <Box>
-          <Typography sx={{display: "inline", marginRight: 1}} variant="h6" align="center" gutterBottom>
-            Section 
+          <Typography sx={{ display: "inline", marginRight: 1 }} variant="h6" align="center" gutterBottom>
+            Section
           </Typography>
-          <Typography sx={{display: "inline", backgroundColor: "#E7EBF0"}} variant="h6" align="center" gutterBottom>
+          <Typography sx={{ display: "inline", backgroundColor: "#E7EBF0" }} variant="h6" align="center" gutterBottom>
             {section}
           </Typography>
         </Box>
@@ -93,18 +97,22 @@ export default function RecordMUI() {
           backgroundColor: "#E7EBF0",
         }}
       >
-        <Typography sx={{marginBottom: 4}} variant="h5" align="center">
-            Read the following sentences
+        <Typography sx={{ marginBottom: 4 }} variant="h5" align="center">
+          Read the following sentences
         </Typography>
 
-        <Paper sx={{height: 200, overflowY: "auto", padding: 1}} elevation={3}>
+        <Paper sx={{ height: 200, overflowY: "auto", padding: 1 }} elevation={3}>
           <Typography variant="h6" align="left">
             {prompt}
           </Typography>
         </Paper>
       </Box>
 
-      <Box sx={{flexDirection: "row"}}>
+
+      <Grid container spacing={2}
+        direction="row"
+        justifyContent="center"
+        alignItems="center">
         <Button
           variant="outlined"
           color="secondary"
@@ -115,7 +123,32 @@ export default function RecordMUI() {
           Previous
         </Button>
 
+        <AudioRecorder key={key} />
+
         <Button
+          sx={{ ml: 4, mr: 2 }}
+          variant="outlined"
+          color="secondary"
+          endIcon={<FastForwardIcon />}
+          onClick={onSkip}
+        >
+          Skip
+        </Button>
+        <Button
+          variant="contained"
+          endIcon={<SendIcon />}
+          sx={{ ml: 2, mr: 4 }}
+        >
+          Submit
+        </Button>
+      </Grid>
+
+    </Container>
+  );
+}
+
+
+{/* <Button
           variant="contained"
           sx={{ml: 4, mr: 4}}
           color="primary"
@@ -125,8 +158,8 @@ export default function RecordMUI() {
           }
         >
           {isRecording ? "Stop Recording" : "Start Recording"}
-        </Button>
-        {/* {audioUrl && (
+        </Button> */}
+{/* {audioUrl && (
           <Button
             variant="contained"
             color="secondary"
@@ -138,25 +171,4 @@ export default function RecordMUI() {
             {isPlaying ? "Stop Playback" : "Start Playback"}
           </Button>
         )} */}
-        {audioUrl && <audio src={audioUrl} controls />}
-        <Button
-          sx={{ml: 4, mr: 2}}
-          variant="outlined"
-          color="secondary"
-          endIcon={<FastForwardIcon />}
-          onClick={onSkip}
-        >
-          Skip
-        </Button>
-        <Button
-          variant="contained" 
-          endIcon={<SendIcon />}
-          sx={{ml: 2, mr: 4}}
-        >
-          Submit
-        </Button>
-
-      </Box>
-    </Container>
-  );
-}
+{/* {audioUrl && <audio src={audioUrl} controls />} */ }

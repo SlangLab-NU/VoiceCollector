@@ -4,6 +4,9 @@
 
 import { useState, useRef, useEffect } from "react";
 import AudioWeb from "./audio-web";
+import { Button, Stack } from "@mui/material";
+import MicIcon from "@mui/icons-material/Mic";
+import MicOffIcon from "@mui/icons-material/MicOff";
 
 const AudioRecorder = () => {
   const mimeType = "audio/webm";
@@ -80,7 +83,6 @@ const AudioRecorder = () => {
     if (!permission) {
       await getMicrophonePermission();
     }
-
     await audioWeb.current.start();
     setRecordingStatus("recording");
     console.log("Recording started");
@@ -98,6 +100,7 @@ const AudioRecorder = () => {
 
   return (
     <div className="audio-controls">
+      <Stack spacing={2}>
       {audioInfo ? (
         <div className="audio-container">
           <audio src={audioInfo["url"]} controls></audio>
@@ -107,18 +110,49 @@ const AudioRecorder = () => {
         </div>
       ) : null}
       {!isRecording() ? (
-        <button onClick={startRecording} type="button">
+        <Button 
+        variant="outlined"
+        color="primary"
+        startIcon={<MicIcon />}
+        onClick={startRecording} type="button">
           Start Recording
-        </button>
+        </Button>
       ) : null}
       {isRecording() ? (
-        <button onClick={stopRecording} type="button">
+        <Button onClick={stopRecording} type="button"
+        startIcon={ <MicOffIcon /> }>
           Stop Recording
-        </button>
+        </Button>
       ) : null}
+      </Stack>
     </div>
   );
 };
 
 
 export default AudioRecorder;
+
+{/* <Button
+          variant="contained"
+          sx={{ml: 4, mr: 4}}
+          color="primary"
+          startIcon={isRecording ? <MicOffIcon /> : <MicIcon />}
+          onClick={() =>
+            isRecording ? handleStopRecording() : handleStartRecording()
+          }
+        >
+          {isRecording ? "Stop Recording" : "Start Recording"}
+        </Button> */}
+{/* {audioUrl && (
+          <Button
+            variant="contained"
+            color="secondary"
+            startIcon={isPlaying ? <StopIcon /> : <PlayArrowIcon />}
+            onClick={() =>
+              isPlaying ? handleStopPlaying() : handleStartPlaying()
+            }
+          >
+            {isPlaying ? "Stop Playback" : "Start Playback"}
+          </Button>
+        )} */}
+{/* {audioUrl && <audio src={audioUrl} controls />} */ }
