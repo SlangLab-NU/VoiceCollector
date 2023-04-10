@@ -20,6 +20,7 @@ export default function RecordMUI() {
   const [audioUrl, setAudioUrl] = useState(null);
   // Force to initialize a new audio_recorder
   const [key, setKey] = useState(0);
+  const [audioFile, setAudioFile] = useState(null);
 
   useEffect(() => {
     setSection(data[promptNum].section);
@@ -53,6 +54,7 @@ export default function RecordMUI() {
 
   const handleStopRecording = (blob) => {
     setIsRecording(false);
+    setAudioFile(blob);
     // setAudioUrl(URL.createObjectURL(blob));
   };
 
@@ -63,6 +65,15 @@ export default function RecordMUI() {
   const handleStopPlaying = () => {
     setIsPlaying(false);
   };
+
+  const handleSubmit = async() => {
+    console.log(audioFile.blob);
+    const formData = new FormData();
+    formData.append("file", audioFile.blob, "test.ogg");
+    const response =await fetch("http://127.0.0.1:5000/api/v1/validate/format", { method: 'POST', body: formData });
+    console.log(await response.json())
+  };
+
 
   return (
     <Container>
@@ -123,7 +134,9 @@ export default function RecordMUI() {
           Previous
         </Button>
 
-        <AudioRecorder key={key} />
+        <AudioRecorder key={key}
+        onStopRecording={handleStopRecording}
+        />
 
         <Button
           sx={{ ml: 4, mr: 2 }}
@@ -138,6 +151,7 @@ export default function RecordMUI() {
           variant="contained"
           endIcon={<SendIcon />}
           sx={{ ml: 2, mr: 4 }}
+          onClick={handleSubmit}
         >
           Submit
         </Button>
@@ -146,29 +160,3 @@ export default function RecordMUI() {
     </Container>
   );
 }
-
-
-{/* <Button
-          variant="contained"
-          sx={{ml: 4, mr: 4}}
-          color="primary"
-          startIcon={isRecording ? <MicOffIcon /> : <MicIcon />}
-          onClick={() =>
-            isRecording ? handleStopRecording() : handleStartRecording()
-          }
-        >
-          {isRecording ? "Stop Recording" : "Start Recording"}
-        </Button> */}
-{/* {audioUrl && (
-          <Button
-            variant="contained"
-            color="secondary"
-            startIcon={isPlaying ? <StopIcon /> : <PlayArrowIcon />}
-            onClick={() =>
-              isPlaying ? handleStopPlaying() : handleStartPlaying()
-            }
-          >
-            {isPlaying ? "Stop Playback" : "Start Playback"}
-          </Button>
-        )} */}
-{/* {audioUrl && <audio src={audioUrl} controls />} */ }

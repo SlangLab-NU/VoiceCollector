@@ -8,7 +8,7 @@ import { Button, Stack } from "@mui/material";
 import MicIcon from "@mui/icons-material/Mic";
 import MicOffIcon from "@mui/icons-material/MicOff";
 
-const AudioRecorder = () => {
+const AudioRecorder = (props) => {
   const mimeType = "audio/webm";
   const audioWeb = useRef(null);
 
@@ -88,13 +88,14 @@ const AudioRecorder = () => {
     console.log("Recording started");
   };
 
-  const stopRecording = async () => {
+  const stopRecording = async (blob) => {
     const info = await audioWeb.current.stop();
     setAudioInfo(info);
     setRecordingStatus("waiting");
     setPermission(false);
     console.log("Recording stopped");
-    saveRecording();
+    // saveRecording();
+    props.onStopRecording(info)
   };
 
 
