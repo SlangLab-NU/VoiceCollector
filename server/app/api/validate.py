@@ -49,8 +49,10 @@ def validate_format():
             actual_format = file.filename.split(".")[-1]
             filename_format_check = (actual_format == expected_format)
             if not filename_format_check:
-                return jsonify(filename_format={"expected": expected_format, "actual": actual_format}, result=False)
-
+                response = jsonify(filename_format={"expected": expected_format, "actual": actual_format}, result=False)
+                response.headers.add('Access-Control-Allow-Origin', '*')
+                return response
+            
             with sf.SoundFile(file) as f:
                 result = True
                 response = {}

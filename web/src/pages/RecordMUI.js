@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Box, Button, Typography, Container, Paper, Stack } from "@mui/material";
+import { Box, Button, Typography, Container, Paper, Stack, Grid } from "@mui/material";
 // import { makeStyles } from '@mui/styles';
-import MicIcon from "@mui/icons-material/Mic";
+
 import SendIcon from '@mui/icons-material/Send';
 import FastForwardIcon from '@mui/icons-material/FastForward';
 import FastRewindIcon from '@mui/icons-material/FastRewind';
-import MicOffIcon from "@mui/icons-material/MicOff";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import StopIcon from "@mui/icons-material/Stop";
 import data from '../data.js';
+import AudioRecorder from "../components/AudioRecorderCommon.js";
 
 
 export default function RecordMUI() {
@@ -17,16 +17,20 @@ export default function RecordMUI() {
   const [prompt, setPrompt] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  // Force to initialize a new audio_recorder
+  const [key, setKey] = useState(0);
   const [audioUrl, setAudioUrl] = useState(null);
+  const [audioBlob, setAudioBlob] = useState(null);
 
   useEffect(() => {
     setSection(data[promptNum].section);
     setPrompt(data[promptNum].prompt);
   }, [])
-  
+
 
   function onSkip() {
     if (promptNum < data.length - 1) {
+      setKey(key + 1);
       setPromptNum(promptNum + 1);
       setSection(data[promptNum + 1].section);
       setPrompt(data[promptNum + 1].prompt);
@@ -35,30 +39,26 @@ export default function RecordMUI() {
 
   function onPrev() {
     if (promptNum > 0) {
+      setKey(key + 1);
       setPromptNum(promptNum - 1);
       setSection(data[promptNum - 1].section);
       setPrompt(data[promptNum - 1].prompt);
     }
   }
 
-  const handleStartRecording = () => {
-    setIsRecording(true);
-    setIsPlaying(false);
-    setAudioUrl(null);
+  const handleStopRecording = (audio) => {
+    setAudioUrl(audio.url);
+    setAudioBlob(audio.blob);
   };
 
-  const handleStopRecording = (blob) => {
-    setIsRecording(false);
-    setAudioUrl(URL.createObjectURL(blob));
+  const handleSubmit = async() => {
+    console.log(audioBlob);
+    const formData = new FormData();
+    formData.append("file", audioBlob, "test.ogg");
+    const response =await fetch("http://127.0.0.1:5000/api/v1/validate/format", { method: 'POST', body: formData });
+    console.log(await response.json())
   };
 
-  const handleStartPlaying = () => {
-    setIsPlaying(true);
-  };
-
-  const handleStopPlaying = () => {
-    setIsPlaying(false);
-  };
 
   return (
     <Container>
@@ -72,10 +72,10 @@ export default function RecordMUI() {
           Prompt {promptNum + 1}/{data.length}
         </Typography>
         <Box>
-          <Typography sx={{display: "inline", marginRight: 1}} variant="h6" align="center" gutterBottom>
-            Section 
+          <Typography sx={{ display: "inline", marginRight: 1 }} variant="h6" align="center" gutterBottom>
+            Section
           </Typography>
-          <Typography sx={{display: "inline", backgroundColor: "#E7EBF0"}} variant="h6" align="center" gutterBottom>
+          <Typography sx={{ display: "inline", backgroundColor: "#E7EBF0" }} variant="h6" align="center" gutterBottom>
             {section}
           </Typography>
         </Box>
@@ -93,18 +93,22 @@ export default function RecordMUI() {
           backgroundColor: "#E7EBF0",
         }}
       >
-        <Typography sx={{marginBottom: 4}} variant="h5" align="center">
-            Read the following sentences
+        <Typography sx={{ marginBottom: 4 }} variant="h5" align="center">
+          Read the following sentences
         </Typography>
 
-        <Paper sx={{height: 200, overflowY: "auto", padding: 1}} elevation={3}>
+        <Paper sx={{ height: 200, overflowY: "auto", padding: 1 }} elevation={3}>
           <Typography variant="h6" align="left">
             {prompt}
           </Typography>
         </Paper>
       </Box>
 
-      <Box sx={{flexDirection: "row"}}>
+
+      <Grid container spacing={2}
+        direction="row"
+        justifyContent="center"
+        alignItems="center">
         <Button
           variant="outlined"
           color="secondary"
@@ -115,32 +119,12 @@ export default function RecordMUI() {
           Previous
         </Button>
 
+        <AudioRecorder key={key}
+        onStopRecording={handleStopRecording}
+        />
+
         <Button
-          variant="contained"
-          sx={{ml: 4, mr: 4}}
-          color="primary"
-          startIcon={isRecording ? <MicOffIcon /> : <MicIcon />}
-          onClick={() =>
-            isRecording ? handleStopRecording() : handleStartRecording()
-          }
-        >
-          {isRecording ? "Stop Recording" : "Start Recording"}
-        </Button>
-        {/* {audioUrl && (
-          <Button
-            variant="contained"
-            color="secondary"
-            startIcon={isPlaying ? <StopIcon /> : <PlayArrowIcon />}
-            onClick={() =>
-              isPlaying ? handleStopPlaying() : handleStartPlaying()
-            }
-          >
-            {isPlaying ? "Stop Playback" : "Start Playback"}
-          </Button>
-        )} */}
-        {audioUrl && <audio src={audioUrl} controls />}
-        <Button
-          sx={{ml: 4, mr: 2}}
+          sx={{ ml: 4, mr: 2 }}
           variant="outlined"
           color="secondary"
           endIcon={<FastForwardIcon />}
@@ -149,14 +133,15 @@ export default function RecordMUI() {
           Skip
         </Button>
         <Button
-          variant="contained" 
+          variant="contained"
           endIcon={<SendIcon />}
-          sx={{ml: 2, mr: 4}}
+          sx={{ ml: 2, mr: 4 }}
+          onClick={handleSubmit}
         >
           Submit
         </Button>
+      </Grid>
 
-      </Box>
     </Container>
   );
 }
