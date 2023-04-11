@@ -159,3 +159,6 @@ dmypy.json
 # TORGO data
 F
 F.tar
+
+# Test data
+test_file.wav

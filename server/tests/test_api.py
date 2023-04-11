@@ -5,9 +5,9 @@ Tests for API handlers
 import json
 import jsonschema
 import pytest
-
+import io
+import os
 from app import create_app
-
 
 @pytest.fixture(scope='module', autouse=True)
 def client():
@@ -91,3 +91,16 @@ def test__write_record_route(client):
     response_data = json.loads(response.data)
     assert response_data["result"] == "success"
     
+
+def test_write_file_route(client):
+    # Test with no file
+    response = client.post('/api/v1/speak/write_file/test_file.wav')
+    assert response.get_json()['msg'] == "Error: No audio files in request"
+
+    # Test with valid file
+    test_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'test_file.wav')
+    for i in range(10):
+            with open(test_file_path, 'rb') as f:
+                test_file = io.BytesIO(f.read())
+            response = client.post(f'/api/v1/speak/write_file/test_file_{i}.wav', data={'file': (test_file, f'test_file_{i}.wav')})
+            assert response.status_code == 200

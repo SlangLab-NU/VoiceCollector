@@ -10,7 +10,7 @@ import logging
 from botocore.exceptions import ClientError
 from flask import Blueprint, jsonify, request
 from ..scripts import db_helper
-
+import mimetypes
 
 conn = db_helper.connect_to_ec2()
 s3 = db_helper.connect_to_s3()
@@ -47,12 +47,12 @@ def write_record_route():
     data = request.json
     # data = {
     #     "audio_id": 3,
-    #     "user_id": 1,
-    #     "url": "audio_id_user_id_ref_id.mp3",
+    #     "session_id": 1,
+    #     "s3_url": "audio_id_user_id_ref_id.mp3",
     #     "date": "2023-03-23 12:34:56",
     #     "validated": True,
     #     "ref_id": 5,
-    #     "sequence_matcher_score": 0.9,
+    #     "sequence_matcher_score": 0.9, change!!!
     #     "cer_score": 0.8,
     #     "metaphone_match_score": 0.7
     # }
@@ -61,16 +61,29 @@ def write_record_route():
         return jsonify({"result": "success"})
     except Exception as e:
         return jsonify({"result": "error", "message": str(e)}), 400
+
+
+def get_content_type(filename):
+    mimetype, _ = mimetypes.guess_type(filename)
+    if mimetype is not None:
+        return mimetype
+    else:
+        return 'application/octet-stream'
     
 @blueprint.route('/write_file/<url>', methods=['POST'])
 def write_file_route(url):
-    # data = request.json
-    data = "test_recording.mp3"
+    if request.method == 'POST' :
+            # check if the post request has the file part
+        if 'file' not in request.files:
+            response = jsonify(dict(msg="Error: No audio files in request"))
+            return response
+        
     # Upload file to S3 bucket
     try:
-        # data: the path of audio file that needs to be uploaded. 
-        # url: the name of the file in S3, must be the same as url in audio table.
-        response = s3.upload_file(data, Key=f'{url}') # <Response 5 bytes [200 OK]>
+        # url: the name of the file in S3, must be the same as url in audio table in mysql.
+        file = request.files['file']
+        content_type = get_content_type(file.filename)
+        response = s3.upload_fileobj(file, url, ExtraArgs={'ContentType': content_type})       
     except ClientError as e:
         response = logging.error(e)
     return jsonify(response)
