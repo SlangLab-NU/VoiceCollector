@@ -17,10 +17,10 @@ export default function RecordMUI() {
   const [prompt, setPrompt] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [audioUrl, setAudioUrl] = useState(null);
   // Force to initialize a new audio_recorder
   const [key, setKey] = useState(0);
-  const [audioFile, setAudioFile] = useState(null);
+  const [audioUrl, setAudioUrl] = useState(null);
+  const [audioBlob, setAudioBlob] = useState(null);
 
   useEffect(() => {
     setSection(data[promptNum].section);
@@ -46,30 +46,15 @@ export default function RecordMUI() {
     }
   }
 
-  const handleStartRecording = () => {
-    setIsRecording(true);
-    setIsPlaying(false);
-    setAudioUrl(null);
-  };
-
-  const handleStopRecording = (blob) => {
-    setIsRecording(false);
-    setAudioFile(blob);
-    // setAudioUrl(URL.createObjectURL(blob));
-  };
-
-  const handleStartPlaying = () => {
-    setIsPlaying(true);
-  };
-
-  const handleStopPlaying = () => {
-    setIsPlaying(false);
+  const handleStopRecording = (audio) => {
+    setAudioUrl(audio.url);
+    setAudioBlob(audio.blob);
   };
 
   const handleSubmit = async() => {
-    console.log(audioFile.blob);
+    console.log(audioBlob);
     const formData = new FormData();
-    formData.append("file", audioFile.blob, "test.ogg");
+    formData.append("file", audioBlob, "test.ogg");
     const response =await fetch("http://127.0.0.1:5000/api/v1/validate/format", { method: 'POST', body: formData });
     console.log(await response.json())
   };

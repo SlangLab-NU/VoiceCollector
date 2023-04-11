@@ -88,7 +88,7 @@ const AudioRecorder = (props) => {
     console.log("Recording started");
   };
 
-  const stopRecording = async (blob) => {
+  const stopRecording = async () => {
     const info = await audioWeb.current.stop();
     setAudioInfo(info);
     setRecordingStatus("waiting");
