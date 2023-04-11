@@ -45,17 +45,6 @@ def get_all_user_id_route(user_id):
 @blueprint.route('/write_record', methods=['POST'])
 def write_record_route():
     data = request.json
-    # data = {
-    #     "audio_id": 3,
-    #     "session_id": 1,
-    #     "s3_url": "audio_id_user_id_ref_id.mp3",
-    #     "date": "2023-03-23 12:34:56",
-    #     "validated": True,
-    #     "ref_id": 5,
-    #     "sequence_matcher_score": 0.9, change!!!
-    #     "cer_score": 0.8,
-    #     "metaphone_match_score": 0.7
-    # }
     try:
         db_helper.write_record(data, conn)
         return jsonify({"result": "success"})

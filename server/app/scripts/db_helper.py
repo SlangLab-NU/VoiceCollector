@@ -62,21 +62,21 @@ def write_record(data, conn):
     Write a record into the database.
     """
     query = """INSERT INTO audio (
-                audio_id, user_id, url, date, validated, ref_id, 
-                sequence_matcher_score, cer_score, metaphone_match_score)
+                audio_id, session_id, s3_url, date, validated, ref_id, 
+                sequence_matcher, cer, metaphone_match)
                 VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
     with conn.cursor() as cursor:
         cursor.execute(
             query,((
                 data.get("audio_id"),
-                data.get("user_id"),
-                data.get("url"),
+                data.get("session_id"),
+                data.get("s3_url"),
                 data.get("date"),
                 data.get("validated"),
                 data.get("ref_id"),
-                data.get("sequence_matcher_score"),
-                data.get("cer_score"),
-                data.get("metaphone_match_score"),
+                data.get("sequence_matcher"),
+                data.get("cer"),
+                data.get("metaphone_match"),
                 )),
         )
     conn.commit()

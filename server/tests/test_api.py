@@ -69,15 +69,15 @@ def test_validate_json_schema(client):
 def test__write_record_route(client):
     # Test data
     data = {
-        "audio_id": 4,
-        "user_id": 1,
-        "url": "http://example.com/audio.mp3",
+        "audio_id": 6,
+        "session_id": "session_id123",
+        "s3_url": "audio123.wav",
         "date": "2023-03-23 12:34:56",
         "validated": True,
         "ref_id": 3,
-        "sequence_matcher_score": 0.9,
-        "cer_score": 0.8,
-        "metaphone_match_score": 0.7
+        "sequence_matcher": 0.9,
+        "cer": 0.8,
+        "metaphone_match": 0.7
     }
     # Send a POST request with the test data
     response = client.post(
