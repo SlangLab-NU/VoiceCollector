@@ -33,14 +33,6 @@ def get_reference():
         result = cursor.fetchall()
         return jsonify(result)
 
-@blueprint.route('/exists_user_id/<user_id>', methods=['GET'])
-def get_all_user_id_route(user_id):
-    with conn.cursor() as cursor:
-        cursor.execute('select exists (select distinct user_id from audio where user_id = %s)', user_id)
-        result = cursor.fetchall()
-        # [{"exists (select distinct user_id from audio where user_id = '<user_id'>": 1}], where value of 1 means true, 0 means false.
-        return jsonify(result)
-
     
 @blueprint.route('/write_record', methods=['POST'])
 def write_record_route():
