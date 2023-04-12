@@ -1,11 +1,12 @@
 // Taken from https://github.com/common-voice/common-voice/blob/main/web/src/components/pages/contribution/speak/audio-web.ts
 
 const getAudioFormat = (() => {
-  const preferredFormat = 'audio/ogg; codecs=opus';
+  // const preferredFormat = 'audio/ogg; codecs=opus';
   const audio = document.createElement('audio');
-  const format = audio.canPlayType(preferredFormat)
-    ? preferredFormat
-    : 'audio/wav';
+  // const format = audio.canPlayType(preferredFormat)
+  //   ? preferredFormat
+  //   : 'audio/wav';
+  const format = 'audio/wav';
   return function getAudioFormat() {
     return format;
   };
