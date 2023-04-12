@@ -17,6 +17,8 @@ conda activate voice-collector
 pip install -r requirements-dev.txt
 ```
 
+Install ffmpeg (required by `pydub` to read audio formats other than wav), follow <https://github.com/jiaaro/pydub#getting-ffmpeg-set-up>.
+
 To run the app in debug mode,
 
 ```bash
