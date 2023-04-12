@@ -25,9 +25,9 @@ def convert_to_wav(file):
     
     dst_path = tmp_dir / (fname.split(".")[0] + ".wav")
     sound = AudioSegment.from_file(file, "webm")
-    sound.set_channels(config["channels"])
-    sound.set_frame_rate(config["sample_rate"])
-    sound.set_sample_width(config["sample_width"])
+    sound = sound.set_channels(config["channels"])
+    sound = sound.set_frame_rate(config["sample_rate"])
+    sound = sound.set_sample_width(config["sample_width"])
     sound.export(dst_path, format="wav")
 
 @blueprint.route('/convert_to_wav', methods=["POST"])
