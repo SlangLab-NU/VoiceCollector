@@ -55,7 +55,7 @@ export default function RecordMUI() {
     console.log(audioBlob);
     const formData = new FormData();
     formData.append("file", audioBlob, "test.ogg");
-    const response =await fetch("http://127.0.0.1:5000/api/v1/format/convert_to_wav", { method: 'POST', body: formData });
+    const response =await fetch("http://127.0.0.1:5000/api/v1/validate/format", { method: 'POST', body: formData });
     console.log(await response.json())
   };
 
