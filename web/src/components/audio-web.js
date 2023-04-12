@@ -1,4 +1,5 @@
 "use strict";
+// Taken from https://github.com/common-voice/common-voice/blob/main/web/src/components/pages/contribution/speak/audio-web.ts
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -38,11 +39,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 exports.__esModule = true;
 exports.AudioError = void 0;
 var getAudioFormat = (function () {
-    var preferredFormat = 'audio/ogg; codecs=opus';
+    var preferredFormat = 'audio/webm';
     var audio = document.createElement('audio');
     var format = audio.canPlayType(preferredFormat)
         ? preferredFormat
-        : 'audio/wav';
+        : 'audio/webm';
     return function getAudioFormat() {
         return format;
     };

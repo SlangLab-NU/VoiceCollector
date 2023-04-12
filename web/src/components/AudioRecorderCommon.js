@@ -9,7 +9,6 @@ import MicIcon from "@mui/icons-material/Mic";
 import MicOffIcon from "@mui/icons-material/MicOff";
 
 const AudioRecorder = (props) => {
-  const mimeType = "audio/webm";
   const audioWeb = useRef(null);
 
   const [permission, setPermission] = useState(false);

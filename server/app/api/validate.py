@@ -45,11 +45,11 @@ def validate_format():
     
         else:
             file = request.files['file']
-            expected_format = config['major_format'].lower()
-            actual_format = file.filename.split(".")[-1]
-            filename_format_check = (actual_format == expected_format)
-            if not filename_format_check:
-                response = jsonify(filename_format={"expected": expected_format, "actual": actual_format}, result=False)
+            expected_format = config['format']
+            postfix = file.filename.split(".")[-1]
+            postfix_check = (postfix == expected_format)
+            if not postfix_check:
+                response = jsonify(postfix={"expected": expected_format, "actual": postfix}, result=False)
                 response.headers.add('Access-Control-Allow-Origin', '*')
                 return response
             
