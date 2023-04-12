@@ -1,6 +1,6 @@
 from werkzeug.datastructures import FileStorage
 from io import IOBase
-from flask import Blueprint, jsonify, request, redirect
+from flask import Blueprint, jsonify, request, send_file
 import json
 import pathlib
 from pydub import AudioSegment
@@ -29,6 +29,7 @@ def convert_to_wav(file):
     sound = sound.set_frame_rate(config["sample_rate"])
     sound = sound.set_sample_width(config["sample_width"])
     sound.export(dst_path, format="wav")
+    return dst_path
 
 @blueprint.route('/convert_to_wav', methods=["POST"])
 def convert_to_wav_handler():
@@ -43,8 +44,10 @@ def convert_to_wav_handler():
         # dest_audio = file.filename.split(".")[0]
         # print("format:", actual_format)
         if actual_format == "weba":
-            convert_to_wav(file)
-            response = jsonify("converted")
+            output_path = convert_to_wav(file)
+            # Return the converted file
+            # response = jsonify({"msg": "converted"})
+            response = send_file(output_path)
             response.headers.add('Access-Control-Allow-Origin', '*')
             return response
         
