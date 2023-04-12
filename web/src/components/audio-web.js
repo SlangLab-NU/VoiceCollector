@@ -39,12 +39,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 exports.__esModule = true;
 exports.AudioError = void 0;
 var getAudioFormat = (function () {
-    // const preferredFormat = 'audio/ogg; codecs=opus';
+    var preferredFormat = 'audio/webm';
     var audio = document.createElement('audio');
-    // const format = audio.canPlayType(preferredFormat)
-    //   ? preferredFormat
-    //   : 'audio/wav';
-    var format = 'audio/wav';
+    var format = audio.canPlayType(preferredFormat)
+        ? preferredFormat
+        : 'audio/webm';
     return function getAudioFormat() {
         return format;
     };
