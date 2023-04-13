@@ -44,7 +44,6 @@ def normalize(s: str):
     """
     return re.sub("[^a-zA-Z]+", " ", s.lower())
 
-# TODO: unify the score with intelligibility or severity
 
 def sequence_matcher(y_pred, y_true):
     """

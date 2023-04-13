@@ -15,6 +15,13 @@ def client():
     return app.test_client()
 
 
+def test_default(client):
+    response = client.get('/api/v1/')
+    assert response.status_code == 200
+    parsed_data = json.loads(response.data)
+    assert parsed_data.get('msg') == 'Welcome to VoiceCollector backend API.'
+
+
 def test_not_found(client):
     response = client.get('/noexist')
     assert response.status_code == 404

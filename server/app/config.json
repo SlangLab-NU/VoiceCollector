@@ -1,0 +1,12 @@
+{
+    "vad_mode":3,
+    "silence_ratio":0.9,
+    "lowest_dBFS":-18,
+    "shortest_length_for_sentence":0.3,
+    "format":"wav",
+    "major_format":"WAV",
+    "sample_rate":48000,
+    "channels":1,
+    "sample_width": 2,
+    "subtype":"PCM_16"
+}
