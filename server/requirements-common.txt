@@ -6,7 +6,11 @@ transformers==4.26.1
 huggingsound==0.1.6
 jiwer==2.5.1
 metaphone==0.6
+PyMySQL==1.0.2
+python-dotenv==1.0.0
+jsonschema==4.17.3
 werkzeug==2.2.2
 webrtcvad-wheels==2.0.11.post1
 pydub==0.25.1
 gevent==22.10.2
+boto3==1.26.100

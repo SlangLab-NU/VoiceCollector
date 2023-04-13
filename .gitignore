@@ -75,7 +75,7 @@ coverage.xml
 *.py,cover
 .hypothesis/
 .pytest_cache/
-
+.vscode
 # Translations
 *.mo
 *.pot
@@ -157,9 +157,6 @@ dmypy.json
 .idea/
 
 # TORGO data
-F
 F.tar
 
-.expo
-.vscode
 yarn.lock

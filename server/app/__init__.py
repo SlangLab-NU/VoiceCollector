@@ -2,7 +2,7 @@
 Primary Flask app
 
 """
-from flask import Flask
+from flask import Flask, jsonify
 from flask_cors import CORS
 
 from .api import api as api_blueprint
@@ -16,5 +16,5 @@ def create_app():
     add_error_handlers(app)
     return app
 
-
+# Create a Flask app instance
 application = create_app()
