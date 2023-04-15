@@ -104,36 +104,43 @@ def validate():
 @blueprint.route('/format',methods=['POST'])
 def validate_format():
     if request.method == 'POST' :
-        if 'file' not in request.files:
-            return jsonify(dict(msg="Error: No audio files in request"))
-    
-        else:
-            file = request.files['file']
-            result, info = check_suffix(file)
-            if not result:
-                response = jsonify(info=info, result=False)
-                response.headers.add('Access-Control-Allow-Origin', '*')
-                return response
+        if 'audio' not in request.files:
+            return jsonify(msg="Error: No audio files in request"), 400
+
+        file = request.files['audio']
+
+        if file.filename == '':
+            return jsonify(msg="Not selected file exists"), 400
             
-            result, info = check_audio_format(file)
-            response = jsonify(info=info, result=result)
+        result, info = check_suffix(file)
+        if not result:
+            response = jsonify(info=info, result=False)
             response.headers.add('Access-Control-Allow-Origin', '*')
             return response
+        
+        result, info = check_audio_format(file)
+        response = jsonify(info=info, result=result)
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
             
 
 @blueprint.route('/volume_pause',methods=['POST'])
 def validate_volume_pause():
     global vad, target_dbfs
     if request.method == 'POST' :
-            # check if the post request has the file part
-        if 'file' not in request.files:
-            return jsonify(dict(msg="Error: No audio files in request"))
-        else: 
-            file = request.files['file']
-            result, info = check_volume_pause(file)
-            response = jsonify(info=info, result=result)
-            response.headers.add('Access-Control-Allow-Origin', '*')
-            return response
+        # check if the post request has the file part
+        if 'audio' not in request.files:
+            return jsonify(msg="Error: No audio files in request"), 400
+
+        file = request.files['audio']
+        
+        if file.filename == '':
+            return jsonify(msg="Not selected file exists"), 400
+        
+        result, info = check_volume_pause(file)
+        response = jsonify(info=info, result=result)
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
 
 
 
