@@ -19,10 +19,10 @@ def test_format_check_pass(client):
         "silence.m4a",
     ]
     results = [
-        "{'result': True}",
-        "{'channels': {'actual': 2, 'expected': 1}, 'result': False}",
-        "{'channels': {'actual': 2, 'expected': 1}, 'result': False, 'sample_rate': {'actual': 22050, 'expected': 48000}}",
-        "{'filename_format': {'actual': 'm4a', 'expected': 'wav'}, 'result': False}",
+        "{'info': {}, 'result': True}",
+        "{'info': {'channels': {'actual': 2, 'expected': 1}}, 'result': False}",
+        "{'info': {'channels': {'actual': 2, 'expected': 1}, 'sample_rate': {'actual': 22050, 'expected': 48000}}, 'result': False}",
+        "{'info': {'suffix': {'actual': 'm4a', 'expected': 'wav'}}, 'result': False}",
     ]
 
     for fname, result in zip(filenames, results):
@@ -47,10 +47,10 @@ def test_silence_check_pass(client):
         "low_voice_very_long_silence.wav",
     ]
     results = [
-        "{'result': True, 'silence_ratio': 0.6734693877551021, 'volume': -29.117730341169}",
-        "{'result': True, 'silence_ratio': 0.8660844250363902, 'volume': -41.00134167022599}",
-        "{'result': False, 'silence_ratio': {'actual': 0.9482248520710059, 'expected': '< 0.9'}, 'volume': {'actual': -42.668657847696984, 'expected': '> -18'}}",
-        "{'result': False, 'silence_ratio': {'actual': 0.9883177570093458, 'expected': '< 0.9'}, 'volume': {'actual': -41.61762061851039, 'expected': '> -18'}}"
+        "{'info': {'silence_ratio': 0.6734693877551021, 'volume': -29.117730341169}, 'result': True}",
+        "{'info': {'silence_ratio': 0.8660844250363902, 'volume': -41.00134167022599}, 'result': True}",
+        "{'info': {'silence_ratio': {'actual': 0.9482248520710059, 'expected': '< 0.9'}, 'volume': {'actual': -42.668657847696984, 'expected': '> -18'}}, 'result': False}",
+        "{'info': {'silence_ratio': {'actual': 0.9883177570093458, 'expected': '< 0.9'}, 'volume': {'actual': -41.61762061851039, 'expected': '> -18'}}, 'result': False}"
     ]
 
     for fname, result in zip(filenames, results):
