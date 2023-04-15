@@ -76,8 +76,7 @@ def test_validate_json_schema(client):
 def test__write_record_route(client):
     # Test data
     data = {
-        "audio_id": 6,
-        "session_id": "session_id123",
+        "session_id": "session_id234",
         "s3_url": "audio123.wav",
         "date": "2023-03-23 12:34:56",
         "validated": True,
