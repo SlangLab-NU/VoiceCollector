@@ -11,6 +11,8 @@ with the companion repo at https://github.com/miguelgrinberg/flasky
 
 Install dependencies
 
+Install PyTorch <https://pytorch.org/get-started/locally/>
+
 ```bash
 conda create -n voice-collector python=3.9.4
 conda activate voice-collector

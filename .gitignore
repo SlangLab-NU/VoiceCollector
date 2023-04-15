@@ -157,6 +157,8 @@ dmypy.json
 .idea/
 
 # TORGO data
+F
+FC
 F.tar
 
 yarn.lock
