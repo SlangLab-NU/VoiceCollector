@@ -17,9 +17,9 @@ blueprint = Blueprint('intel', __name__, url_prefix="/intel")
 model = SpeechRecognitionModel("jonatasgrosman/wav2vec2-large-xlsr-53-english")
 
 
-def transcribe(model, audio_paths):
-    transcriptions = model.transcribe(audio_paths)
-    return [x["transcription"] for x in transcriptions]
+def transcribe(model, audio_files):
+    transcriptions = model.transcribe(audio_files)
+    return {'transcriptions': [x["transcription"] for x in transcriptions]}
 
 
 def allowed_file(filename):
@@ -44,16 +44,35 @@ def get_transcripts():
     # filename = secure_filename(file.filename)
     # file.save(UPLOAD_FOLDER / filename)
     # return redirect(url_for('download_file', name=filename))
-    return jsonify(transcribe(model, files))
+    response = jsonify(transcribe(model, files))
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
         
 
 
 @blueprint.route('/', methods=["POST"])
 def predict_scores():
-    y_pred = get_transcripts().json
     # After db is setup, `data` should look like `{"audio_id", "..." "ref_id": "..."}` and the audio file is uploaded
+    # y_pred = get_transcripts().json
+    if 'audio' not in request.files:
+        return jsonify(msg="No file part"), 400
+
     data = request.form
     y_true = data.getlist("ref")
+
+    files = request.files.getlist("audio")
+    
+    if len(files) != len(y_true):
+        return jsonify(msg="The number of audio files and reference does not match"), 400
+
+    for f in files:
+        if f.filename == '':
+            return jsonify(msg="Not selected file exists"), 400
+        if not allowed_file(f.filename):
+            return jsonify(msg="Not allowed extension exists"), 400
+    
+    y_pred = transcribe(model, files)["transcriptions"]
+    
     return intel_score.evaluate(y_pred, y_true)
 
 
