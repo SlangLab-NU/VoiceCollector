@@ -28,7 +28,7 @@ def test_format_check_pass(client):
     for fname, result in zip(filenames, results):
         audio_file = samples_dir / fname
         with open(audio_file, 'rb') as f:
-            data = {"file": f}
+            data = {"audio": f}
             response = client.post(
                 "/api/v1/validate/format",
                 data=data,
@@ -56,7 +56,7 @@ def test_silence_check_pass(client):
     for fname, result in zip(filenames, results):
         audio_file = samples_dir / fname
         with open(audio_file, 'rb') as f:
-            data = {"file": f}
+            data = {"audio": f}
             response = client.post(
                 "/api/v1/validate/volume_pause",
                 data=data,
