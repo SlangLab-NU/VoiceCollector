@@ -152,3 +152,18 @@ def test_write_file_route(client):
             with open(test_file_path, 'rb') as f:
                 response = client.post(f'/api/v1/speak/write_file/test_file_{i}.wav', data={'file': f})
             assert response.status_code == 200
+
+
+def test_submit(client):
+    # Test with valid file
+    test_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "samples", 'normal.weba')
+    with open(test_file_path, 'rb') as f:
+        data = {
+            "session_id": "session_ggg",
+            "date": "2023-01-01 11:11:11",
+            "ref_id": 3,
+            "audio": f,
+        }
+        response = client.post(f'/api/v1/speak/submit/test_ggg.wav', data=data)
+
+    assert response.status_code == 200
