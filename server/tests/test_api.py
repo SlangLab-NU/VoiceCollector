@@ -150,7 +150,7 @@ def test_write_file_route(client):
     test_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),'samples', '0174.wav')
     for i in range(10):
             with open(test_file_path, 'rb') as f:
-                response = client.post(f'/api/v1/speak/write_file/test_file_{i}.wav', data={'file': f})
+                response = client.post(f'/api/v1/speak/write_file/test_file_{i}.wav', data={'audio': f})
             assert response.status_code == 200
 
 
