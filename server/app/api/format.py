@@ -33,13 +33,17 @@ def convert_to_wav(file):
 
 @blueprint.route('/convert_to_wav', methods=["POST"])
 def convert_to_wav_handler():
-    if 'file' not in request.files:
-            response = dict(msg="Error: No audio files in request")
+    if 'audio' not in request.files:
+            response = jsonify(msg="Error: No audio files in request")
+            response.headers.add('Access-Control-Allow-Origin', '*')
+            return response, 400
+    if request.files['audio'].filename == '':
+            response = jsonify(msg="Not selected file exists")
             response.headers.add('Access-Control-Allow-Origin', '*')
             return response, 400
     else: 
         # dest_song = os.path.splitext(file.filename)[0]+'.wav'
-        file = request.files['file']
+        file = request.files['audio']
         actual_format = file.filename.split(".")[-1]
         # dest_audio = file.filename.split(".")[0]
         # print("format:", actual_format)
