@@ -7,12 +7,17 @@ Speak API route handlers. They handle requests related to reference text, record
 
 
 import logging
-from botocore.exceptions import ClientError
-from flask import Blueprint, jsonify, request, current_app
-import pathlib
-from ..scripts import db_helper, intel_score
 import mimetypes
+import pathlib
+
 import jsonschema
+from botocore.exceptions import ClientError
+from flask import Blueprint, current_app, jsonify, request
+
+from ..scripts import db_helper, intel_score
+from .format import convert_to_wav_handler
+from .intel import model, transcribe
+from .validate import check_audio_format, check_volume_pause
 
 AUDIO_SCHEMA = {
     "type": "object",
@@ -38,10 +43,6 @@ AUDIO_SCHEMA = {
     ],
     "additionalProperties": False
 }
-from .format import convert_to_wav_handler
-from .validate import check_audio_format, check_volume_pause
-from .intel import transcribe, model
-
 
 current_dir = pathlib.Path(__file__).parent.resolve()
 tmp_dir = current_dir.parent.parent / "tmp"
