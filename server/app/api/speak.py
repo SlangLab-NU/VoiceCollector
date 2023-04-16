@@ -97,14 +97,16 @@ def get_content_type(filename):
 def write_file_route(url):
     if request.method == 'POST' :
             # check if the post request has the file part
-        if 'file' not in request.files:
-            response = jsonify(dict(msg="Error: No audio files in request"))
+        if 'audio' not in request.files:
+            response = jsonify(dict(msg="Error: No audio files in request")), 400
             return response
         
     # Upload file to S3 bucket
     try:
         # url: the name of the file in S3, must be the same as url in audio table in mysql.
-        file = request.files['file']
+        file = request.files['audio']
+        if file.filename == '':
+            return jsonify(msg="Not selected file exists"), 400
         content_type = get_content_type(file.filename)
         response = s3.upload_fileobj(file, url, ExtraArgs={'ContentType': content_type})       
     except ClientError as e:
