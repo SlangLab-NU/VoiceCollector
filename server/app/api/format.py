@@ -47,6 +47,9 @@ def convert_to_wav_handler():
         actual_format = file.filename.split(".")[-1]
         # dest_audio = file.filename.split(".")[0]
         # print("format:", actual_format)
+        if actual_format == "wav":
+            return jsonify(msg="Already in wav format.")
+
         if actual_format == "weba":
             output_path = convert_to_wav(file)
             # Return the converted file
