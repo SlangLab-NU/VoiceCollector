@@ -11,6 +11,32 @@ from botocore.exceptions import ClientError
 from flask import Blueprint, jsonify, request
 from ..scripts import db_helper
 import mimetypes
+import jsonschema
+
+AUDIO_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "session_id": {"type": "string"},
+        "s3_url": {"type": "string"},
+        "date": {"type": "string", "format": "date-time"},
+        "validated": {"type": "boolean"},
+        "ref_id": {"type": "integer"},
+        "sequence_matcher": {"type": "number"},
+        "cer": {"type": "number"},
+        "metaphone_match": {"type": "number"}
+    },
+    "required": [
+        "session_id",
+        "s3_url",
+        "date",
+        "validated",
+        "ref_id",
+        "sequence_matcher",
+        "cer",
+        "metaphone_match"
+    ],
+    "additionalProperties": False
+}
 
 conn = db_helper.connect_to_ec2()
 s3 = db_helper.connect_to_s3()
@@ -37,6 +63,11 @@ def get_reference():
 @blueprint.route('/write_record', methods=['POST'])
 def write_record_route():
     data = request.json
+    try:
+        jsonschema.validate(instance=data, schema=AUDIO_SCHEMA)
+    except jsonschema.ValidationError as e:
+        return jsonify({"result": "error", "message": str(e)}), 400
+
     try:
         db_helper.write_record(data, conn)
         return jsonify({"result": "success"})

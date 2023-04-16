@@ -96,6 +96,49 @@ def test__write_record_route(client):
     # Check if the response JSON has the expected result
     response_data = json.loads(response.data)
     assert response_data["result"] == "success"
+
+def test__write_record_route_invalid_data(client):
+    # Test data
+    data = {
+        "s3_url": "audio123.wav",
+        "date": "2023-03-23 12:34:56",
+        "validated": True,
+        "ref_id": 3,
+        "sequence_matcher": 0.9,
+        "cer": 0.8,
+        "metaphone_match": 0.7
+    }
+    # Send a POST request with the test data
+    response = client.post(
+        "/api/v1/speak/write_record",
+        data=json.dumps(data),
+        content_type="application/json"
+    )
+    # Check if the response has a failed status code (400)
+    assert response.status_code == 400 
+    # Check if the response JSON has the expected result
+    assert response.get_json()['message'].startswith("'session_id' is a required property")
+
+    data2 = {
+        "session_id": 1,
+        "s3_url": "audio123.wav",
+        "date": "2023-03-23 12:34:56",
+        "validated": True,
+        "ref_id": 3,
+        "sequence_matcher": 0.9,
+        "cer": 0.8,
+        "metaphone_match": 0.7
+    }
+    # Send a POST request with the test data
+    response = client.post(
+        "/api/v1/speak/write_record",
+        data=json.dumps(data2),
+        content_type="application/json"
+    )
+    # Check if the response has a failed status code (400)
+    assert response.status_code == 400 
+    # Check if the response JSON has the expected result
+    assert response.get_json()['message'].startswith("1 is not of type 'string'")
     
 
 def test_write_file_route(client):
@@ -104,9 +147,8 @@ def test_write_file_route(client):
     assert response.get_json()['msg'] == "Error: No audio files in request"
 
     # Test with valid file
-    test_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'test_file.wav')
+    test_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),'samples', '0174.wav')
     for i in range(10):
             with open(test_file_path, 'rb') as f:
-                test_file = io.BytesIO(f.read())
-            response = client.post(f'/api/v1/speak/write_file/test_file_{i}.wav', data={'file': (test_file, f'test_file_{i}.wav')})
+                response = client.post(f'/api/v1/speak/write_file/test_file_{i}.wav', data={'file': f})
             assert response.status_code == 200
