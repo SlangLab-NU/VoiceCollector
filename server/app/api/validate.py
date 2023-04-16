@@ -126,7 +126,6 @@ def validate_format():
 
 @blueprint.route('/volume_pause',methods=['POST'])
 def validate_volume_pause():
-    global vad, target_dbfs
     if request.method == 'POST' :
         # check if the post request has the file part
         if 'audio' not in request.files:
