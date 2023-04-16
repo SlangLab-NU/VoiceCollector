@@ -15,7 +15,7 @@ tmp_dir = current_dir.parent.parent / "tmp"
 if not tmp_dir.exists():
     tmp_dir.mkdir()
 
-def convert_to_wav(file):
+def convert_to_wav(file, actual_format):
     # Python file object from open(...)
     if isinstance(file, IOBase):
         fname = file.name
@@ -24,7 +24,11 @@ def convert_to_wav(file):
         fname = file.filename
     
     dst_path = tmp_dir / (fname.split(".")[0] + ".wav")
-    sound = AudioSegment.from_file(file, "webm")
+    if actual_format == "weba":
+        sound = AudioSegment.from_file(file, "webm")
+    elif actual_format == "wav":
+        sound = AudioSegment.from_wav(file)
+    
     sound = sound.set_channels(config["channels"])
     sound = sound.set_frame_rate(config["sample_rate"])
     sound = sound.set_sample_width(config["sample_width"])
@@ -47,11 +51,9 @@ def convert_to_wav_handler():
         actual_format = file.filename.split(".")[-1]
         # dest_audio = file.filename.split(".")[0]
         # print("format:", actual_format)
-        if actual_format == "wav":
-            return jsonify(msg="Already in wav format.")
 
-        if actual_format == "weba":
-            output_path = convert_to_wav(file)
+        if actual_format in ["weba", "wav"]:
+            output_path = convert_to_wav(file, actual_format)
             # Return the converted file
             # response = jsonify({"msg": "converted"})
             response = send_file(output_path)
