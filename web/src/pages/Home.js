@@ -26,7 +26,10 @@ export default function Home() {
   return (
     <>
       <NavBar />
-      <ScrollContainer>
+      <Hero/>
+      <AboutUs/>
+      <ContactUs/>
+      {/* <ScrollContainer>
         <ScrollPage>
           <Animator animation={batch(MoveIn(0, 200), MoveOut())}>
             <Hero />
@@ -44,7 +47,7 @@ export default function Home() {
             <ContactUs />
           </Animator>
         </ScrollPage>
-      </ScrollContainer>
+      </ScrollContainer> */}
       <Footer />
     </>
   )

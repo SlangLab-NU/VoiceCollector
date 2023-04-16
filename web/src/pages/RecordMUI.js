@@ -9,6 +9,8 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import StopIcon from "@mui/icons-material/Stop";
 import data from '../data.js';
 import AudioRecorder from "../components/AudioRecorderCommon.js";
+import DoneIcon from '@mui/icons-material/Done';
+import ErrorIcon from '@mui/icons-material/Error';
 
 
 export default function RecordMUI() {
@@ -21,6 +23,7 @@ export default function RecordMUI() {
   const [key, setKey] = useState(0);
   const [audioUrl, setAudioUrl] = useState(null);
   const [audioBlob, setAudioBlob] = useState(null);
+  const [submitStatus, setSubmitStatus] = useState(null)
 
   useEffect(() => {
     setSection(data[promptNum].section);
@@ -34,6 +37,7 @@ export default function RecordMUI() {
       setPromptNum(promptNum + 1);
       setSection(data[promptNum + 1].section);
       setPrompt(data[promptNum + 1].prompt);
+      setSubmitStatus(null);
     }
   }
 
@@ -53,10 +57,20 @@ export default function RecordMUI() {
 
   const handleSubmit = async() => {
     console.log(audioBlob);
+    if(audioBlob == null){
+      console.log("No valid audio file to submit")
+    }
     const formData = new FormData();
     formData.append("file", audioBlob, "test.ogg");
-    const response =await fetch("http://127.0.0.1:5000/api/v1/validate/format", { method: 'POST', body: formData });
-    console.log(await response.json())
+    // const response =await fetch("http://127.0.0.1:5000/api/v1/validate/format", { method: 'POST', body: formData });
+    const response = JSON.parse('true')
+    if(await response  ==  JSON.parse("true")){
+      // TODO: change skip button to 'next'
+      setSubmitStatus(true);
+    }else{
+      // when submission failed, set status to false
+    }
+
   };
 
 
@@ -130,11 +144,12 @@ export default function RecordMUI() {
           endIcon={<FastForwardIcon />}
           onClick={onSkip}
         >
-          Skip
+          {submitStatus ? "next" : "skip"}
         </Button>
         <Button
           variant="contained"
-          endIcon={<SendIcon />}
+          endIcon={ submitStatus == null? <SendIcon /> 
+          : (submitStatus ? <DoneIcon /> :<ErrorIcon />)}
           sx={{ ml: 2, mr: 4 }}
           onClick={handleSubmit}
         >
