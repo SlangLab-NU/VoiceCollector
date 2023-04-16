@@ -8,8 +8,9 @@ Speak API route handlers. They handle requests related to reference text, record
 
 import logging
 from botocore.exceptions import ClientError
-from flask import Blueprint, jsonify, request
-from ..scripts import db_helper
+from flask import Blueprint, jsonify, request, current_app
+import pathlib
+from ..scripts import db_helper, intel_score
 import mimetypes
 import jsonschema
 
@@ -41,16 +42,22 @@ AUDIO_SCHEMA = {
     ],
     "additionalProperties": False
 }
+from .format import convert_to_wav_handler
+from .validate import check_audio_format, check_volume_pause
+from .intel import transcribe, model
+
+
+current_dir = pathlib.Path(__file__).parent.resolve()
+tmp_dir = current_dir.parent.parent / "tmp"
 
 conn = db_helper.connect_to_ec2()
 s3 = db_helper.connect_to_s3()
-
 
 blueprint = Blueprint('speak', __name__, url_prefix="/speak")
 
 
 @blueprint.route('/get_reference')
-def get_reference():
+def get_reference_hanlder():
     """Get all reference texts
 
     Args:
@@ -70,7 +77,6 @@ def get_reference():
         return jsonify({"error": error_message}), 500
         
 
-    
 @blueprint.route('/write_record', methods=['POST'])
 def write_record_route():
     data = request.json
@@ -108,9 +114,66 @@ def write_file_route(url):
         if file.filename == '':
             return jsonify(msg="Not selected file exists"), 400
         content_type = get_content_type(file.filename)
-        response = s3.upload_fileobj(file, url, ExtraArgs={'ContentType': content_type})       
+        s3.upload_fileobj(file, url, ExtraArgs={'ContentType': content_type})       
     except ClientError as e:
-        response = logging.error(e)
-    return jsonify(response)
+        current_app.logger.error(e)
+        response = jsonify(msg="Error: Failed to upload file to S3"), 400
+    return jsonify(msg="Success: File uploaded to S3"), 200
 
 
+@blueprint.route('/submit/<url>', methods=['POST'])
+def submit_handler(url):
+    # Example of data submitted by frontend
+    # data = {
+    #     "session_id": "session_id234",
+    #     "date": "2023-03-23 12:34:56",
+    #     "ref_id": 3,
+    # }
+    data = dict(request.form)
+    data["s3_url"] = url
+    data["ref_id"] = int(data["ref_id"])
+    
+    # Convert audio file to wav format
+    response = convert_to_wav_handler()
+    if response.status_code == 400:
+        return response
+
+    file = request.files['audio']
+    filename = file.filename.split(".")[0]
+    file_path = tmp_dir / f"{filename}.wav"
+    assert file_path.exists(), "Converted file does not exist"
+
+    # Validate audio file
+    result, info = check_audio_format(file_path)
+    if not result:
+        return jsonify(info), 400
+
+    result, info = check_volume_pause(str(file_path))
+    if not result:
+        return jsonify(info), 400
+
+    # Get intelligibility scores
+    reference = db_helper.get_reference(conn)
+    ref = [r["text"] for r in reference if r["ref_id"] == data["ref_id"]][0]
+
+    y_pred = transcribe(model, [file_path])["transcriptions"][0]
+    scores = intel_score.evaluate(y_pred, ref)
+
+    data["validated"] = True
+    for k, v in scores.items():
+        data[k] = v
+    
+    # Upload file to S3 bucket
+    try:
+        content_type = get_content_type(file_path.name)
+        s3.upload_file(file_path, url, ExtraArgs={'ContentType': content_type})       
+    except ClientError as e:
+        current_app.logger.error(e)
+        return jsonify(msg="Error: Failed to upload file to S3"), 400
+    
+    # Write record to database
+    try:
+        db_helper.write_record(data, conn)
+        return jsonify(msg="Success: audio submitted"), 200
+    except Exception as e:
+        return jsonify(msg="Error: " + str(e)), 400
