@@ -7,6 +7,10 @@ import pymysql
 from dotenv import load_dotenv
 import os
 import boto3
+import threading
+
+lock = threading.Lock()
+
 
 def connect_to_ec2():
     """
@@ -65,6 +69,7 @@ def write_record(data, conn):
                 session_id, s3_url, date, validated, ref_id, 
                 sequence_matcher, cer, metaphone_match)
                 VALUES (%s,%s,%s,%s,%s,%s,%s,%s)"""
+    lock.acquire()
     with conn.cursor() as cursor:
         cursor.execute(
             query,((
@@ -79,6 +84,7 @@ def write_record(data, conn):
                 )),
         )
     conn.commit()
+    lock.release()
     
 
 def write_file():
