@@ -7,11 +7,11 @@ import FastForwardIcon from '@mui/icons-material/FastForward';
 import FastRewindIcon from '@mui/icons-material/FastRewind';
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import StopIcon from "@mui/icons-material/Stop";
-import data from '../data.js';
 import AudioRecorder from "../components/AudioRecorderCommon.js";
 import DoneIcon from '@mui/icons-material/Done';
 import ErrorIcon from '@mui/icons-material/Error';
 
+import axios from 'axios';
 
 export default function RecordMUI() {
   const [promptNum, setPromptNum] = useState(0);
@@ -24,12 +24,24 @@ export default function RecordMUI() {
   const [audioUrl, setAudioUrl] = useState(null);
   const [audioBlob, setAudioBlob] = useState(null);
   const [submitStatus, setSubmitStatus] = useState(null)
+  const [data, setData] = useState([]);
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get('http://127.0.0.1:5000/api/v1/speak/get_reference');
+      const data = response.data;
+      setData(data);
+      setSection(data[promptNum].section);
+      setPrompt(data[promptNum].prompt);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
 
   useEffect(() => {
-    setSection(data[promptNum].section);
-    setPrompt(data[promptNum].prompt);
-  }, [])
-
+    fetchData();
+  }, []);
 
   function onSkip() {
     if (promptNum < data.length - 1) {

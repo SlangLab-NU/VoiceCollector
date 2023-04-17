@@ -13,6 +13,10 @@ from ..scripts import db_helper
 import mimetypes
 import jsonschema
 
+import threading
+
+lock = threading.Lock()
+
 AUDIO_SCHEMA = {
     "type": "object",
     "properties": {
@@ -54,10 +58,17 @@ def get_reference():
     Returns:
         _type_: _description_
     """
-    with conn.cursor() as cursor:
-        cursor.execute('select * from reference')
-        result = cursor.fetchall()
-        return jsonify(result)
+    try:
+        with conn.cursor() as cursor:
+            lock.acquire()
+            cursor.execute('select * from reference')
+            result = cursor.fetchall()
+            lock.release()
+            return jsonify(result)
+    except Exception as e:
+        error_message = str(e)
+        return jsonify({"error": error_message}), 500
+        
 
     
 @blueprint.route('/write_record', methods=['POST'])
