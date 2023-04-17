@@ -18,10 +18,13 @@ from ..scripts import db_helper, intel_score
 from .format import convert_to_wav_handler
 from .intel import model, transcribe
 from .validate import check_audio_format, check_volume_pause
+<<<<<<< HEAD
 
 import threading
 
 lock = threading.Lock()
+=======
+>>>>>>> 67c7ee05229916a3db0170d94f84f079dd892b89
 
 AUDIO_SCHEMA = {
     "type": "object",

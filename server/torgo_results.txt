@@ -1,0 +1,71 @@
+D:\capstone\VoiceCollector\server\F\F01\Session1
+Number of broken files: 0
+sequence_matcher: 0.4442545777522821
+cer: 0.3405290608709096
+metaphone_match: 0.4003315890807152
+
+D:\capstone\VoiceCollector\server\F\F03\Session1
+Number of broken files: 0
+sequence_matcher: 0.6311758613659811
+cer: 0.5787396281564532
+metaphone_match: 0.6985975613088019
+
+D:\capstone\VoiceCollector\server\F\F03\Session2
+Number of broken files: 0
+sequence_matcher: 0.6769885835480752
+cer: 0.5876794935604751
+metaphone_match: 0.6673496363496242
+
+D:\capstone\VoiceCollector\server\F\F03\Session3
+Number of broken files: 0
+sequence_matcher: 0.6584250818756298
+cer: 0.542963196190086
+metaphone_match: 0.6611253067895357
+
+D:\capstone\VoiceCollector\server\F\F04\Session1
+Number of broken files: 0
+sequence_matcher: 0.8606081271813665
+cer: 0.8005700958413534
+metaphone_match: 0.9071906693711969
+
+D:\capstone\VoiceCollector\server\F\F04\Session2
+Number of broken files: 0
+sequence_matcher: 0.8743737154321544
+cer: 0.8190674679141647
+metaphone_match: 0.8795785839576947
+
+D:\capstone\VoiceCollector\server\FC\FC01\Session1
+Number of broken files: 0
+sequence_matcher: 0.8283378945744524
+cer: 0.7618011539253332
+metaphone_match: 0.8812707247401125
+
+D:\capstone\VoiceCollector\server\FC\FC02\Session2
+Number of broken files: 0
+sequence_matcher: 0.8615650630310395
+cer: 0.7980224392844008
+metaphone_match: 0.9040176019738103
+
+D:\capstone\VoiceCollector\server\FC\FC02\Session3
+Number of broken files: 0
+sequence_matcher: 0.8650623946870375
+cer: 0.815029317457463
+metaphone_match: 0.8744232761893077
+
+D:\capstone\VoiceCollector\server\FC\FC03\Session1
+Number of broken files: 0
+sequence_matcher: 0.8581095995791811
+cer: 0.7906160618665983
+metaphone_match: 0.8824639006989389
+
+D:\capstone\VoiceCollector\server\FC\FC03\Session2
+Number of broken files: 0
+sequence_matcher: 0.8385502126938814
+cer: 0.7803487520427606
+metaphone_match: 0.8702717043618037
+
+D:\capstone\VoiceCollector\server\FC\FC03\Session3
+Number of broken files: 0
+sequence_matcher: 0.8684779492180912
+cer: 0.8173350741387104
+metaphone_match: 0.8949143468817514
