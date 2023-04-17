@@ -34,7 +34,7 @@ def test_transcribe(client):
     )
     assert response.status_code == 200
     parsed_data = json.loads(response.data)
-    assert parsed_data == ["you're used to being on the field", 'wy yell or worry over silly items']
+    assert parsed_data == {"transcriptions": ["you're used to being on the field", 'wy yell or worry over silly items']}
 
 
 def test_predict_scores(client):

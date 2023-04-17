@@ -94,3 +94,16 @@ def write_file():
     pass
 
 
+def get_reference(conn):
+    with conn.cursor() as cursor:
+        cursor.execute('select * from reference')
+        result = cursor.fetchall()
+        return result
+
+
+def get_records(conn):
+    with conn.cursor() as cursor:
+        cursor.execute('select * from audio')
+        result = cursor.fetchall()
+        return result
+
