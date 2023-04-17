@@ -73,14 +73,22 @@ export default function RecordMUI() {
       console.log("No valid audio file to submit")
     }
     const formData = new FormData();
-    formData.append("file", audioBlob, "test.ogg");
-    // const response =await fetch("http://127.0.0.1:5000/api/v1/validate/format", { method: 'POST', body: formData });
-    const response = JSON.parse('true')
+    const currentDate = new Date()
+    // Get a random number for session id
+    const rand =  (Math.random() * 100);
+    const filename = "test" + rand + ".webm"
+
+    formData.append("session_id", rand);
+    formData.append("date", currentDate);
+    formData.append("ref_id", data[promptNum].ref_id);
+    formData.append("audio", audioBlob, filename);
+
+    const response =await fetch("http://127.0.0.1:5000/api/v1/speak/submit/" + filename, { method: 'POST', body: formData });
     if(await response  ==  JSON.parse("true")){
-      // TODO: change skip button to 'next'
       setSubmitStatus(true);
     }else{
-      // when submission failed, set status to false
+      // when submission failed, set status to back to empty
+      setSubmitStatus(null);
     }
 
   };
