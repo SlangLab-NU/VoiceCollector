@@ -24,7 +24,7 @@ def convert_to_wav(file, actual_format):
         fname = file.filename
     
     dst_path = tmp_dir / (fname.split(".")[0] + ".wav")
-    if actual_format == "weba":
+    if actual_format == "weba" or actual_format == "webm":
         sound = AudioSegment.from_file(file, "webm")
     elif actual_format == "wav":
         sound = AudioSegment.from_wav(file)
