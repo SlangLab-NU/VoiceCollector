@@ -55,6 +55,7 @@ REFERENCE_SCHEMA = {
     "items": {
         "type": "object",
         "properties": {
+            "image_url": {"type": ["null", "string"]},
             "ref_id": {"type": "number"},
             "section": {"type": "string"},
             "prompt": {"type": "string"},
