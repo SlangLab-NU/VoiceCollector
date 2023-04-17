@@ -114,6 +114,7 @@ export default function RecordMUI() {
           </Typography>
         </Box>
       </Box>
+
       <Box
         sx={{
           // border: `2px solid`,
@@ -125,17 +126,34 @@ export default function RecordMUI() {
           pr: 10,
           mb: 4,
           backgroundColor: "#E7EBF0",
+          width: "80%",
+          height: 500,
         }}
-      >
-        <Typography sx={{ marginBottom: 4 }} variant="h5" align="center">
-          Read the following sentences
-        </Typography>
-
-        <Paper sx={{ height: 200, overflowY: "auto", padding: 1 }} elevation={3}>
-          <Typography variant="h6" align="left">
+      > 
+      {section !== 'Image' ? (
+        <Box>
+          <Typography sx={{ marginBottom: 4 }} variant="h5" align="center">
+            Read the following sentences
+          </Typography>
+          <Paper sx={{ height: 400, overflowY: "auto", padding: 1 }} elevation={3}>
+            <Typography variant="h6" align="left">
+              {prompt}
+            </Typography>
+          </Paper> 
+        </Box>
+        ) : (
+        <Box>
+          <Typography sx={{ marginBottom: 4 }} variant="h5" align="center">
             {prompt}
           </Typography>
-        </Paper>
+          <img src={`/assets/${data[promptNum].image_url}`} alt='' className='image' style={{
+            maxWidth: '100%',
+            maxHeight: 'calc(100% - 48px)', // Subtract the height occupied by the Typography component and marginBottom
+            objectFit: 'contain',
+          }}/>
+      </Box>
+      )}
+        
       </Box>
 
 
