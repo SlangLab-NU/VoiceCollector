@@ -136,9 +136,9 @@ export default function RecordMUI() {
         ) : (
         <Box>
           <Typography sx={{ marginBottom: 4 }} variant="h5" align="center">
-            Tell me what is happening in this picture
+            {prompt}
           </Typography>
-          <img src={`/assets/${prompt}`} alt='' className='image' style={{
+          <img src={`/assets/${data[promptNum].image_url}`} alt='' className='image' style={{
             maxWidth: '100%',
             maxHeight: 'calc(100% - 48px)', // Subtract the height occupied by the Typography component and marginBottom
             objectFit: 'contain',
