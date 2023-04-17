@@ -60,7 +60,7 @@ REFERENCE_SCHEMA = {
             "prompt": {"type": "string"},
             "promptNum": {"type": "number"}
         },
-        "required": ["section", "prompt", "promptNum"]
+        "required": ["ref_id","section", "prompt", "promptNum"]
     }
 }
 
