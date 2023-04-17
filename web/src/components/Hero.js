@@ -28,7 +28,7 @@ function Hero() {
                         Donate Your Voice
                     {/* </Box> */}
                 </Typography>
-                <Button variant="contained">Contribute Your Voice</Button>
+                <Button variant="contained" href='/record'>Contribute Your Voice</Button>
                 <Button variant="outlined">Download the Database</Button>
                 <Button variant="text">Text</Button>
             </Stack>
