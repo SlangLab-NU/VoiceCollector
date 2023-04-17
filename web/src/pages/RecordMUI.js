@@ -5,8 +5,6 @@ import { Box, Button, Typography, Container, Paper, Stack, Grid } from "@mui/mat
 import SendIcon from '@mui/icons-material/Send';
 import FastForwardIcon from '@mui/icons-material/FastForward';
 import FastRewindIcon from '@mui/icons-material/FastRewind';
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import StopIcon from "@mui/icons-material/Stop";
 import AudioRecorder from "../components/AudioRecorderCommon.js";
 import DoneIcon from '@mui/icons-material/Done';
 import ErrorIcon from '@mui/icons-material/Error';
@@ -17,8 +15,6 @@ export default function RecordMUI() {
   const [promptNum, setPromptNum] = useState(0);
   const [section, setSection] = useState("");
   const [prompt, setPrompt] = useState("");
-  const [isRecording, setIsRecording] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
   // Force to initialize a new audio_recorder
   const [key, setKey] = useState(0);
   const [audioUrl, setAudioUrl] = useState(null);
@@ -43,6 +39,11 @@ export default function RecordMUI() {
     fetchData();
   }, []);
 
+  function clearAudio() {
+    setAudioUrl(null);
+    setAudioBlob(null);
+  }
+
   function onSkip() {
     if (promptNum < data.length - 1) {
       setKey(key + 1);
@@ -50,6 +51,7 @@ export default function RecordMUI() {
       setSection(data[promptNum + 1].section);
       setPrompt(data[promptNum + 1].prompt);
       setSubmitStatus(null);
+      clearAudio();
     }
   }
 
@@ -59,6 +61,7 @@ export default function RecordMUI() {
       setPromptNum(promptNum - 1);
       setSection(data[promptNum - 1].section);
       setPrompt(data[promptNum - 1].prompt);
+      clearAudio();
     }
   }
 
@@ -68,12 +71,14 @@ export default function RecordMUI() {
   };
 
   const handleSubmit = async() => {
-    console.log(audioBlob);
     if(audioBlob == null){
+      // TODO: show warning alert here
       console.log("No valid audio file to submit")
+      return;
     }
     const formData = new FormData();
-    const currentDate = new Date()
+    // Get current date with format YYYY-MM-DD HH:MM:SS
+    const currentDate = new Date().toISOString().slice(0, 19).replace('T', ' ');
     // Get a random number for session id
     const rand =  (Math.random() * 100);
     const filename = "test" + rand + ".webm"
@@ -83,10 +88,13 @@ export default function RecordMUI() {
     formData.append("ref_id", data[promptNum].ref_id);
     formData.append("audio", audioBlob, filename);
 
-    const response =await fetch("http://127.0.0.1:5000/api/v1/speak/submit/" + filename, { method: 'POST', body: formData });
-    if(await response  ==  JSON.parse("true")){
+    const response = await fetch("http://127.0.0.1:5000/api/v1/speak/submit/" + filename, { method: 'POST', body: formData });
+    
+    if(response.status === 200){
+      // TODO: show success alert here
       setSubmitStatus(true);
     }else{
+      // TODO: show fail alert here
       // when submission failed, set status to back to empty
       setSubmitStatus(null);
     }
