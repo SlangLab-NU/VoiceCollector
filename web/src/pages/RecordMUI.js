@@ -8,6 +8,7 @@ import FastRewindIcon from '@mui/icons-material/FastRewind';
 import AudioRecorder from "../components/AudioRecorderCommon.js";
 import DoneIcon from '@mui/icons-material/Done';
 import ErrorIcon from '@mui/icons-material/Error';
+import Alert from '@mui/material/Alert';
 
 import axios from 'axios';
 
@@ -17,6 +18,7 @@ export default function RecordMUI() {
   const [prompt, setPrompt] = useState("");
   // Force to initialize a new audio_recorder
   const [key, setKey] = useState(0);
+  const [alertOpen, setAlertOpen] = useState(false);
   const [audioUrl, setAudioUrl] = useState(null);
   const [audioBlob, setAudioBlob] = useState(null);
   const [submitStatus, setSubmitStatus] = useState(null)
@@ -80,7 +82,7 @@ export default function RecordMUI() {
     // Get current date with format YYYY-MM-DD HH:MM:SS
     const currentDate = new Date().toISOString().slice(0, 19).replace('T', ' ');
     // Get a random number for session id
-    const rand =  (Math.random() * 100);
+    const rand = (Math.random() * 100);
     const filename = "test" + rand + ".webm"
 
     formData.append("session_id", rand);
@@ -91,12 +93,11 @@ export default function RecordMUI() {
     const response = await fetch("http://127.0.0.1:5000/api/v1/speak/submit/" + filename, { method: 'POST', body: formData });
     
     if(response.status === 200){
-      // TODO: show success alert here
       setSubmitStatus(true);
     }else{
-      // TODO: show fail alert here
-      // when submission failed, set status to back to empty
+      // When submission failed, set status to back to empty and show alert
       setSubmitStatus(null);
+      setAlertOpen(true);
     }
 
   };
@@ -137,35 +138,36 @@ export default function RecordMUI() {
           width: "80%",
           height: 500,
         }}
-      > 
-      {section !== 'Image' ? (
-        <Box>
-          <Typography sx={{ marginBottom: 4 }} variant="h5" align="center">
-            Read the following sentences
-          </Typography>
-          <Paper sx={{ height: 400, overflowY: "auto", padding: 1 }} elevation={3}>
-            <Typography variant="h6" align="left">
+      >
+        {section !== 'Image' ? (
+          <Box>
+            <Typography sx={{ marginBottom: 4 }} variant="h5" align="center">
+              Read the following sentences
+            </Typography>
+            <Paper sx={{ height: 400, overflowY: "auto", padding: 1 }} elevation={3}>
+              <Typography variant="h6" align="left">
+                {prompt}
+              </Typography>
+            </Paper>
+          </Box>
+        ) : (
+          <Box>
+            <Typography sx={{ marginBottom: 4 }} variant="h5" align="center">
               {prompt}
             </Typography>
-          </Paper> 
-        </Box>
-        ) : (
-        <Box>
-          <Typography sx={{ marginBottom: 4 }} variant="h5" align="center">
-            {prompt}
-          </Typography>
-          <img src={`/assets/${data[promptNum].image_url}`} alt='' className='image' style={{
-            maxWidth: '100%',
-            maxHeight: 'calc(100% - 48px)', // Subtract the height occupied by the Typography component and marginBottom
-            objectFit: 'contain',
-          }}/>
-      </Box>
-      )}
-        
+            <img src={`/assets/${data[promptNum].image_url}`} alt='' className='image' style={{
+              maxWidth: '100%',
+              maxHeight: 'calc(100% - 48px)', // Subtract the height occupied by the Typography component and marginBottom
+              objectFit: 'contain',
+            }} />
+          </Box>
+        )}
+
       </Box>
 
 
       <Grid container spacing={2}
+        display="flex"
         direction="row"
         justifyContent="center"
         alignItems="center">
@@ -173,14 +175,14 @@ export default function RecordMUI() {
           variant="outlined"
           color="secondary"
           startIcon={<FastRewindIcon />}
-          sx={{ml: 4, mr: 2}}
+          sx={{ ml: 4, mr: 2 }}
           onClick={onPrev}
         >
           Previous
         </Button>
 
         <AudioRecorder key={key}
-        onStopRecording={handleStopRecording}
+          onStopRecording={handleStopRecording}
         />
 
         <Button
@@ -194,13 +196,22 @@ export default function RecordMUI() {
         </Button>
         <Button
           variant="contained"
-          endIcon={ submitStatus == null? <SendIcon /> 
-          : (submitStatus ? <DoneIcon /> :<ErrorIcon />)}
+          endIcon={submitStatus == null ? <SendIcon />
+            : (submitStatus ? <DoneIcon /> : <ErrorIcon />)}
           sx={{ ml: 2, mr: 4 }}
           onClick={handleSubmit}
         >
           Submit
         </Button>
+        {alertOpen && (
+          <Alert severity="error" onClose={() => setAlertOpen(false)}
+            sx={{
+              fontSize: '14px',
+              marginTop: '15px',
+              width: '500px'
+            }}>
+            Submission failed. Please try again.
+          </Alert>)}
       </Grid>
 
     </Container>
