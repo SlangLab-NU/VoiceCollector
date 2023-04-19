@@ -78,6 +78,27 @@ def get_reference_hanlder():
         return jsonify({"error": error_message}), 500
         
 
+@blueprint.route('/get_records')
+def get_records():
+    """Get all records
+
+    Args:
+
+    Returns:
+        _type_: _description_
+    """
+    try:
+        with conn.cursor() as cursor:
+            lock.acquire()
+            cursor.execute('select * from audio')
+            result = cursor.fetchall()
+            lock.release()
+            return jsonify(result)
+    except Exception as e:
+        error_message = str(e)
+        return jsonify({"error": error_message}), 500
+
+
 @blueprint.route('/write_record', methods=['POST'])
 def write_record_route():
     data = request.json
@@ -136,7 +157,7 @@ def submit_handler(url):
     
     # Convert audio file to wav format
     response = convert_to_wav_handler()
-    if response.status_code == 400:
+    if type(response) is tuple and response[1] == 400:
         return response
 
     file = request.files['audio']
@@ -155,7 +176,7 @@ def submit_handler(url):
 
     # Get intelligibility scores
     reference = db_helper.get_reference(conn)
-    ref = [r["text"] for r in reference if r["ref_id"] == data["ref_id"]][0]
+    ref = [r["prompt"] for r in reference if r["ref_id"] == data["ref_id"]][0]
 
     y_pred = transcribe(model, [file_path])["transcriptions"][0]
     scores = intel_score.evaluate(y_pred, ref)

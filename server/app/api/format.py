@@ -52,7 +52,7 @@ def convert_to_wav_handler():
         # dest_audio = file.filename.split(".")[0]
         # print("format:", actual_format)
 
-        if actual_format in ["weba", "wav"]:
+        if actual_format in ["weba", "webm", "wav"]:
             output_path = convert_to_wav(file, actual_format)
             # Return the converted file
             # response = jsonify({"msg": "converted"})
@@ -60,7 +60,7 @@ def convert_to_wav_handler():
             response.headers.add('Access-Control-Allow-Origin', '*')
             return response
         
-        response = jsonify(format={"expected": "weba", "actual": actual_format}, result=False)
+        response = jsonify(format={"expected": "weba/webm", "actual": actual_format}, result=False)
         response.headers.add('Access-Control-Allow-Origin', '*')
         return response, 400
 
