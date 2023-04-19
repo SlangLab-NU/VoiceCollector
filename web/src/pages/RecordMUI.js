@@ -94,7 +94,7 @@ export default function RecordMUI() {
     
     if(response.status === 200){
       setSubmitStatus(true);
-    }else{
+    } else {
       // When submission failed, set status to back to empty and show alert
       setSubmitStatus(null);
       setAlertOpen(true);
