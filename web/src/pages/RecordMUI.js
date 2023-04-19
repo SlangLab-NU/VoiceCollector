@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, Button, Typography, Container, Paper, Stack, Grid } from "@mui/material";
+import { Box, Button, Typography, Container, Paper, Stack, Grid, Collapse } from "@mui/material";
 // import { makeStyles } from '@mui/styles';
 
 import SendIcon from '@mui/icons-material/Send';
@@ -203,14 +203,15 @@ export default function RecordMUI() {
         <Button
           disabled = {!allowSubmit}
           variant="contained"
+          color={submitStatus == null? "primary" : "success"}
           endIcon={submitStatus == null ? <SendIcon />
             : (submitStatus ? <DoneIcon /> : <ErrorIcon />)}
           sx={{ ml: 2, mr: 4 }}
           onClick={handleSubmit}
         >
-          Submit
+          {submitStatus == null? "Submit" : "Submitted"}
         </Button>
-        {alertOpen && (
+        <Collapse in={alertOpen}>
           <Alert severity="error" onClose={() => setAlertOpen(false)}
             sx={{
               fontSize: '14px',
@@ -218,7 +219,8 @@ export default function RecordMUI() {
               width: '500px'
             }}>
             Submission failed. Please try again.
-          </Alert>)}
+          </Alert>
+        </Collapse>
       </Grid>
 
     </Container>
