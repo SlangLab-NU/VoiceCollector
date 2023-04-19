@@ -106,26 +106,6 @@ export default function RecordMUI() {
       setSubmitStatus(null);
       setAlertOpen(true);
     }
-    else{
-      const formData = new FormData();
-      const currentDate = new Date()
-      // Get a random number for session id
-      const rand = (Math.random() * 100);
-      const filename = "test" + rand + ".webm"
-  
-      formData.append("session_id", rand);
-      formData.append("date", currentDate);
-      formData.append("ref_id", data[promptNum].ref_id);
-      formData.append("audio", audioBlob, filename);
-  
-      const response = await fetch("http://127.0.0.1:5000/api/v1/speak/submit/" + filename, { method: 'POST', body: formData });
-      if (await response == JSON.parse("true")) {
-        setSubmitStatus(true);
-      } else {
-        setSubmitStatus(null);
-        setAlertOpen(true);
-      }
-    }
   };
 
 
