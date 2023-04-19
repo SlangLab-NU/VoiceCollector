@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, Button, Typography, Container, Paper, Stack, Grid } from "@mui/material";
+import { Box, Button, Typography, Container, Paper, Stack, Grid, Collapse } from "@mui/material";
 // import { makeStyles } from '@mui/styles';
 
 import SendIcon from '@mui/icons-material/Send';
@@ -23,6 +23,7 @@ export default function RecordMUI() {
   const [audioBlob, setAudioBlob] = useState(null);
   const [submitStatus, setSubmitStatus] = useState(null)
   const [data, setData] = useState([]);
+  const [allowSubmit, setAllowSubmit] = useState(false);
 
   const fetchData = async () => {
     try {
@@ -53,6 +54,7 @@ export default function RecordMUI() {
       setSection(data[promptNum + 1].section);
       setPrompt(data[promptNum + 1].prompt);
       setSubmitStatus(null);
+      setAllowSubmit(false);
       clearAudio();
     }
   }
@@ -63,11 +65,16 @@ export default function RecordMUI() {
       setPromptNum(promptNum - 1);
       setSection(data[promptNum - 1].section);
       setPrompt(data[promptNum - 1].prompt);
+      setSubmitStatus(null);
+      setAllowSubmit(false);
       clearAudio();
     }
   }
 
   const handleStopRecording = (audio) => {
+    if(audio != null){
+      setAllowSubmit(true);
+    }
     setAudioUrl(audio.url);
     setAudioBlob(audio.blob);
   };
@@ -99,7 +106,6 @@ export default function RecordMUI() {
       setSubmitStatus(null);
       setAlertOpen(true);
     }
-
   };
 
 
@@ -195,15 +201,17 @@ export default function RecordMUI() {
           {submitStatus ? "next" : "skip"}
         </Button>
         <Button
+          disabled = {!allowSubmit}
           variant="contained"
+          color={submitStatus == null? "primary" : "success"}
           endIcon={submitStatus == null ? <SendIcon />
             : (submitStatus ? <DoneIcon /> : <ErrorIcon />)}
           sx={{ ml: 2, mr: 4 }}
           onClick={handleSubmit}
         >
-          Submit
+          {submitStatus == null? "Submit" : "Submitted"}
         </Button>
-        {alertOpen && (
+        <Collapse in={alertOpen}>
           <Alert severity="error" onClose={() => setAlertOpen(false)}
             sx={{
               fontSize: '14px',
@@ -211,7 +219,8 @@ export default function RecordMUI() {
               width: '500px'
             }}>
             Submission failed. Please try again.
-          </Alert>)}
+          </Alert>
+        </Collapse>
       </Grid>
 
     </Container>
