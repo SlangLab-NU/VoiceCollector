@@ -27,6 +27,7 @@ export default function RecordMUI() {
   const [audioBlob, setAudioBlob] = useState(null);
   const [submitStatus, setSubmitStatus] = useState(null)
   const [data, setData] = useState([]);
+  const [allowSubmit, setAllowSubmit] = useState(false);
 
   const fetchData = async () => {
     try {
@@ -52,6 +53,7 @@ export default function RecordMUI() {
       setSection(data[promptNum + 1].section);
       setPrompt(data[promptNum + 1].prompt);
       setSubmitStatus(null);
+      setAllowSubmit(false);
     }
   }
 
@@ -61,10 +63,15 @@ export default function RecordMUI() {
       setPromptNum(promptNum - 1);
       setSection(data[promptNum - 1].section);
       setPrompt(data[promptNum - 1].prompt);
+      setSubmitStatus(null);
+      setAllowSubmit(false);
     }
   }
 
   const handleStopRecording = (audio) => {
+    if(audio != null){
+      setAllowSubmit(true);
+    }
     setAudioUrl(audio.url);
     setAudioBlob(audio.blob);
   };
@@ -72,27 +79,29 @@ export default function RecordMUI() {
   const handleSubmit = async () => {
     console.log(audioBlob);
     if (audioBlob == null) {
-      console.log("No valid audio file to submit")
-    }
-    const formData = new FormData();
-    const currentDate = new Date()
-    // Get a random number for session id
-    const rand = (Math.random() * 100);
-    const filename = "test" + rand + ".webm"
-
-    formData.append("session_id", rand);
-    formData.append("date", currentDate);
-    formData.append("ref_id", data[promptNum].ref_id);
-    formData.append("audio", audioBlob, filename);
-
-    const response = await fetch("http://127.0.0.1:5000/api/v1/speak/submit/" + filename, { method: 'POST', body: formData });
-    if (await response == JSON.parse("true")) {
-      setSubmitStatus(true);
-    } else {
-      setSubmitStatus(null);
+      console.log("No valid audio file to submit");
       setAlertOpen(true);
     }
-
+    else{
+      const formData = new FormData();
+      const currentDate = new Date()
+      // Get a random number for session id
+      const rand = (Math.random() * 100);
+      const filename = "test" + rand + ".webm"
+  
+      formData.append("session_id", rand);
+      formData.append("date", currentDate);
+      formData.append("ref_id", data[promptNum].ref_id);
+      formData.append("audio", audioBlob, filename);
+  
+      const response = await fetch("http://127.0.0.1:5000/api/v1/speak/submit/" + filename, { method: 'POST', body: formData });
+      if (await response == JSON.parse("true")) {
+        setSubmitStatus(true);
+      } else {
+        setSubmitStatus(null);
+        setAlertOpen(true);
+      }
+    }
   };
 
 
@@ -188,6 +197,7 @@ export default function RecordMUI() {
           {submitStatus ? "next" : "skip"}
         </Button>
         <Button
+          disabled = {!allowSubmit}
           variant="contained"
           endIcon={submitStatus == null ? <SendIcon />
             : (submitStatus ? <DoneIcon /> : <ErrorIcon />)}
