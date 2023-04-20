@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Box, Button, Typography, Container, Paper, Stack, Grid, Collapse } from "@mui/material";
+import CircularProgress from '@mui/material/CircularProgress';
 // import { makeStyles } from '@mui/styles';
 
 import SendIcon from '@mui/icons-material/Send';
@@ -84,6 +85,9 @@ export default function RecordMUI() {
       // TODO: show warning alert here
       console.log("No valid audio file to submit")
       return;
+    } else if (submitStatus != null){
+      // Do nothing if already submitted
+      return;
     }
     const formData = new FormData();
     // Get current date with format YYYY-MM-DD HH:MM:SS
@@ -97,10 +101,11 @@ export default function RecordMUI() {
     formData.append("ref_id", data[promptNum].ref_id);
     formData.append("audio", audioBlob, filename);
 
+    setSubmitStatus("submitting");
     const response = await fetch("http://127.0.0.1:5000/api/v1/speak/submit/" + filename, { method: 'POST', body: formData });
     
     if(response.status === 200){
-      setSubmitStatus(true);
+      setSubmitStatus("success");
     } else {
       // When submission failed, set status to back to empty and show alert
       setSubmitStatus(null);
@@ -198,19 +203,25 @@ export default function RecordMUI() {
           endIcon={<FastForwardIcon />}
           onClick={onSkip}
         >
-          {submitStatus ? "next" : "skip"}
+          {submitStatus === "success" ? "next" : "skip"}
         </Button>
-        <Button
-          disabled = {!allowSubmit}
-          variant="contained"
-          color={submitStatus == null? "primary" : "success"}
-          endIcon={submitStatus == null ? <SendIcon />
-            : (submitStatus ? <DoneIcon /> : <ErrorIcon />)}
-          sx={{ ml: 2, mr: 4 }}
-          onClick={handleSubmit}
-        >
-          {submitStatus == null? "Submit" : "Submitted"}
-        </Button>
+        {/* Don't submit when it's submitted */}
+        { submitStatus === "submitting" ?
+          <CircularProgress />
+          :
+          <Button
+            disabled = {!allowSubmit}
+            variant="contained"
+            color={submitStatus == null? "primary" : "success"}
+            endIcon={submitStatus == null ? <SendIcon />
+              : (submitStatus ? <DoneIcon /> : <ErrorIcon />)}
+            sx={{ ml: 2, mr: 4 }}
+            onClick={handleSubmit}
+          >
+            {submitStatus == null? "Submit" : "Submitted"}
+          </Button>
+        }
+        
         <Collapse in={alertOpen}>
           <Alert severity="error" onClose={() => setAlertOpen(false)}
             sx={{
