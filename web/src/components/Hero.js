@@ -24,15 +24,16 @@ function Hero() {
         >
             <Stack spacing={2}>
                 <Typography variant="h4" component="div">
-                    {/* <Box sx={{ fontFamily: 'Monospace', fontSize: 'h1.heading' }}> */}
-                        Donate Your Voice
-                    {/* </Box> */}
+                    Welcome to VoiceCollector
                 </Typography>
-                <Button variant="contained" href='/record'>Contribute Your Voice</Button>
-                <Button variant="outlined">Download the Database</Button>
-                <Button variant="text">Text</Button>
+                <Typography variant="h5" component="div">
+                    We try to understand how people with dysarthria speak
+                </Typography>
+                <Button variant="contained" href='/record'>Donate Your Voice</Button>
+                <Button variant="outlined">Download the Dataset</Button>
+                {/* <Button variant="text">Text</Button> */}
             </Stack>
-            <Particle />
+            {/* <Particle /> */}
         </div>
 
 
