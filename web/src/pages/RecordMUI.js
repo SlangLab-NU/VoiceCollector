@@ -25,10 +25,15 @@ export default function RecordMUI() {
   const [submitStatus, setSubmitStatus] = useState(null)
   const [data, setData] = useState([]);
   const [allowSubmit, setAllowSubmit] = useState(false);
-
+  
+  // Retrieves the api url and port number and combines them into one const
+  const appApiUrlandPort = process.env.REACT_APP_API_URL + ':' + process.env.REACT_APP_PORT_NUMBER
+  
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://127.0.0.1:5000/api/v1/speak/get_reference');
+      // Ensure a .env is in the web directory containing the api url and port number
+      const response = await axios.get(`${appApiUrlandPort}/api/v1/speak/get_reference`);
+      
       const data = response.data;
       setData(data);
       setSection(data[promptNum].section);
@@ -102,7 +107,7 @@ export default function RecordMUI() {
     formData.append("audio", audioBlob, filename);
 
     setSubmitStatus("submitting");
-    const response = await fetch("http://127.0.0.1:5000/api/v1/speak/submit/" + filename, { method: 'POST', body: formData });
+    const response = await fetch(`${appApiUrlandPort}/api/v1/speak/submit/` + filename, { method: 'POST', body: formData });
     
     if(response.status === 200){
       setSubmitStatus("success");

@@ -11,13 +11,12 @@ import threading
 
 lock = threading.Lock()
 
-
 def connect_to_ec2():
     """
     Connect to mysql in EC2 and return the connection.
     """
     # Load environment variables from .env file in root directory
-    dotenv_path = os.path.join(os.path.dirname(__file__), '..','.env')
+    dotenv_path = os.path.join(os.path.dirname(__file__), '..', '.env')
     load_dotenv(dotenv_path)
 
     # Read MySQL configuration from environment variables
@@ -38,12 +37,13 @@ def connect_to_ec2():
     )
     return conn
 
+
 def connect_to_s3():
     """
     Connect to S3 and return the bucket that stores audio files.
     """
     # Load environment variables from .env file in root directory
-    dotenv_path = os.path.join(os.path.dirname(__file__), '..','.env')
+    dotenv_path = os.path.join(os.path.dirname(__file__), '..', '.env')
     load_dotenv(dotenv_path)
 
     # Read S3 configuration from environment variables
@@ -61,6 +61,7 @@ def connect_to_s3():
     )
     return s3.Bucket(s3_bucket)
 
+
 def write_record(data, conn):
     """
     Write a record into the database.
@@ -72,7 +73,7 @@ def write_record(data, conn):
     lock.acquire()
     with conn.cursor() as cursor:
         cursor.execute(
-            query,((
+            query, ((
                 data.get("session_id"),
                 data.get("s3_url"),
                 data.get("date"),
@@ -81,11 +82,11 @@ def write_record(data, conn):
                 data.get("sequence_matcher"),
                 data.get("cer"),
                 data.get("metaphone_match"),
-                )),
+            )),
         )
     conn.commit()
     lock.release()
-    
+
 
 def write_file():
     """
@@ -106,4 +107,3 @@ def get_records(conn):
         cursor.execute('select * from audio')
         result = cursor.fetchall()
         return result
-
