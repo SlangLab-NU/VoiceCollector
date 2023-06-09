@@ -11,10 +11,6 @@ import threading
 
 lock = threading.Lock()
 
-# Task 2 is to create a function that adds items to a local db (sqlLite) instead of EC2
-# This is executed in speak.py
-
-
 def connect_to_ec2():
     """
     Connect to mysql in EC2 and return the connection.

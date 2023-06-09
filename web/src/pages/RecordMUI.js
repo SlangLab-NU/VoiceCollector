@@ -31,9 +31,8 @@ export default function RecordMUI() {
   
   const fetchData = async () => {
     try {
-      // Ensure .env is in the web directory
+      // Ensure a .env is in the web directory containing the api url and port number
       const response = await axios.get(`${appApiUrlandPort}/api/v1/speak/get_reference`);
-      // const response = await axios.get('http://127.0.0.1:5000/api/v1/speak/get_reference');
       
       const data = response.data;
       setData(data);
