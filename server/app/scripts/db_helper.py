@@ -8,11 +8,28 @@ from dotenv import load_dotenv
 import os
 import boto3
 import threading
+import sqlite3
+
 
 lock = threading.Lock()
 
 # Task 2 is to create a function that adds items to a local db (sqlLite) instead of EC2
 # This is executed in speak.py
+# connection = sqlite3.connect('database.db')
+# path = os.path.realpath(__file__)
+# dir = os.path.dirname(path)
+# dir = dir.replace('scripts', 'dbTables')
+# os.chdir(dir)
+
+# with open('schema.sql') as f:
+#     connection.executescript(f.read())
+
+# cur = connection.cursor()
+# # cur.execute("INSERT INTO posts (section) VALUES (?)",
+# #             ('First Post')
+# #             )
+# connection.commit()
+# connection.close()
 
 
 def connect_to_ec2():
