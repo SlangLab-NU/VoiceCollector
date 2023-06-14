@@ -10,6 +10,7 @@ import boto3
 import threading
 import sqlite3
 from .referencesDB import (references) 
+from flask import jsonify
 
 
 lock = threading.Lock()
@@ -118,11 +119,17 @@ def write_record(data, conn):
     lock.release()
 
 def get_db_connection():
+    """
+    Connect to local database (database.db) and returns connection
+    """
     conn = sqlite3.connect('database.db')
     conn.row_factory = sqlite3.Row
     return conn
 
 def write_local_record(data):
+    """
+    Connects audio recordings to local database (database.db) and writes metadata to audio table
+    """
     conn = get_db_connection()
     lock.acquire()
     # input values must be a tuple
@@ -147,39 +154,53 @@ def write_file():
     """
     pass
 
+
 def write_references_to_db():
+    """
+    Takes in json data from references.txt and populates the reference table
+    """
     with open('references.txt') as f:
         references_json = json.load(f)
-    # print(references_json)
     references = references_json.get("references")
-    # print(references.get("section"))
     conn = get_db_connection()
-    conn.execute("""INSERT INTO reference
-                    (section, prompt, promptnum, image_url) 
-                    VALUES (?, ?, ?, ?)""",
-                    (references.get("section"),
-                     references.get("prompt"),
-                     references.get("promptnum"),
-                     references.get("image_url")),)
+    cursor = conn.cursor()
+    for reference in references:
+        cursor.execute("""INSERT INTO reference
+                        (section, prompt, promptnum, image_url) 
+                        VALUES (?, ?, ?, ?)""",
+                        (reference.get("section"),
+                        reference.get("prompt"),
+                        reference.get("promptNum"),
+                        reference.get("image_url")),)
     conn.commit()
     conn.close()
 
-# def get_reference():
-#     write_references_to_db()
+
+def get_reference():
+    """
+    Fetches references from the database and returns a list of references as dictionaries
+    """
+
+    connect = get_db_connection()
+    cursor = connect.cursor()
+    cursor.execute('SELECT * FROM reference')
+    res = cursor.fetchall()
+    # fetchall for sqlite returns list of row objects, this step converts each row into a dictionary
+    references = [dict(row) for row in res]
+    connect.close()
+    
+    return references
 
 
-# Issue is mock data doesnt include all keys from table. Determine where the ec2 database gets that.
-def get_reference(conn):
-    write_references_to_db()
-    with conn.cursor() as cursor:
-        cursor.execute('select * from reference')
-        result = cursor.fetchall()
-        # print(result)
-        return result
+def get_records():
+    """
+    Fetches references from the database and returns a list of records as dictionaries
+    """
+    connect = get_db_connection()
+    cursor = connect.cursor()
+    cursor.execute('SELECT * FROM audio')
+    res = cursor.fetchall()
+    results = [dict(row) for row in res]
+    connect.close()
 
-
-def get_records(conn):
-    with conn.cursor() as cursor:
-        cursor.execute('select * from audio')
-        result = cursor.fetchall()
-        return result
+    return results

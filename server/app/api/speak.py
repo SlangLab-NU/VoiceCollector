@@ -9,7 +9,7 @@ import traceback
 import logging
 import mimetypes
 import pathlib
-
+import json
 import jsonschema
 from botocore.exceptions import ClientError
 from flask import Blueprint, current_app, jsonify, request
@@ -51,12 +51,17 @@ AUDIO_SCHEMA = {
 current_dir = pathlib.Path(__file__).parent.resolve()
 tmp_dir = current_dir.parent.parent / "tmp"
 
+# Write references to db
+# DB gets written here, resets each time... 
+# local_db = db_helper.connect_to_local_db()
+
 conn = db_helper.connect_to_ec2()
-local_db = db_helper.connect_to_local_db()
 s3 = db_helper.connect_to_s3()
 
 blueprint = Blueprint('speak', __name__, url_prefix="/speak")
 
+# References get written to db here every time at start
+db_helper.write_references_to_db()
 
 @blueprint.route('/get_reference')
 def get_reference_hanlder():
@@ -67,13 +72,11 @@ def get_reference_hanlder():
     Returns:
         _type_: _description_
     """
+    
     try:
-        with conn.cursor() as cursor:
-            lock.acquire()
-            cursor.execute('select * from reference')
-            result = cursor.fetchall()
-            lock.release()
-            return jsonify(result)
+        references = db_helper.get_reference()
+        return jsonify(references)
+
     except Exception as e:
         error_message = str(e)
         return jsonify({"error": error_message}), 500
@@ -88,13 +91,11 @@ def get_records():
     Returns:
         _type_: _description_
     """
+    # conn = db_helper.get_db_connection()
     try:
-        with conn.cursor() as cursor:
-            lock.acquire()
-            cursor.execute('select * from audio')
-            result = cursor.fetchall()
-            lock.release()
-            return jsonify(result)
+        records = db_helper.get_records()
+        return jsonify(records)
+
     except Exception as e:
         error_message = str(e)
         return jsonify({"error": error_message}), 500
@@ -155,8 +156,7 @@ def submit_handler(url):
     #     "ref_id": 3,
     # }
     data = dict(request.form)
-    print("From submit_handler")
-    print(data)
+
     data["s3_url"] = url
     data["ref_id"] = int(data["ref_id"])
     
@@ -180,8 +180,7 @@ def submit_handler(url):
         return jsonify(info), 400
 
     # Get intelligibility scores
-    # Mock with actual JSON instead of pulling from the DB
-    reference = db_helper.get_reference(conn)
+    reference = db_helper.get_reference()
     ref = [r["prompt"] for r in reference if r["ref_id"] == data["ref_id"]][0]
 
     y_pred = transcribe(model, [file_path])["transcriptions"][0]
