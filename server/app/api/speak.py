@@ -5,7 +5,7 @@ Speak API route handlers. They handle requests related to reference text, record
 
 
 
-
+import traceback
 import logging
 import mimetypes
 import pathlib
@@ -52,6 +52,7 @@ current_dir = pathlib.Path(__file__).parent.resolve()
 tmp_dir = current_dir.parent.parent / "tmp"
 
 conn = db_helper.connect_to_ec2()
+local_db = db_helper.connect_to_local_db()
 s3 = db_helper.connect_to_s3()
 
 blueprint = Blueprint('speak', __name__, url_prefix="/speak")
@@ -109,6 +110,8 @@ def write_record_route():
 
     try:
         db_helper.write_record(data, conn)
+        db_helper.write_local_record(data)
+        print("Write_Record_Route local occured")
         return jsonify({"result": "success"})
     except Exception as e:
         return jsonify({"result": "error", "message": str(e)}), 400
@@ -152,6 +155,8 @@ def submit_handler(url):
     #     "ref_id": 3,
     # }
     data = dict(request.form)
+    print("From submit_handler")
+    print(data)
     data["s3_url"] = url
     data["ref_id"] = int(data["ref_id"])
     
@@ -175,6 +180,7 @@ def submit_handler(url):
         return jsonify(info), 400
 
     # Get intelligibility scores
+    # Mock with actual JSON instead of pulling from the DB
     reference = db_helper.get_reference(conn)
     ref = [r["prompt"] for r in reference if r["ref_id"] == data["ref_id"]][0]
 
@@ -196,6 +202,8 @@ def submit_handler(url):
     # Write record to database
     try:
         db_helper.write_record(data, conn)
+        db_helper.write_local_record(data)
         return jsonify(msg="Success: audio submitted"), 200
     except Exception as e:
+        print(traceback.format_exc())
         return jsonify(msg="Error: " + str(e)), 400
