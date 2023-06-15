@@ -103,7 +103,6 @@ def write_local_record(data):
     Connects audio recordings to local database (database.db) and writes metadata to audio table
     """
     conn = get_db_connection()
-    lock.acquire()
     # input values must be a tuple
     conn.execute("""INSERT INTO audio 
                     (session_id, s3_url, date, validated, ref_id, sequence_matcher, cer, metaphone_match) 
@@ -117,7 +116,6 @@ def write_local_record(data):
             data.get("cer"),
             data.get("metaphone_match")),)
     conn.commit()
-    lock.release()
     conn.close()
 
 def write_file():
