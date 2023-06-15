@@ -61,7 +61,7 @@ s3 = db_helper.connect_to_s3()
 blueprint = Blueprint('speak', __name__, url_prefix="/speak")
 
 # References get written to db here every time at start
-db_helper.write_references_to_db()
+# db_helper.write_references_to_db()
 
 @blueprint.route('/get_reference')
 def get_reference_hanlder():
@@ -91,7 +91,6 @@ def get_records():
     Returns:
         _type_: _description_
     """
-    # conn = db_helper.get_db_connection()
     try:
         records = db_helper.get_records()
         return jsonify(records)
@@ -112,7 +111,6 @@ def write_record_route():
     try:
         db_helper.write_record(data, conn)
         db_helper.write_local_record(data)
-        print("Write_Record_Route local occured")
         return jsonify({"result": "success"})
     except Exception as e:
         return jsonify({"result": "error", "message": str(e)}), 400

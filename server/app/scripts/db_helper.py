@@ -9,37 +9,9 @@ import os
 import boto3
 import threading
 import sqlite3
-from .referencesDB import (references) 
-from flask import jsonify
 
 
 lock = threading.Lock()
-
-# Task 2 is to create a function that adds items to a local db (sqlLite) instead of EC2
-# This is executed in speak.py
-
-def connect_to_local_db():
-    connection = sqlite3.connect('database.db')
-    # Changes directory to access schema table
-    # path = os.path.realpath(__file__)
-    # dir = os.path.dirname(path)
-    # dir = dir.replace('scripts', 'dbTables')
-    # os.chdir(dir)
-
-    with open('schema.sql') as f:
-        connection.executescript(f.read())
-
-    cursor = connection.cursor()
-    # Practice post
-    # cursor.execute("INSERT INTO audio (session_id, s3_url, date, validated, ref_id, sequence_matcher, cer, metaphone_match) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-    #             ('1', '1', 'First Post', '', '1', '1', '1.0', '1.0', '1.0')
-    #             )
-    # for row in cursor.execute("select * from audio"):
-    #     print(row)
-    connection.commit()
-    connection.close()
-
-    return cursor
 
 
 def connect_to_ec2():
