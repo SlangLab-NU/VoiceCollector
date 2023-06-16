@@ -12,8 +12,6 @@ import sqlite3
 
 
 lock = threading.Lock()
-
-
 def connect_to_ec2():
     """
     Connect to mysql in EC2 and return the connection.
