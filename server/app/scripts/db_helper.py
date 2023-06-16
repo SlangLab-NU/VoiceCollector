@@ -9,6 +9,12 @@ import os
 import boto3
 import threading
 import sqlite3
+import pathlib
+
+current_dir = pathlib.Path(__file__).parent.resolve()
+config_path = current_dir / ".." / "config.json"
+config = json.loads(config_path.read_text())
+config = config["DATABASE"]
 
 
 lock = threading.Lock()
@@ -92,7 +98,7 @@ def get_db_connection():
     """
     Connect to local database (database.db) and returns connection
     """
-    conn = sqlite3.connect('database.db')
+    conn = sqlite3.connect(config['database'])
     conn.row_factory = sqlite3.Row
     return conn
 
@@ -127,7 +133,7 @@ def write_references_to_db():
     """
     Takes in json data from references.txt and populates the reference table
     """
-    with open('references.txt') as f:
+    with open(config['references']) as f:
         references_json = json.load(f)
     references = references_json.get("references")
     conn = get_db_connection()
