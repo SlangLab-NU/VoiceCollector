@@ -6,7 +6,7 @@ node_modules
 .pnp.js
 
 # database
-**/app/database.db
+*.db
 
 # testing
 /coverage

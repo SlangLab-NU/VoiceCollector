@@ -51,9 +51,6 @@ AUDIO_SCHEMA = {
 current_dir = pathlib.Path(__file__).parent.resolve()
 tmp_dir = current_dir.parent.parent / "tmp"
 
-# Write references to db
-# DB gets written here, resets each time... 
-# local_db = db_helper.connect_to_local_db()
 
 conn = db_helper.connect_to_ec2()
 s3 = db_helper.connect_to_s3()
@@ -109,7 +106,7 @@ def write_record_route():
         return jsonify({"result": "error", "message": str(e)}), 400
 
     try:
-        db_helper.write_record(data, conn)
+        db_helper.write_record(data)
         db_helper.write_local_record(data)
         return jsonify({"result": "success"})
     except Exception as e:

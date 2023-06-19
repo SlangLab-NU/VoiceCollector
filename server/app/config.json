@@ -14,6 +14,7 @@
     "DATABASE":{
         "database": "database.db",
         "schema": "schema.sql",
-        "references": "references.txt"
+        "references": "references.txt",
+        "db_type": "local"
     }
 }
