@@ -5,11 +5,11 @@ Speak API route handlers. They handle requests related to reference text, record
 
 
 
-
+import traceback
 import logging
 import mimetypes
 import pathlib
-
+import json
 import jsonschema
 from botocore.exceptions import ClientError
 from flask import Blueprint, current_app, jsonify, request
@@ -51,11 +51,12 @@ AUDIO_SCHEMA = {
 current_dir = pathlib.Path(__file__).parent.resolve()
 tmp_dir = current_dir.parent.parent / "tmp"
 
-conn = db_helper.connect_to_ec2()
 s3 = db_helper.connect_to_s3()
 
 blueprint = Blueprint('speak', __name__, url_prefix="/speak")
 
+# References get written to db here every time at start
+# db_helper.write_references_to_db()
 
 @blueprint.route('/get_reference')
 def get_reference_hanlder():
@@ -66,13 +67,11 @@ def get_reference_hanlder():
     Returns:
         _type_: _description_
     """
+    
     try:
-        with conn.cursor() as cursor:
-            lock.acquire()
-            cursor.execute('select * from reference')
-            result = cursor.fetchall()
-            lock.release()
-            return jsonify(result)
+        references = db_helper.get_reference()
+        return jsonify(references)
+
     except Exception as e:
         error_message = str(e)
         return jsonify({"error": error_message}), 500
@@ -88,12 +87,9 @@ def get_records():
         _type_: _description_
     """
     try:
-        with conn.cursor() as cursor:
-            lock.acquire()
-            cursor.execute('select * from audio')
-            result = cursor.fetchall()
-            lock.release()
-            return jsonify(result)
+        records = db_helper.get_records()
+        return jsonify(records)
+
     except Exception as e:
         error_message = str(e)
         return jsonify({"error": error_message}), 500
@@ -108,7 +104,7 @@ def write_record_route():
         return jsonify({"result": "error", "message": str(e)}), 400
 
     try:
-        db_helper.write_record(data, conn)
+        db_helper.write_record(data)
         return jsonify({"result": "success"})
     except Exception as e:
         return jsonify({"result": "error", "message": str(e)}), 400
@@ -152,6 +148,7 @@ def submit_handler(url):
     #     "ref_id": 3,
     # }
     data = dict(request.form)
+
     data["s3_url"] = url
     data["ref_id"] = int(data["ref_id"])
     
@@ -175,7 +172,7 @@ def submit_handler(url):
         return jsonify(info), 400
 
     # Get intelligibility scores
-    reference = db_helper.get_reference(conn)
+    reference = db_helper.get_reference()
     ref = [r["prompt"] for r in reference if r["ref_id"] == data["ref_id"]][0]
 
     y_pred = transcribe(model, [file_path])["transcriptions"][0]
@@ -195,7 +192,8 @@ def submit_handler(url):
     
     # Write record to database
     try:
-        db_helper.write_record(data, conn)
+        db_helper.write_record(data)
         return jsonify(msg="Success: audio submitted"), 200
     except Exception as e:
+        print(traceback.format_exc())
         return jsonify(msg="Error: " + str(e)), 400

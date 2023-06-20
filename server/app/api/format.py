@@ -10,6 +10,7 @@ blueprint = Blueprint('format', __name__, url_prefix="/format")
 current_dir = pathlib.Path(__file__).parent.resolve()
 config_path = current_dir / ".." / "config.json"
 config = json.loads(config_path.read_text())
+config = config["APP"]
 tmp_dir = current_dir.parent.parent / "tmp"
 
 if not tmp_dir.exists():

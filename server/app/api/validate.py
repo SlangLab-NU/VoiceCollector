@@ -23,7 +23,7 @@ current_dir = pathlib.Path(__file__).parent.resolve()
 config_path = current_dir / ".." / "config.json"
 with open(config_path, "r") as f:
     config = json.load(f)
-
+config = config["APP"]
 
 def check_suffix(file):
     suffix = file.filename.split(".")[-1]
