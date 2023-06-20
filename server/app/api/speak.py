@@ -51,8 +51,6 @@ AUDIO_SCHEMA = {
 current_dir = pathlib.Path(__file__).parent.resolve()
 tmp_dir = current_dir.parent.parent / "tmp"
 
-
-conn = db_helper.connect_to_ec2()
 s3 = db_helper.connect_to_s3()
 
 blueprint = Blueprint('speak', __name__, url_prefix="/speak")
@@ -107,7 +105,6 @@ def write_record_route():
 
     try:
         db_helper.write_record(data)
-        db_helper.write_local_record(data)
         return jsonify({"result": "success"})
     except Exception as e:
         return jsonify({"result": "error", "message": str(e)}), 400
@@ -195,8 +192,7 @@ def submit_handler(url):
     
     # Write record to database
     try:
-        db_helper.write_record(data, conn)
-        db_helper.write_local_record(data)
+        db_helper.write_record(data)
         return jsonify(msg="Success: audio submitted"), 200
     except Exception as e:
         print(traceback.format_exc())

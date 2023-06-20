@@ -16,7 +16,7 @@ config_path = current_dir / ".." / "config.json"
 with open(config_path, "r") as f:
     config = json.load(f)
 config = config["DATABASE"]
-
+db_type = config["db_type"]
 
 lock = threading.Lock()
 def connect_to_ec2():
@@ -84,8 +84,6 @@ def connect_to_db():
     Merges the db connections for ec2, S3 and local databases. Pulls db_type variable from config.json
     identifying which db type the connection is being made to and returns that connection
     """
-    db_type = config["db_type"]
-
     if db_type == "ec2":
         return connect_to_ec2()
     elif db_type == "s3":
@@ -105,42 +103,37 @@ def write_record(data):
                 sequence_matcher, cer, metaphone_match)
                 VALUES (%s,%s,%s,%s,%s,%s,%s,%s)"""
     lock.acquire()
-    with conn.cursor() as cursor:
-        cursor.execute(
-            query, ((
-                data.get("session_id"),
-                data.get("s3_url"),
-                data.get("date"),
-                data.get("validated"),
-                data.get("ref_id"),
-                data.get("sequence_matcher"),
-                data.get("cer"),
-                data.get("metaphone_match"),
-            )),
-        )
+
+    if db_type == "ec2":
+        with conn.cursor() as cursor:
+            cursor.execute(
+                query, ((
+                    data.get("session_id"),
+                    data.get("s3_url"),
+                    data.get("date"),
+                    data.get("validated"),
+                    data.get("ref_id"),
+                    data.get("sequence_matcher"),
+                    data.get("cer"),
+                    data.get("metaphone_match"),
+                )),
+            )
+    else:
+        conn.execute("""INSERT INTO audio 
+                    (session_id, s3_url, date, validated, ref_id, sequence_matcher, cer, metaphone_match) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)""", 
+                    (data.get("session_id"),
+                    data.get("s3_url"),
+                    data.get("date"),
+                    data.get("validated"),
+                    data.get("ref_id"),
+                    data.get("sequence_matcher"),
+                    data.get("cer"),
+                    data.get("metaphone_match")),
+            )          
     conn.commit()
     lock.release()
 
-
-def write_local_record(data):
-    """
-    Connects audio recordings to local database (database.db) and writes metadata to audio table
-    """
-    conn = connect_to_local_db()
-    # input values must be a tuple
-    conn.execute("""INSERT INTO audio 
-                    (session_id, s3_url, date, validated, ref_id, sequence_matcher, cer, metaphone_match) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)""", 
-            (data.get("session_id"),
-            data.get("s3_url"),
-            data.get("date"),
-            data.get("validated"),
-            data.get("ref_id"),
-            data.get("sequence_matcher"),
-            data.get("cer"),
-            data.get("metaphone_match")),)
-    conn.commit()
-    conn.close()
 
 def write_file():
     """
