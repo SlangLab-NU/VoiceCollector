@@ -10,6 +10,9 @@ import boto3
 import threading
 import sqlite3
 import pathlib
+from server.app.log import logger as logger
+
+logger = logger.load_log()
 
 current_dir = pathlib.Path(__file__).parent.resolve()
 config_path = current_dir / ".." / "config.json"

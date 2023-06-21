@@ -1,7 +1,11 @@
 from pathlib import Path
+from server.app.log import logger as logger
+
+logger = logger.load_log()
 
 current_dir = Path(__file__).parent.resolve()
 server_dir = current_dir.parent.parent
+
 
 F1_session1 = server_dir /  "F" / "F01" / "Session1"
 F3_session1 = server_dir /  "F" / "F03" / "Session1"
@@ -25,5 +29,5 @@ for session_path in [F1_session1, F3_session1, F3_session2, F3_session3, F4_sess
 
     for i, p in enumerate(prompts):
         if "xxx" in p:
-            print(p.strip(), prompt_files[i])
+            logger.info(f"{p.strip()}, {prompt_files[i]}")
 
