@@ -4,6 +4,9 @@ import sys
 import wave
 
 import webrtcvad
+from server.app.log import logger as logger
+
+logger = logger.load_log()
 
 voiced_count = 0
 total_count = 0
@@ -158,10 +161,10 @@ def get_silence_ratio(vad_mode_from_config, f):
         # print(' Writing %s' % (path,))
         # write_wave(path, segment, sample_rate)
         pass
-    print("Voiced frames count: ", voiced_count)
-    print("Total frames count: ", total_count)
+    logger.info(f"Voiced frames count: {voiced_count}")
+    logger.info(f"Total frames count: {total_count}")
     silence_ratio = 1 - voiced_count / total_count
-    print("Silence ratio: ", round(silence_ratio, 2))
+    logger.info(f"Silence ratio: {round(silence_ratio, 2)}")
     return voiced_count, total_count, silence_ratio
     # if vaild_speech_count/total_count >= 0.1:
     #   print("Speech pause check passed")

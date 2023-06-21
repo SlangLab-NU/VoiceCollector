@@ -18,6 +18,9 @@ from ..scripts import db_helper, intel_score
 from .format import convert_to_wav_handler
 from .intel import model, transcribe
 from .validate import check_audio_format, check_volume_pause
+from server.app.log import logger as logger
+
+logger = logger.load_log()
 
 import threading
 
@@ -195,5 +198,5 @@ def submit_handler(url):
         db_helper.write_record(data)
         return jsonify(msg="Success: audio submitted"), 200
     except Exception as e:
-        print(traceback.format_exc())
+        logger.info(traceback.format_exc())
         return jsonify(msg="Error: " + str(e)), 400

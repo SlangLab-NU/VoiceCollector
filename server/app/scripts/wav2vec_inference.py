@@ -1,4 +1,7 @@
 from huggingsound import SpeechRecognitionModel
+from server.app.log import logger as logger
+
+logger = logger.load_log()
 
 model = SpeechRecognitionModel("jonatasgrosman/wav2vec2-large-xlsr-53-english")
 # audio_paths = ["/path/to/file.mp3", "/path/to/another_file.wav"]
@@ -18,7 +21,7 @@ prompts = [
     "He played basketball there while working toward a law degree."
 ]
 transcriptions = model.transcribe(audio_paths)
-print([x["transcription"] for x in transcriptions])
+logger.info(f'{[x["transcription"] for x in transcriptions]}')
 
 # references = [{"path": audio_paths[i], "transcription": prompts[i]} for i in range(len(audio_paths))]
 # evaluation = model.evaluate(references)
