@@ -3,7 +3,7 @@
 Starter project template for running a Flask-based application as a Web API on
 Google App Engine Standard (Python 3.7 Runtime).
 
-The application structure of this starter kit is loosely inspired by the API chapter of Miguel Grinberg's 
+The application structure of this starter kit is loosely inspired by the API chapter of Miguel Grinberg's
 [Flask Web Development (Second Edition)](http://oreilly.com/catalog/0636920089056) book,
 with the companion repo at https://github.com/miguelgrinberg/flasky
 
@@ -21,7 +21,19 @@ pip install -r requirements-dev.txt
 
 Install ffmpeg (required by `pydub` to read audio formats other than wav), follow <https://github.com/jiaaro/pydub#getting-ffmpeg-set-up>.
 
-To run the app in debug mode,
+Initialize the local db
+
+```bash
+python init_db.py
+```
+
+To run app, note where the create_app() method is
+
+```bash
+export FLASK_APP=__init__.py
+```
+
+Then to run the app in debug mode,
 
 ```bash
 flask run --debug
@@ -58,12 +70,10 @@ The starter kit does not yet include the following (PRs are welcome):
 - Sample integration with Cloud Firestore
 - Sample auth integration
 
-
 ## Development Setup Requirements
 
 - Python 3.7 or later
 - Windows, macOS, and Linux development environments are supported
-
 
 ## Development Setup Instructions
 
@@ -71,11 +81,10 @@ Assuming the development setup requirements above have been satisfied,
 run the following in a terminal (git-bash is recommended on Windows) after cloning the repo
 to set up your local development environment.
 
-```bash 
+```bash
 # Install local dev requirements, ideally in an isolated Python 3.7 (or later) environment
 pip install -r requirements-dev.txt
 ```
-
 
 ## Running the Development Server
 
@@ -98,9 +107,9 @@ The sample hello endpoint is at `http://$HOST:$PORT/api/v1/hello/world`
 
 ### Customizing the HTTP Port
 
-The app runs on port 8000 (for gunicorn) and 8080 (for waitress) by default.  
+The app runs on port 8000 (for gunicorn) and 8080 (for waitress) by default.
 
-To customize the port, pass the `--bind` option (for gunicorn) 
+To customize the port, pass the `--bind` option (for gunicorn)
 or the `--port` option (for Waitress) as in the following examples...
 
 ```bash
@@ -110,7 +119,6 @@ gunicorn --bind=:9000 app:application --reload
 # Set Waitress port to 9000
 waitress-serve --port=9000 app:application
 ```
-
 
 ## Running Tests
 
@@ -125,7 +133,6 @@ pytest tests/test_api.py::test_hello
 
 ```
 
-
 ## Google Cloud Setup Instructions
 
 The following steps only need to be performed once per local development environment...
@@ -138,7 +145,6 @@ The following steps only need to be performed once per local development environ
 6. Set the active project (created in step 1) via `gcloud config set project PROJECT_ID`
 7. If on Windows or macOS, install the App Engine components via `gcloud components install app-engine-python`
 
-
 ## Deploying to Google App Engine
 
 Ensure the project you want to deploy is selected via `gcloud config set project PROJECT_ID`, then
@@ -148,7 +154,6 @@ run the following command at the repo root (where the `app.yaml` config file is 
 # Deploy to App Engine
 gcloud app deploy
 ```
-
 
 ## CI/CD
 
@@ -168,7 +173,6 @@ the repo's master branch:
 
 A Continuous Deployment (CD) pipeline via GitHub Actions will likely land in this starter kit to complement the
 CI workflow noted above.
-
 
 ## Prior Art
 
