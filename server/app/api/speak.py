@@ -6,10 +6,8 @@ Speak API route handlers. They handle requests related to reference text, record
 
 
 import traceback
-import logging
 import mimetypes
 import pathlib
-import json
 import jsonschema
 from botocore.exceptions import ClientError
 from flask import Blueprint, current_app, jsonify, request
@@ -18,7 +16,7 @@ from ..scripts import db_helper, intel_score
 from .format import convert_to_wav_handler
 from .intel import model, transcribe
 from .validate import check_audio_format, check_volume_pause
-from server.app.log import logger as logger
+from ..log import logger
 
 logger = logger.load_log()
 

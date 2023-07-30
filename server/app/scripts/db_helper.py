@@ -10,7 +10,8 @@ import boto3
 import threading
 import sqlite3
 import pathlib
-from server.app.log import logger as logger
+from ..log import logger
+
 
 logger = logger.load_log()
 

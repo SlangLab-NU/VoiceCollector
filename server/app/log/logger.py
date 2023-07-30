@@ -1,8 +1,22 @@
 import sys
+import json
 import logging
 
 
-# TODO add error handling or debug output
+def load_log_config():
+    """
+    Load logging configuration from config.json with error handling.
+    """
+    try:
+        with open('config.json', 'r') as f:
+            config = json.load(f)
+        config = config['LOGGING']
+    except Exception as e:
+        print('Failed to load logging configuration from config.json.')
+        print(e)
+        sys.exit(1)
+    return config
+
 def load_log():
 
     log_format = (
