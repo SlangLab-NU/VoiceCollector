@@ -107,12 +107,18 @@ export default function RecordMUI() {
     formData.append("audio", audioBlob, filename);
 
     setSubmitStatus("submitting");
-    const response = await fetch(`${appApiUrlandPort}/api/v1/speak/submit/` + filename, { method: 'POST', body: formData });
-    
-    if(response.status === 200){
-      setSubmitStatus("success");
-    } else {
-      // When submission failed, set status to back to empty and show alert
+    try {
+      const response = await fetch(`${appApiUrlandPort}/api/v1/speak/submit/` + filename, { method: 'POST', body: formData });
+      
+      if(response.status === 200){
+        setSubmitStatus("success");
+      } else {
+        // When submission failed, set status to back to empty and show alert
+        setSubmitStatus(null);
+        setAlertOpen(true);
+      }
+    } catch (error) {
+      console.error('Error submitting data:', error);
       setSubmitStatus(null);
       setAlertOpen(true);
     }
