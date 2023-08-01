@@ -10,7 +10,14 @@ import boto3
 import threading
 import sqlite3
 import pathlib
-from ..log import logger
+
+try:
+    # Try an absolute import first
+    from log import logger
+except ModuleNotFoundError:
+    # If the absolute import fails, fallback to a relative import
+    # This is for running flask in debug mode in its own environment
+    from ..log import logger
 
 
 logger = logger.load_log()

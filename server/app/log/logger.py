@@ -19,22 +19,3 @@ def load_log():
         print('Failed to load logging configuration from logging_config.yaml.')
         print(e)
         sys.exit(1)
-
-# def load_log():
-
-#     log_format = (
-#         '%(asctime)s - '
-#         '%(name)s - '
-#         '%(filename)s - '
-#         '%(lineno)s - '
-#         '%(funcName)s - '
-#         '%(levelname)s - '
-#         '%(message)s'
-#     )
-#     handlers = [logging.StreamHandler(sys.stdout)]
-#     logging.basicConfig(level=logging.INFO,
-#                         handlers=handlers,
-#                         format=log_format)
-#     logger = logging.getLogger('VoiceCollectorEntry')
-#     logger.setLevel(logging.INFO)
-#     return logger

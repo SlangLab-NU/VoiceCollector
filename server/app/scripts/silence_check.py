@@ -2,7 +2,6 @@ import collections
 import contextlib
 import sys  
 import wave
-
 import webrtcvad
 from ..log import logger
 
