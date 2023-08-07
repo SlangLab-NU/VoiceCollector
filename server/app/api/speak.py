@@ -12,9 +12,8 @@ import jsonschema
 from botocore.exceptions import ClientError
 from flask import Blueprint, current_app, jsonify, request
 
-from ..scripts import db_helper, intel_score
+from ..scripts import db_helper
 from .format import convert_to_wav_handler
-from .intel import model, transcribe
 from .validate import check_audio_format, check_volume_pause
 from ..log import logger
 
@@ -30,21 +29,13 @@ AUDIO_SCHEMA = {
         "session_id": {"type": "string"},
         "s3_url": {"type": "string"},
         "date": {"type": "string", "format": "date-time"},
-        "validated": {"type": "boolean"},
-        "ref_id": {"type": "integer"},
-        "sequence_matcher": {"type": "number"},
-        "cer": {"type": "number"},
-        "metaphone_match": {"type": "number"}
+        "ref_id": {"type": "integer"}
     },
     "required": [
         "session_id",
         "s3_url",
         "date",
-        "validated",
-        "ref_id",
-        "sequence_matcher",
-        "cer",
-        "metaphone_match"
+        "ref_id"
     ],
     "additionalProperties": False
 }
@@ -171,17 +162,6 @@ def submit_handler(url):
     result, info = check_volume_pause(str(file_path))
     if not result:
         return jsonify(info), 400
-
-    # Get intelligibility scores
-    reference = db_helper.get_reference()
-    ref = [r["prompt"] for r in reference if r["ref_id"] == data["ref_id"]][0]
-
-    y_pred = transcribe(model, [file_path])["transcriptions"][0]
-    scores = intel_score.evaluate(y_pred, ref)
-
-    data["validated"] = True
-    for k, v in scores.items():
-        data[k] = v
     
     # Upload file to S3 bucket
     try:
