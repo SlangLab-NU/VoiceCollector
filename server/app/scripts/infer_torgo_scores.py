@@ -4,7 +4,9 @@ from re import A
 import intel_score
 from huggingsound import SpeechRecognitionModel
 from pydub import AudioSegment
+from ..log import logger
 
+logger = logger.load_log()
 
 model = SpeechRecognitionModel("jonatasgrosman/wav2vec2-large-xlsr-53-english")
 
@@ -92,10 +94,7 @@ for voice_dir in server_dir.iterdir():
                 for key in scores:
                     total_scores[key].extend(scores[key])
 
-            print(session_path) 
-            print("Number of broken files:", broken_count)
+            logger.info(session_path)
+            logger.info(f"Number of broken files: {broken_count}")
             for key, value in total_scores.items():
-                print(f"{key}: {sum(value) / len(value)}")
-            print()
-
-
+                logger.info(f"{key}: {sum(value) / len(value)}")

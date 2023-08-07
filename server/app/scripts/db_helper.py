@@ -11,6 +11,17 @@ import threading
 import sqlite3
 import pathlib
 
+try:
+    # Try an absolute import first
+    from log import logger
+except ModuleNotFoundError:
+    # If the absolute import fails, fallback to a relative import
+    # This is for running flask in debug mode in its own environment
+    from ..log import logger
+
+
+logger = logger.load_log()
+
 current_dir = pathlib.Path(__file__).parent.resolve()
 config_path = current_dir / ".." / "config.json"
 with open(config_path, "r") as f:

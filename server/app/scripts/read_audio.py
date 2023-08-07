@@ -1,5 +1,8 @@
 from pydub import AudioSegment
 from pathlib import Path
+from ..log import logger
+
+logger = logger.load_log()
 
 folder = Path(__file__).absolute().parent.parent.parent / "tests" / "samples"
 
@@ -10,16 +13,16 @@ def read_audio(file):
     # sound = AudioSegment.from_wav(path)
     sound = AudioSegment.from_file(path)
 
-    print("Channels: ", sound.channels)
-    print("Frame Rate: ", sound.frame_rate)
-    print("Sample width: ", sound.sample_width)
+    logger.info(f"Channels: {sound.channels}")
+    logger.info(f"Frame Rate: {sound.frame_rate}")
+    logger.info(f"Sample width: {sound.sample_width}")
     
     sound = sound.set_sample_width(2)
-    print("Sample width: ", sound.sample_width)
+    logger.info(f"Sample width: {sound.sample_width}")
     
     
     # sound.export(folder / "normal.wav", format="wav")
-    print(sound)
+    logger.info(f"{sound}")
     return sound
 
 read_audio("")
