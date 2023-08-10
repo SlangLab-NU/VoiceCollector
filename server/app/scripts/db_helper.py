@@ -6,7 +6,7 @@ import json
 import pymysql
 from dotenv import load_dotenv
 import os
-import boto3
+from minio import Minio
 import threading
 import sqlite3
 import pathlib
@@ -66,19 +66,22 @@ def connect_to_s3():
     load_dotenv(dotenv_path)
 
     # Read S3 configuration from environment variables
+    s3_hostname = os.environ.get('S3_HOSTNAME')
     s3_access_key = os.environ.get('S3_ACCESS_KEY')
     s3_secret_key = os.environ.get('S3_SECRET_KEY')
     s3_bucket = os.environ.get('S3_BUCKET')
     region_name = os.environ.get('REGION_NAME')
-
+    secure = os.environ.get('SECURE')
     # Create a S3 connection
-    s3 = boto3.resource(
-        service_name='s3',
-        region_name=region_name,
-        aws_access_key_id=s3_access_key,
-        aws_secret_access_key=s3_secret_key
+    client = Minio(
+        endpoint=s3_hostname,
+        access_key=s3_access_key,
+        secret_key=s3_secret_key,
+        region=region_name,
+        secure=False,
     )
-    return s3.Bucket(s3_bucket)
+
+    return client, s3_bucket
 
 
 def connect_to_local_db():
