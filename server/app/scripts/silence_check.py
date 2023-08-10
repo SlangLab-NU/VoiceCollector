@@ -156,7 +156,12 @@ def get_silence_ratio(vad_mode_from_config, f):
     vad.set_mode(vad_mode_from_config)
     frames = frame_generator(30, audio, sample_rate)
     frames = list(frames)
-    _ = vad_collector(sample_rate, 30, 300, vad, frames)
+    segments = vad_collector(sample_rate, 30, 300, vad, frames)
+    for i, segment in enumerate(segments):
+        # path = 'drive/MyDrive/Capstone/chunk-%002d.wav' % (i,)
+        # print(' Writing %s' % (path,))
+        # write_wave(path, segment, sample_rate)
+        pass
     logger.info(f"Voiced frames count: {voiced_count}")
     logger.info(f"Total frames count: {total_count}")
     silence_ratio = 1 - voiced_count / total_count

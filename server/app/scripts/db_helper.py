@@ -110,9 +110,8 @@ def write_record(data):
     conn = connect_to_db()
 
     query = """INSERT INTO audio (
-                session_id, s3_url, date, validated, ref_id, 
-                sequence_matcher, cer, metaphone_match)
-                VALUES (%s,%s,%s,%s,%s,%s,%s,%s)"""
+                session_id, s3_url, date, ref_id)
+                VALUES (%s,%s,%s,%s)"""
     lock.acquire()
 
     if db_type == "ec2":
@@ -122,25 +121,17 @@ def write_record(data):
                     data.get("session_id"),
                     data.get("s3_url"),
                     data.get("date"),
-                    data.get("validated"),
-                    data.get("ref_id"),
-                    data.get("sequence_matcher"),
-                    data.get("cer"),
-                    data.get("metaphone_match"),
+                    data.get("ref_id")
                 )),
             )
     else:
         conn.execute("""INSERT INTO audio 
-                    (session_id, s3_url, date, validated, ref_id, sequence_matcher, cer, metaphone_match) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)""", 
+                    (session_id, s3_url, date, ref_id) 
+                    VALUES (?, ?, ?, ?)""",
                     (data.get("session_id"),
                     data.get("s3_url"),
                     data.get("date"),
-                    data.get("validated"),
-                    data.get("ref_id"),
-                    data.get("sequence_matcher"),
-                    data.get("cer"),
-                    data.get("metaphone_match")),
+                    data.get("ref_id")),
             )          
     conn.commit()
     lock.release()

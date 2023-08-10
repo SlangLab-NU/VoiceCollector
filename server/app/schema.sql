@@ -15,9 +15,5 @@ CREATE TABLE audio (
     session_id VARCHAR(128) NOT NULL,
     s3_url VARCHAR(45) NOT NULL,
     date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    validated INTEGER(1) DEFAULT NULL,
-    ref_id INTEGER(11) NOT NULL,
-    sequence_matcher REAL NOT NULL,
-    cer REAL NOT NULL,
-    metaphone_match REAL NOT NULL
+    ref_id INTEGER(11) NOT NULL
 );
