@@ -3,7 +3,6 @@ Functions that performs CRUD operations in database and handles file storage.
 
 """
 import json
-import pymysql
 from dotenv import load_dotenv
 import os
 from minio import Minio
@@ -30,31 +29,6 @@ config = config["DATABASE"]
 db_type = config["db_type"]
 
 lock = threading.Lock()
-def connect_to_ec2():
-    """
-    Connect to mysql in EC2 and return the connection.
-    """
-    # Load environment variables from .env file in root directory
-    dotenv_path = os.path.join(os.path.dirname(__file__), '..', '.env')
-    load_dotenv(dotenv_path)
-
-    # Read MySQL configuration from environment variables
-    mysql_host = os.environ.get('MYSQL_HOST')
-    mysql_port = os.environ.get('MYSQL_PORT')
-    mysql_user = os.environ.get('MYSQL_USER')
-    mysql_password = os.environ.get('MYSQL_PASSWORD')
-    mysql_db = os.environ.get('MYSQL_DB')
-
-    # Create a MySQL connection
-    conn = pymysql.connect(
-        host=mysql_host,
-        port=int(mysql_port),
-        user=mysql_user,
-        password=mysql_password,
-        db=mysql_db,
-        cursorclass=pymysql.cursors.DictCursor
-    )
-    return conn
 
 
 def connect_to_s3():
@@ -98,9 +72,7 @@ def connect_to_db():
     Merges the db connections for ec2, S3 and local databases. Pulls db_type variable from config.json
     identifying which db type the connection is being made to and returns that connection
     """
-    if db_type == "ec2":
-        return connect_to_ec2()
-    elif db_type == "s3":
+    if db_type == "s3":
         return connect_to_s3()
     elif db_type == "local":
         return connect_to_local_db()
@@ -111,24 +83,8 @@ def write_record(data):
     Write a record into the database.
     """
     conn = connect_to_db()
-
-    query = """INSERT INTO audio (
-                session_id, s3_url, date, ref_id)
-                VALUES (%s,%s,%s,%s)"""
     lock.acquire()
-
-    if db_type == "ec2":
-        with conn.cursor() as cursor:
-            cursor.execute(
-                query, ((
-                    data.get("session_id"),
-                    data.get("s3_url"),
-                    data.get("date"),
-                    data.get("ref_id")
-                )),
-            )
-    else:
-        conn.execute("""INSERT INTO audio 
+    conn.execute("""INSERT INTO audio 
                     (session_id, s3_url, date, ref_id) 
                     VALUES (?, ?, ?, ?)""",
                     (data.get("session_id"),
