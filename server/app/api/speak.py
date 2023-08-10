@@ -9,7 +9,7 @@ import traceback
 import mimetypes
 import pathlib
 import jsonschema
-from botocore.exceptions import ClientError
+from minio.error import S3Error
 from flask import Blueprint, current_app, jsonify, request
 
 from ..scripts import db_helper
@@ -148,7 +148,7 @@ def submit_handler(url):
         client.fput_object(bucket_name=s3_bucket,
                            object_name=file_path.name,
                            file_path=file_path)
-    except ClientError as e:
+    except S3Error as e:
         current_app.logger.error(e)
         return jsonify(msg="Error: Failed to upload file to S3"), 400
     
