@@ -25,6 +25,7 @@ with open(config_path, "r") as f:
     config = json.load(f)
 config = config["APP"]
 
+
 def check_suffix(file):
     suffix = file.filename.split(".")[-1]
     result = suffix == config["format"]
@@ -62,6 +63,7 @@ def check_audio_format(file):
             result = False
 
     return result, info
+
 
 def check_volume_pause(file):
     result = True

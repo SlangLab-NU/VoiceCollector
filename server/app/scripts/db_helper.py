@@ -3,10 +3,9 @@ Functions that performs CRUD operations in database and handles file storage.
 
 """
 import json
-import pymysql
 from dotenv import load_dotenv
 import os
-import boto3
+from minio import Minio
 import threading
 import sqlite3
 import pathlib
@@ -30,31 +29,6 @@ config = config["DATABASE"]
 db_type = config["db_type"]
 
 lock = threading.Lock()
-def connect_to_ec2():
-    """
-    Connect to mysql in EC2 and return the connection.
-    """
-    # Load environment variables from .env file in root directory
-    dotenv_path = os.path.join(os.path.dirname(__file__), '..', '.env')
-    load_dotenv(dotenv_path)
-
-    # Read MySQL configuration from environment variables
-    mysql_host = os.environ.get('MYSQL_HOST')
-    mysql_port = os.environ.get('MYSQL_PORT')
-    mysql_user = os.environ.get('MYSQL_USER')
-    mysql_password = os.environ.get('MYSQL_PASSWORD')
-    mysql_db = os.environ.get('MYSQL_DB')
-
-    # Create a MySQL connection
-    conn = pymysql.connect(
-        host=mysql_host,
-        port=int(mysql_port),
-        user=mysql_user,
-        password=mysql_password,
-        db=mysql_db,
-        cursorclass=pymysql.cursors.DictCursor
-    )
-    return conn
 
 
 def connect_to_s3():
@@ -66,19 +40,22 @@ def connect_to_s3():
     load_dotenv(dotenv_path)
 
     # Read S3 configuration from environment variables
+    s3_hostname = os.environ.get('S3_HOSTNAME')
     s3_access_key = os.environ.get('S3_ACCESS_KEY')
     s3_secret_key = os.environ.get('S3_SECRET_KEY')
     s3_bucket = os.environ.get('S3_BUCKET')
     region_name = os.environ.get('REGION_NAME')
-
+    secure = (os.environ.get('SECURE') == 'True')
     # Create a S3 connection
-    s3 = boto3.resource(
-        service_name='s3',
-        region_name=region_name,
-        aws_access_key_id=s3_access_key,
-        aws_secret_access_key=s3_secret_key
+    client = Minio(
+        endpoint=s3_hostname,
+        access_key=s3_access_key,
+        secret_key=s3_secret_key,
+        region=region_name,
+        secure=secure,
     )
-    return s3.Bucket(s3_bucket)
+
+    return client, s3_bucket
 
 
 def connect_to_local_db():
@@ -95,9 +72,7 @@ def connect_to_db():
     Merges the db connections for ec2, S3 and local databases. Pulls db_type variable from config.json
     identifying which db type the connection is being made to and returns that connection
     """
-    if db_type == "ec2":
-        return connect_to_ec2()
-    elif db_type == "s3":
+    if db_type == "s3":
         return connect_to_s3()
     elif db_type == "local":
         return connect_to_local_db()
@@ -108,39 +83,14 @@ def write_record(data):
     Write a record into the database.
     """
     conn = connect_to_db()
-
-    query = """INSERT INTO audio (
-                session_id, s3_url, date, validated, ref_id, 
-                sequence_matcher, cer, metaphone_match)
-                VALUES (%s,%s,%s,%s,%s,%s,%s,%s)"""
     lock.acquire()
-
-    if db_type == "ec2":
-        with conn.cursor() as cursor:
-            cursor.execute(
-                query, ((
-                    data.get("session_id"),
-                    data.get("s3_url"),
-                    data.get("date"),
-                    data.get("validated"),
-                    data.get("ref_id"),
-                    data.get("sequence_matcher"),
-                    data.get("cer"),
-                    data.get("metaphone_match"),
-                )),
-            )
-    else:
-        conn.execute("""INSERT INTO audio 
-                    (session_id, s3_url, date, validated, ref_id, sequence_matcher, cer, metaphone_match) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)""", 
+    conn.execute("""INSERT INTO audio 
+                    (session_id, s3_url, date, ref_id) 
+                    VALUES (?, ?, ?, ?)""",
                     (data.get("session_id"),
                     data.get("s3_url"),
                     data.get("date"),
-                    data.get("validated"),
-                    data.get("ref_id"),
-                    data.get("sequence_matcher"),
-                    data.get("cer"),
-                    data.get("metaphone_match")),
+                    data.get("ref_id")),
             )          
     conn.commit()
     lock.release()

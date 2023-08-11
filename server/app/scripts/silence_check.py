@@ -10,6 +10,7 @@ logger = logger.load_log()
 voiced_count = 0
 total_count = 0
 
+
 def read_wave(wf):
     """Reads a .wav file.
 
@@ -98,6 +99,7 @@ def vad_collector(sample_rate, frame_duration_ms,
     triggered = False
 
     voiced_frames = []
+    #TODO: Remove this global dependence
     global total_count, voiced_count
 
     for frame in frames:
@@ -165,10 +167,5 @@ def get_silence_ratio(vad_mode_from_config, f):
     silence_ratio = 1 - voiced_count / total_count
     logger.info(f"Silence ratio: {round(silence_ratio, 2)}")
     return voiced_count, total_count, silence_ratio
-    # if vaild_speech_count/total_count >= 0.1:
-    #   print("Speech pause check passed")
-    #   return True
-    # else:
-    #   print("Speech pause check didn't pass")
-    #   return False
+
 
