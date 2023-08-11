@@ -9,7 +9,7 @@ import traceback
 import mimetypes
 import pathlib
 import jsonschema
-from botocore.exceptions import ClientError
+from minio.error import S3Error
 from flask import Blueprint, current_app, jsonify, request
 
 from ..scripts import db_helper
@@ -43,7 +43,7 @@ AUDIO_SCHEMA = {
 current_dir = pathlib.Path(__file__).parent.resolve()
 tmp_dir = current_dir.parent.parent / "tmp"
 
-s3 = db_helper.connect_to_s3()
+client, s3_bucket = db_helper.connect_to_s3()
 
 blueprint = Blueprint('speak', __name__, url_prefix="/speak")
 
@@ -108,27 +108,6 @@ def get_content_type(filename):
         return mimetype
     else:
         return 'application/octet-stream'
-    
-@blueprint.route('/write_file/<url>', methods=['POST'])
-def write_file_route(url):
-    if request.method == 'POST' :
-            # check if the post request has the file part
-        if 'audio' not in request.files:
-            response = jsonify(dict(msg="Error: No audio files in request")), 400
-            return response
-        
-    # Upload file to S3 bucket
-    try:
-        # url: the name of the file in S3, must be the same as url in audio table in mysql.
-        file = request.files['audio']
-        if file.filename == '':
-            return jsonify(msg="Not selected file exists"), 400
-        content_type = get_content_type(file.filename)
-        s3.upload_fileobj(file, url, ExtraArgs={'ContentType': content_type})       
-    except ClientError as e:
-        current_app.logger.error(e)
-        response = jsonify(msg="Error: Failed to upload file to S3"), 400
-    return jsonify(msg="Success: File uploaded to S3"), 200
 
 
 @blueprint.route('/submit/<url>', methods=['POST'])
@@ -166,8 +145,10 @@ def submit_handler(url):
     # Upload file to S3 bucket
     try:
         content_type = get_content_type(file_path.name)
-        s3.upload_file(file_path, url, ExtraArgs={'ContentType': content_type})       
-    except ClientError as e:
+        client.fput_object(bucket_name=s3_bucket,
+                           object_name=file_path.name,
+                           file_path=file_path)
+    except S3Error as e:
         current_app.logger.error(e)
         return jsonify(msg="Error: Failed to upload file to S3"), 400
     
