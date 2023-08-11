@@ -45,14 +45,14 @@ def connect_to_s3():
     s3_secret_key = os.environ.get('S3_SECRET_KEY')
     s3_bucket = os.environ.get('S3_BUCKET')
     region_name = os.environ.get('REGION_NAME')
-    secure = os.environ.get('SECURE')
+    secure = (os.environ.get('SECURE') == 'True')
     # Create a S3 connection
     client = Minio(
         endpoint=s3_hostname,
         access_key=s3_access_key,
         secret_key=s3_secret_key,
         region=region_name,
-        secure=False,
+        secure=secure,
     )
 
     return client, s3_bucket
