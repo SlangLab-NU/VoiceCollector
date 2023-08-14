@@ -127,25 +127,7 @@ export default function RecordMUI() {
 
   return (
     <Container>
-      <Box
-        sx={{
-          marginTop: 4,
-          marginBottom: 4,
-        }}
-      >
-        <Typography variant="h6" align="center" gutterBottom>
-          Prompt {promptNum + 1}/{data.length}
-        </Typography>
-        <Box>
-          <Typography sx={{ display: "inline", marginRight: 1 }} variant="h6" align="center" gutterBottom>
-            Section
-          </Typography>
-          <Typography sx={{ display: "inline", backgroundColor: "#E7EBF0" }} variant="h6" align="center" gutterBottom>
-            {section}
-          </Typography>
-        </Box>
-      </Box>
-
+      <Box sx={{marginTop: 4, marginBottom: 4,}}></Box>
       <Box
         sx={{
           // border: `2px solid`,
@@ -158,13 +140,13 @@ export default function RecordMUI() {
           mb: 4,
           backgroundColor: "#E7EBF0",
           width: "80%",
-          height: 500,
+          maxHeight: 'calc(100% - 48px)', // Make same as image to fit around all images
         }}
       >
         {section !== 'Image' ? (
           <Box>
-            <Typography sx={{ marginBottom: 4 }} variant="h5" align="center">
-              Read the following sentences
+            <Typography sx={{ marginBottom: 4 }} fontSize={{lg: 30, md: 25, base: 20}} align="center">
+            Prompt {promptNum + 1}/{data.length}: Read the following sentences
             </Typography>
             <Paper sx={{ height: 400, overflowY: "auto", padding: 1 }} elevation={3}>
               <Typography variant="h6" align="left">
@@ -174,8 +156,8 @@ export default function RecordMUI() {
           </Box>
         ) : (
           <Box>
-            <Typography sx={{ marginBottom: 4 }} variant="h5" align="center">
-              {prompt}
+            <Typography sx={{ marginBottom: 4 }} fontSize={{lg: 30, md: 25, base: 20}} align="center">
+            Prompt {promptNum + 1}/{data.length}: {prompt}
             </Typography>
             <img src={`/assets/${data[promptNum].image_url}`} alt='' className='image' style={{
               maxWidth: '100%',
@@ -192,7 +174,8 @@ export default function RecordMUI() {
         display="flex"
         direction="row"
         justifyContent="center"
-        alignItems="center">
+        alignItems="center"
+        marginBottom={15}>
         <Button
           variant="outlined"
           color="secondary"

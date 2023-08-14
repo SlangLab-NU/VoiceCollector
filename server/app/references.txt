@@ -39,78 +39,72 @@
     {
         "promptNum": 6,
         "section": "Image",
-        "prompt": "Tell me what is happening in this image",
-        "image_url": "Figure-2.png"
+        "prompt": "Read the following book pages",
+        "image_url": "thomas_birthday_1.jpg"
     },
     {
         "promptNum": 7,
         "section": "Image",
-        "prompt": "Tell me what is happening in this image",
-        "image_url": "thomas_birthday_1.jpg"
+        "prompt": "Read the following book pages",
+        "image_url": "thomas_birthday_2.jpg"
     },
     {
         "promptNum": 8,
         "section": "Image",
-        "prompt": "Tell me what is happening in this image",
-        "image_url": "thomas_birthday_2.jpg"
+        "prompt": "Read the following book pages",
+        "image_url": "thomas_birthday_3.jpg"
     },
     {
         "promptNum": 9,
         "section": "Image",
-        "prompt": "Tell me what is happening in this image",
-        "image_url": "thomas_birthday_3.jpg"
+        "prompt": "Read the following book pages",
+        "image_url": "thomas_birthday_4.jpg"
     },
     {
         "promptNum": 10,
         "section": "Image",
-        "prompt": "Tell me what is happening in this image",
-        "image_url": "thomas_birthday_4.jpg"
+        "prompt": "Read the following book pages",
+        "image_url": "thomas_birthday_5.jpg"
     },
     {
         "promptNum": 11,
         "section": "Image",
-        "prompt": "Tell me what is happening in this image",
-        "image_url": "thomas_birthday_5.jpg"
+        "prompt": "Read the following book pages",
+        "image_url": "thomas_birthday_6.jpg"
     },
     {
         "promptNum": 12,
         "section": "Image",
-        "prompt": "Tell me what is happening in this image",
-        "image_url": "thomas_birthday_6.jpg"
+        "prompt": "Read the following book pages",
+        "image_url": "thomas_birthday_7.jpg"
     },
     {
         "promptNum": 13,
         "section": "Image",
-        "prompt": "Tell me what is happening in this image",
-        "image_url": "thomas_birthday_7.jpg"
+        "prompt": "Read the following book pages",
+        "image_url": "thomas_birthday_8.jpg"
     },
     {
         "promptNum": 14,
         "section": "Image",
-        "prompt": "Tell me what is happening in this image",
-        "image_url": "thomas_birthday_8.jpg"
+        "prompt": "Read the following book pages",
+        "image_url": "thomas_birthday_9.jpg"
     },
     {
         "promptNum": 15,
         "section": "Image",
-        "prompt": "Tell me what is happening in this image",
-        "image_url": "thomas_birthday_9.jpg"
+        "prompt": "Read the following book pages",
+        "image_url": "thomas_birthday_10.jpg"
     },
     {
         "promptNum": 16,
         "section": "Image",
-        "prompt": "Tell me what is happening in this image",
-        "image_url": "thomas_birthday_10.jpg"
-    },
-    {
-        "promptNum": 17,
-        "section": "Image",
-        "prompt": "Tell me what is happening in this image",
+        "prompt": "Read the following book pages",
         "image_url": "thomas_birthday_12.jpg"
     },{
-        "promptNum": 18,
+        "promptNum": 17,
         "section": "Image",
-        "prompt": "Tell me what is happening in this image",
+        "prompt": "Read the following book pages",
         "image_url": "thomas_birthday_13.jpg"
     }]
 }
