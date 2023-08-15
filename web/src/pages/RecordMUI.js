@@ -146,7 +146,7 @@ export default function RecordMUI() {
         {section !== 'Image' ? (
           <Box>
             <Typography sx={{ marginBottom: 4 }} fontSize={{lg: 30, md: 25, base: 20}} align="center">
-            Prompt {promptNum + 1}/{data.length}: Read the following sentences
+            Prompt {promptNum + 1}/{data.length}: Read the following text
             </Typography>
             <Paper sx={{ height: 400, overflowY: "auto", padding: 1 }} elevation={3}>
               <Typography variant="h6" align="left">
