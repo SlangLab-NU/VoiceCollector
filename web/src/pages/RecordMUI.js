@@ -25,15 +25,15 @@ export default function RecordMUI() {
   const [submitStatus, setSubmitStatus] = useState(null)
   const [data, setData] = useState([]);
   const [allowSubmit, setAllowSubmit] = useState(false);
-  
+
   // Retrieves the api url and port number and combines them into one const
   const appApiUrlandPort = process.env.REACT_APP_API_URL + ':' + process.env.REACT_APP_PORT_NUMBER
-  
+
   const fetchData = async () => {
     try {
       // Ensure a .env is in the web directory containing the api url and port number
       const response = await axios.get(`${appApiUrlandPort}/api/v1/speak/get_reference`);
-      
+
       const data = response.data;
       setData(data);
       setSection(data[promptNum].section);
@@ -109,7 +109,7 @@ export default function RecordMUI() {
     setSubmitStatus("submitting");
     try {
       const response = await fetch(`${appApiUrlandPort}/api/v1/speak/submit/` + filename, { method: 'POST', body: formData });
-      
+
       if(response.status === 200){
         setSubmitStatus("success");
       } else {
@@ -127,25 +127,7 @@ export default function RecordMUI() {
 
   return (
     <Container>
-      <Box
-        sx={{
-          marginTop: 4,
-          marginBottom: 4,
-        }}
-      >
-        <Typography variant="h6" align="center" gutterBottom>
-          Prompt {promptNum + 1}/{data.length}
-        </Typography>
-        <Box>
-          <Typography sx={{ display: "inline", marginRight: 1 }} variant="h6" align="center" gutterBottom>
-            Section
-          </Typography>
-          <Typography sx={{ display: "inline", backgroundColor: "#E7EBF0" }} variant="h6" align="center" gutterBottom>
-            {section}
-          </Typography>
-        </Box>
-      </Box>
-
+      <Box sx={{marginTop: 4, marginBottom: 4,}}></Box>
       <Box
         sx={{
           // border: `2px solid`,
@@ -158,13 +140,13 @@ export default function RecordMUI() {
           mb: 4,
           backgroundColor: "#E7EBF0",
           width: "80%",
-          height: 500,
+          maxHeight: 'calc(100% - 48px)', // Make same as image to fit around all images
         }}
       >
         {section !== 'Image' ? (
           <Box>
-            <Typography sx={{ marginBottom: 4 }} variant="h5" align="center">
-              Read the following sentences
+            <Typography sx={{ marginBottom: 4 }} fontSize={{lg: 30, md: 25, base: 20}} align="center">
+            Prompt {promptNum + 1}/{data.length}: Read the following sentences
             </Typography>
             <Paper sx={{ height: 400, overflowY: "auto", padding: 1 }} elevation={3}>
               <Typography variant="h6" align="left">
@@ -174,8 +156,8 @@ export default function RecordMUI() {
           </Box>
         ) : (
           <Box>
-            <Typography sx={{ marginBottom: 4 }} variant="h5" align="center">
-              {prompt}
+            <Typography sx={{ marginBottom: 4 }} fontSize={{lg: 30, md: 25, base: 20}} align="center">
+            Prompt {promptNum + 1}/{data.length}: {prompt}
             </Typography>
             <img src={`/assets/${data[promptNum].image_url}`} alt='' className='image' style={{
               maxWidth: '100%',
@@ -192,7 +174,8 @@ export default function RecordMUI() {
         display="flex"
         direction="row"
         justifyContent="center"
-        alignItems="center">
+        alignItems="center"
+        marginBottom={15}>
         <Button
           variant="outlined"
           color="secondary"
@@ -232,7 +215,7 @@ export default function RecordMUI() {
             {submitStatus == null? "Submit" : "Submitted"}
           </Button>
         }
-        
+
         <Collapse in={alertOpen}>
           <Alert severity="error" onClose={() => setAlertOpen(false)}
             sx={{
