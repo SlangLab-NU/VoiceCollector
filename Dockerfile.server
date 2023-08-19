@@ -1,7 +1,7 @@
 # Use an official Python image as the base image
 FROM python:3.9
 
-# Set environment variables for MySQL and MinIO
+# Set environment variables
 ENV S3_HOSTNAME='localhost:9000'
 ENV S3_BUCKET='local-s3'
 ENV REGION_NAME=''
@@ -24,8 +24,10 @@ RUN pip install -r requirements.txt
 RUN rm -rf /root/.cache/pip
 RUN python init_db.py
 
-# Set environment variables
+# Set environment variables for Flask
 ENV FLASK_APP=__init__.py
+
+# Expose port 5000 for Flask app
 EXPOSE 5000
 
 # Start Flask app

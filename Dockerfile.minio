@@ -1,0 +1,34 @@
+# Use a base image with a minimal OS, like Alpine Linux, for a smaller image size
+FROM alpine:latest
+
+# Set environment variables for MinIO
+ENV MINIO_ROOT_USER='admin'
+ENV MINIO_ROOT_PASSWORD='password'
+
+# Install MinIO Client (mc)
+RUN wget https://dl.min.io/client/mc/release/linux-amd64/mc -O /usr/local/bin/mc && \
+    chmod +x /usr/local/bin/mc
+
+# Copy the mc config file to the container
+COPY ./server/.mc/config.json /root/.mc/config.json
+
+# Download and install MinIO server binary
+RUN wget https://dl.min.io/server/minio/release/linux-amd64/minio -O /usr/local/bin/minio && \
+    chmod +x /usr/local/bin/minio
+
+# Expose port 9000 for MinIO
+EXPOSE 9000
+
+# Create a startup script to run MinIO server
+RUN echo '#!/bin/sh' >> /start_minio.sh && \
+    echo 'mc config host add myminio http://localhost:9000 $MINIO_ACCESS_KEY $MINIO_SECRET_KEY' >> /start_minio.sh && \
+    echo 'if ! mc admin info myminio &>/dev/null; then' >> /start_minio.sh && \
+    echo '  echo "MinIO server is not running. Starting MinIO..."' >> /start_minio.sh && \
+    echo '  minio server /data &' >> /start_minio.sh && \
+    echo '  sleep 5' >> /start_minio.sh && \
+    echo 'fi' >> /start_minio.sh && \
+    echo 'mc mb myminio/local-s3' >> /start_minio.sh && \
+    chmod +x /start_minio.sh
+
+# Start MinIO server on container startup
+CMD ["/start_minio.sh"]
