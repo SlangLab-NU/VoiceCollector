@@ -56,8 +56,8 @@ RUN python init_db.py
 # Set environment variables for Flask
 ENV FLASK_APP=__init__.py
 
-# Expose port 5000 for Flask app
-EXPOSE 5000
+# Expose port 3000 for Flask app
+EXPOSE 3000
 
 # Start Flask app
 CMD ["flask", "run", "--host=0.0.0.0"]

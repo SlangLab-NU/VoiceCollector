@@ -1,9 +1,9 @@
-# Use a base image with a minimal OS, like Alpine Linux, for a smaller image size
+# Use an offical alpine image as the base image
 FROM alpine:latest
 
 # Set environment variables for MinIO access credentials
-ENV MINIO_ROOT_USER='minioadmin'
-ENV MINIO_ROOT_PASSWORD='minioadmin'
+ENV MINIO_ROOT_USER='admin'
+ENV MINIO_ROOT_PASSWORD='password'
 
 # Install MinIO Client (mc) and MinIO Server (minio) binaries
 RUN wget https://dl.min.io/client/mc/release/linux-amd64/mc -O /usr/local/bin/mc && \
@@ -15,19 +15,25 @@ RUN wget https://dl.min.io/server/minio/release/linux-amd64/minio -O /usr/local/
 EXPOSE 9000
 
 # Create a startup script to run MinIO server
+# MinIO server will be started in background (or else the script will not continue)
+# The script will wait until MinIO server is ready before creating a bucket
+# The script will then tail the /dev/null file to keep the container running
 RUN echo '#!/bin/sh' >> /start_minio.sh && \
-    echo 'sleep 10' >> /start_minio.sh && \
-    echo 'mc config host add myminio http://localhost:9000 $MINIO_ROOT_USER $MINIO_ROOT_PASSWORD' >> /start_minio.sh && \
-    echo 'if ! mc admin info myminio &>/dev/null; then' >> /start_minio.sh && \
-    echo '  echo "MinIO server is not running. Starting MinIO..."' >> /start_minio.sh && \
-    echo '  minio server /data &' >> /start_minio.sh && \
-    echo '  sleep 5' >> /start_minio.sh && \
-    echo 'fi' >> /start_minio.sh && \
+    echo 'minio server /data &' >> /start_minio.sh && \
+    echo 'while true; do' >> /start_minio.sh && \
+    echo '  if [ -d "/data/.minio.sys" ]; then' >> /start_minio.sh && \
+    echo '    echo "MinIO server is ready!"' >> /start_minio.sh && \
+    echo '    break' >> /start_minio.sh && \
+    echo '  fi' >> /start_minio.sh && \
+    echo '  sleep 2' >> /start_minio.sh && \
+    echo 'done' >> /start_minio.sh && \
+    echo 'mc alias set myminio http://localhost:9000 $MINIO_ROOT_USER $MINIO_ROOT_PASSWORD' >> /start_minio.sh && \
     echo 'mc mb myminio/local-s3' >> /start_minio.sh && \
+    echo 'tail -f /dev/null' >> /start_minio.sh && \
     chmod +x /start_minio.sh
+
+# Create a data directory for MinIO to store data
+RUN mkdir -p /data
 
 # Start MinIO server on container startup
 CMD ["/start_minio.sh"]
-
-# Define volumes for MinIO data and mc configuration
-VOLUME /data
