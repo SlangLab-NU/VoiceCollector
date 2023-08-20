@@ -1,0 +1,19 @@
+# Use an official Node runtime as the base image
+FROM node:16-alpine as build
+
+# Set environment variables
+ENV PATH /web/node_modules/.bin:$PATH
+
+# Set working directory
+WORKDIR /frontend
+
+# Copy package.json and package-lock.json
+COPY ./web/package.json /frontend
+COPY ./web/src ./src
+COPY ./web/public ./public
+
+# Install dependencies
+RUN yarn install --silent
+
+# Build the app
+RUN yarn build
