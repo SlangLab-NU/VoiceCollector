@@ -20,7 +20,3 @@ cursor = connection.cursor()
 
 connection.commit()
 connection.close()
-
-#  Writes the references to the db
-
-db_helper.write_references_to_db()

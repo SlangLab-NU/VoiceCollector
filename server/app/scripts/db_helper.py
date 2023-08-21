@@ -112,6 +112,10 @@ def write_references_to_db():
     references = references_json.get("references")
     conn = connect_to_local_db()
     cursor = conn.cursor()
+    
+    # Clear any data from previous references
+    cursor.execute("DELETE FROM reference;")
+
     for reference in references:
         cursor.execute("""INSERT INTO reference
                         (section, prompt, promptnum, image_url) 
