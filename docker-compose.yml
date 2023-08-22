@@ -1,0 +1,18 @@
+services:
+  minio:
+    build:
+      context: .
+      dockerfile: Dockerfile.minio
+    image: minio
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile.server
+    image: server
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    image: web
+    ports:
+      - "3000:80"

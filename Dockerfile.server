@@ -2,22 +2,22 @@
 FROM python:3.9
 
 # Set environment variables
-ENV S3_HOSTNAME='localhost:9000'
+ENV S3_HOSTNAME='stoic_dirac:9000'
 ENV S3_BUCKET='local-s3'
 ENV REGION_NAME=''
 ENV S3_ACCESS_KEY='minioadmin'
 ENV S3_SECRET_KEY='minioadmin'
 ENV SECURE='False'
 
-WORKDIR /app
+WORKDIR /server
 
 # Install SQLite3 and ffmpeg
 RUN apt-get update && apt-get install -y sqlite3 libsqlite3-dev
 RUN apt-get update && apt-get install -y ffmpeg libavcodec-extra
 
-# Copy the current directory contents into the container at /app
-COPY ./server/requirements*.txt /app
-COPY ./server/app /app
+# Copy the current directory contents into the container at /server
+COPY ./server/requirements*.txt ./
+COPY ./server/app ./
 
 # Install any needed packages specified in requirements.txt and initialize database
 RUN pip install -r requirements.txt
