@@ -9,15 +9,15 @@ ENV PATH /web/node_modules/.bin:$PATH
 # Set working directory
 WORKDIR /web
 
-# Set environment variables for React app
-ENV REACT_APP_API_URL='http://localhost'
-ENV REACT_APP_PORT_NUMBER='80'
-
 # Copy package.json and package-lock.json
 COPY ./web/package.json ./
 COPY ./yarn.lock ./
 COPY ./web/src ./src
 COPY ./web/public ./public
+
+# Set environment variables for React app
+ENV REACT_APP_API_URL='http://localhost'
+ENV REACT_APP_PORT_NUMBER='3000'
 
 # Install dependencies
 RUN yarn install
