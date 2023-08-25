@@ -8,8 +8,6 @@ services:
     image: minio
     ports:
       - "9000:9000"
-    networks:
-      - my-network
 
   server:
     build:
@@ -19,8 +17,6 @@ services:
     image: server
     ports:
       - "5000:5000"
-    networks:
-      - my-network
 
   web:
     build:
@@ -30,9 +26,3 @@ services:
     image: web
     ports:
       - "3000:80"
-    networks:
-      - my-network
-
-
-networks:
-  my-network:

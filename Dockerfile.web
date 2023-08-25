@@ -9,8 +9,9 @@ ENV PATH /web/node_modules/.bin:$PATH
 # Set working directory
 WORKDIR /web
 
-ENV REACT_APP_API_URL='host.docker.internal'
-ENV REACT_APP_PORT_NUMBER='5000'
+# Set environment variables for React app
+ENV REACT_APP_API_URL='http://localhost'
+ENV REACT_APP_PORT_NUMBER='80'
 
 # Copy package.json and package-lock.json
 COPY ./web/package.json ./
