@@ -1,45 +1,220 @@
 {
     "references": [
     {
-        "promptNum": 0,
-        "section": "Automatic Phrases",
-        "prompt": "0 1 2 3 4 5 6 7 8 9 10",
-        "image_url": null
-    },
-    {
         "promptNum": 1,
-        "section": "Sentences",
-        "prompt": "Britney bought the ABBA album and grabbed banana bread for her lab in November. My mom climbed Burnaby Mountain from the bottom in thirty minutes.",
-        "image_url": null
+        "section": "Image",
+        "prompt": "Read the following book pages",
+        "image_url": "thomas_birthday_1.jpg"
     },
     {
         "promptNum": 2,
-        "section": "Sentences",
-        "prompt": "People prefer pink blooms before May and plastic opals as part of the centerpieces in September.",
-        "image_url": null
+        "section": "Image",
+        "prompt": "Read the following book pages",
+        "image_url": "thomas_birthday_2.jpg"
     },
     {
         "promptNum": 3,
-        "section": "Sentences",
+        "section": "Image",
+        "prompt": "Read the following book pages",
+        "image_url": "thomas_birthday_3.jpg"
+    },
+    {
+        "promptNum": 4,
+        "section": "Image",
+        "prompt": "Read the following book pages",
+        "image_url": "thomas_birthday_4.jpg"
+    },
+    {
+        "promptNum": 5,
+        "section": "Image",
+        "prompt": "Read the following book pages",
+        "image_url": "thomas_birthday_5.jpg"
+    },
+    {
+        "promptNum": 6,
+        "section": "Image",
+        "prompt": "Read the following book pages",
+        "image_url": "thomas_birthday_6.jpg"
+    },
+    {
+        "promptNum": 7,
+        "section": "Image",
+        "prompt": "Read the following book pages",
+        "image_url": "thomas_birthday_7.jpg"
+    },
+    {
+        "promptNum": 8,
+        "section": "Image",
+        "prompt": "Read the following book pages",
+        "image_url": "thomas_birthday_8.jpg"
+    },
+    {
+        "promptNum": 9,
+        "section": "Image",
+        "prompt": "Read the following book pages",
+        "image_url": "thomas_birthday_9.jpg"
+    },
+    {
+        "promptNum": 10,
+        "section": "Image",
+        "prompt": "Read the following book pages",
+        "image_url": "thomas_birthday_10.jpg"
+    },
+    {
+        "promptNum": 11,
+        "section": "Image",
+        "prompt": "Read the following book pages",
+        "image_url": "thomas_birthday_11.jpg"
+    },
+    {
+        "promptNum": 12,
+        "section": "Image",
+        "prompt": "Read the following book pages",
+        "image_url": "thomas_birthday_12.jpg"
+    },
+    {
+        "promptNum": 13,
+        "section": "Image",
+        "prompt": "Read the following book pages",
+        "image_url": "thomas_birthday_13.jpg"
+    },
+    {
+        "promptNum": 14,
+        "section": "Image",
+        "prompt": "Read the following book pages",
+        "image_url": "thomas_birthday_14.jpg"
+    },
+    {
+        "promptNum": 15,
+        "section": "Image",
+        "prompt": "Read the following book pages",
+        "image_url": "thomas_birthday_15.jpg"
+    },
+    {
+        "promptNum": 16,
+        "section": "Image",
+        "prompt": "Read the following book pages",
+        "image_url": "thomas_birthday_16.jpg"
+    },
+    {
+        "promptNum": 17,
+        "section": "Sentences (Bilabials)",
+        "prompt": "My mom climbed Burnaby Mountain from the bottom in thirty minutes.",
+        "image_url": null
+    },
+    {
+        "promptNum": 18,
+        "section": "Sentences (Liquids & Glides)",
         "prompt": "Luna yelled at the little layered pastry for tasting yucky.",
         "image_url": null
     },
     {
-        "promptNum": 4,
-        "section": "Paragraph",
-        "prompt": "When the sunlight strikes raindrops in the air, they act as a prism and form a rainbow. The rainbow is a division of white light into many beautiful colors. These take the shape of a long round arch, with its path high above, and its two ends apparently beyond the horizon. There is, according to legend, a boiling pot of gold at one end. People look, but no one ever finds it. When a man looks for something beyond his reach, his friends say he is looking for the pot of gold at the end of the rainbow. Throughout the centuries people have explained the rainbow in various ways. Some have accepted it as a miracle without physical explanation. To the Hebrews it was a token that there would be no more universal floods. The Greeks used to imagine that it was a sign from the gods to foretell war or heavy rain. The Norsemen considered the rainbow as a bridge over which the gods passed from earth to their home in the sky. Others have tried to explain the phenomenon physically. Aristotle thought that the rainbow was caused by reflection of the sun's rays by the rain. Since then physicists have found that it is not reflection, but refraction by the raindrops which causes the rainbows. Many complicated ideas about the rainbow have been formed. The difference in the rainbow depends considerably upon the size of the drops, and the width of the colored band increases as the size of the drops increases. The actual primary rainbow observed is said to be the effect of super-imposition of a number of bows. If the red of the second bow falls upon the green of the first, the result is to give a bow with an abnormally wide yellow band, since red and green light when mixed form yellow. This is a very common type of bow, one showing mainly red and yellow, with little or no green or blue.",
+        "promptNum": 19,
+        "section": "Automatic phrases",
+        "prompt": "January",
         "image_url": null
     },
     {
-        "promptNum": 5,
+        "promptNum": 20,
+        "section": "Automatic phrases",
+        "prompt": "TWO",
+        "image_url": null
+    },
+    {
+        "promptNum": 21,
+        "section": "Automatic phrases",
+        "prompt": "THREE",
+        "image_url": null
+    },
+    {
+        "promptNum": 22,
+        "section": "Automatic phrases",
+        "prompt": "February",
+        "image_url": null
+    },
+    {
+        "promptNum": 23,
         "section": "Image",
         "prompt": "Tell me what is happening in this image",
         "image_url": "Figure-1.png"
     },
     {
-        "promptNum": 6,
+        "promptNum": 22,
+        "section": "Automatic phrases",
+        "prompt": "December",
+        "image_url": null
+    },
+    {
+        "promptNum": 23,
         "section": "Image",
-        "prompt": "Tell me what is happening in this image",
-        "image_url": "Figure-2.png"
-    }]
+        "prompt": "Read the following book pages",
+        "image_url": "good_sport_1.jpg"
+    },
+    {
+        "promptNum": 24,
+        "section": "Image",
+        "prompt": "Read the following book pages",
+        "image_url": "good_sport_2.jpg"
+    },
+    {
+        "promptNum": 25,
+        "section": "Image",
+        "prompt": "Read the following book pages",
+        "image_url": "good_sport_3.jpg"
+    },
+    {
+        "promptNum": 26,
+        "section": "Image",
+        "prompt": "Read the following book pages",
+        "image_url": "good_sport_4.jpg"
+    },
+    {
+        "promptNum": 27,
+        "section": "Image",
+        "prompt": "Read the following book pages",
+        "image_url": "good_sport_5.jpg"
+    },
+    {
+        "promptNum": 28,
+        "section": "Image",
+        "prompt": "Read the following book pages",
+        "image_url": "good_sport_6.jpg"
+    },
+    {
+        "promptNum": 29,
+        "section": "Image",
+        "prompt": "Read the following book pages",
+        "image_url": "good_sport_7.jpg"
+    },
+    {
+        "promptNum": 30,
+        "section": "Image",
+        "prompt": "Read the following book pages",
+        "image_url": "good_sport_8.jpg"
+    },
+    {
+        "promptNum": 31,
+        "section": "Image",
+        "prompt": "Read the following book pages",
+        "image_url": "good_sport_9.jpg"
+    },
+    {
+        "promptNum": 32,
+        "section": "Image",
+        "prompt": "Read the following book pages",
+        "image_url": "good_sport_10.jpg"
+    },
+    {
+        "promptNum": 33,
+        "section": "Image",
+        "prompt": "Read the following book pages",
+        "image_url": "good_sport_11.jpg"
+    },
+    {
+        "promptNum": 34,
+        "section": "Image",
+        "prompt": "Read the following book pages",
+        "image_url": "good_sport_12.jpg"
+    }
+    ]
 }
