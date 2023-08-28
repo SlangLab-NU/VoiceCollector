@@ -11,7 +11,7 @@ WORKDIR /web
 
 # Copy package.json and package-lock.json
 COPY ./web/package.json ./
-COPY ./yarn.lock ./
+COPY ./web/yarn.lock ./
 COPY ./web/src ./src
 COPY ./web/public ./public
 
