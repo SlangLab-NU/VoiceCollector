@@ -1,0 +1,31 @@
+version: "3"
+services:
+  minio:
+    build:
+      context: .
+      dockerfile: Dockerfile.minio
+    container_name: minio-container
+    image: minio
+    ports:
+      - "9000:9000"
+
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile.server
+    environment:
+      FLASK_APP: "__init__.py"
+    command: flask run --host=0.0.0.0
+    container_name: server-container
+    image: server
+    ports:
+      - "5000:5000"
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    container_name: web-container
+    image: web
+    ports:
+      - "3000:80"
