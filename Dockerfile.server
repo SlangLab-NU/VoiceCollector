@@ -1,0 +1,34 @@
+# Use an official Python image as the base image
+FROM python:3.9
+
+# Set environment variables
+ENV S3_HOSTNAME='host.docker.internal:9000'
+ENV S3_BUCKET='local-s3'
+ENV REGION_NAME=''
+ENV S3_ACCESS_KEY='admin'
+ENV S3_SECRET_KEY='password'
+ENV SECURE='False'
+
+WORKDIR /server
+
+# Install SQLite3 and ffmpeg
+RUN apt-get update && apt-get install -y sqlite3 libsqlite3-dev
+RUN apt-get update && apt-get install -y ffmpeg libavcodec-extra
+
+# Copy the current directory contents into the container at /server
+COPY ./server/requirements*.txt ./
+COPY ./server/app ./
+
+# Install any needed packages specified in requirements.txt and initialize database
+RUN pip install -r requirements.txt
+RUN rm -rf /root/.cache/pip
+RUN python init_db.py
+
+# Set environment variables for Flask
+ENV FLASK_APP=__init__.py
+
+# Expose port 5000 for Flask app
+EXPOSE 5000
+
+# Start Flask app
+CMD ["flask", "run", "--host=0.0.0.0"]
