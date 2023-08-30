@@ -17,7 +17,9 @@ def create_db():
 
     connection = sqlite3.connect(config['database'])
 
-    with open(config['schema']) as f:
+    schema_path = current_dir / config['schema']
+    
+    with open(schema_path) as f:
         connection.executescript(f.read())
 
     cursor = connection.cursor()

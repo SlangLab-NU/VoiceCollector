@@ -27,6 +27,7 @@ with open(config_path, "r") as f:
     config = json.load(f)
 config = config["DATABASE"]
 db_type = config["db_type"]
+reference_path = current_dir / ".." / config["references"]
 
 lock = threading.Lock()
 
@@ -107,7 +108,7 @@ def write_references_to_db():
     """
     Takes in json data from references.txt and populates the reference table
     """
-    with open(config['references']) as f:
+    with open(reference_path) as f:
         references_json = json.load(f)
     references = references_json.get("references")
     conn = connect_to_local_db()
