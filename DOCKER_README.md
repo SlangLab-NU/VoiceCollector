@@ -22,11 +22,11 @@ docker build -f Dockerfile.web -t web .
 
 Use docker-compose to build and run the containers simultaneously:
 
-- For development (using Flask)
+- For development (Flask):
 
    `docker-compose -f docker-compose.dev.yml up -d`
 
-- For production (using gunicorn)
+- For production (Gunicorn):
 
    `docker-compose -f docker-compose.prod.yml up -d`
 
@@ -41,13 +41,19 @@ To stop the containers, run the following command:
 
 ## Running Container Separately
 
-Currently, only the MinIO containers can be ran separately:
+Currently, only the MinIO and Server containers can be ran separately:
 
-Run MinIO docker:
+- Run MinIO docker:
 
    `docker run --rm -p 9000:9000 minio`
 
-The backend server cannot be ran independently.
+- Run Server (Development: Flask) docker:
 
-Please note that the container for the frontend can only be run using docker-compose. If you want to run the frontend separately, navigate to the `web` directory and use:
+   `docker run --rm -p 5000:5000 --env FLASK_APP=__init__ server flask run --host=0.0.0.0`
+
+- Run Server (Production: Gunicorn) docker:
+
+   `docker run --rm -p 5000:5000 --workdir /server server gunicorn -w 4 --bind 0.0.0.0:5000 app:application`
+
+Please note that the container for the frontend can only be run using docker-compose due to the nginx settings. If you want to run the frontend separately, navigate to the `web` directory and use:
 `yarn start`.

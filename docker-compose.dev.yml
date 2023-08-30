@@ -14,8 +14,7 @@ services:
       context: .
       dockerfile: Dockerfile.server
     environment:
-      FLASK_APP: "app.__init__.py"
-    working_dir: /server
+      FLASK_APP: __init__.py
     command: flask run --host=0.0.0.0
     container_name: server-container
     image: server
