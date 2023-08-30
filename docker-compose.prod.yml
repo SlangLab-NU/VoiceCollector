@@ -13,7 +13,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.server
-    command: gunicorn -w 4 --bind 0.0.0.0:5000 app:application
+    working_dir: /server
+    command: gunicorn -w 4 --bind 0.0.0.0:5000 server.app:application
     container_name: server-container
     image: server
     ports:
