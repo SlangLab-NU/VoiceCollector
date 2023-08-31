@@ -20,7 +20,7 @@ docker build -f Dockerfile.web -t web .
 
 ## Running the Application
 
-Use docker-compose to build and run the containers simultaneously:
+Use docker-compose to run the containers simultaneously:
 
 - For development (Flask):
 
@@ -30,9 +30,11 @@ Use docker-compose to build and run the containers simultaneously:
 
    `docker-compose -f docker-compose.prod.yml up -d`
 
-- The -d flag can be omitted if you want to view the logs from the command line console. The logs can also be viewed from the Docker Desktop app.
+- The `-d` flag can be omitted if you want to view the logs from the command line console. The logs can also be viewed from the Docker Desktop app.
 
 - Access the app at http://localhost:3000.
+
+- The `--build` flag can be added at the end to build and run in one command.
 
 ## Stopping the Application
 
