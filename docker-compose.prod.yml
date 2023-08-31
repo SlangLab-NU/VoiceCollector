@@ -2,8 +2,8 @@ version: "3"
 services:
   minio:
     build:
-      context: ./dockerfiles
-      dockerfile: Dockerfile.minio
+      context: .
+      dockerfile: dockerfiles/Dockerfile.minio
     container_name: minio-container
     image: minio
     ports:
@@ -11,8 +11,8 @@ services:
 
   server:
     build:
-      context: ./dockerfiles
-      dockerfile: Dockerfile.server
+      context: .
+      dockerfile: dockerfiles/Dockerfile.server
     working_dir: /server
     command: gunicorn -w 4 --bind 0.0.0.0:5000 app:application
     container_name: server-container
@@ -22,8 +22,8 @@ services:
 
   web:
     build:
-      context: ./dockerfiles
-      dockerfile: Dockerfile.web
+      context: .
+      dockerfile: dockerfiles/Dockerfile.web
     container_name: web-container
     image: web
     ports:
