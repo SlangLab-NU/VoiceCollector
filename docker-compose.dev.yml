@@ -15,8 +15,6 @@ services:
       dockerfile: dockerfiles/Dockerfile.server
     environment:
       FLASK_APP: __init__.py
-      REACT_APP_API_URL: http://localhost
-      REACT_APP_PORT_NUMBER: "3000"
     command: flask run --host=0.0.0.0
     container_name: server-container
     image: server
@@ -27,6 +25,9 @@ services:
     build:
       context: .
       dockerfile: dockerfiles/Dockerfile.web
+    environment:
+      REACT_APP_API_URL: http://localhost
+      REACT_APP_PORT_NUMBER: "3000"
     container_name: web-container
     image: web
     ports:

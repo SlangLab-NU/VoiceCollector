@@ -54,11 +54,11 @@ Currently, only the MinIO and Server containers can be ran separately:
 
 - Run Server (Development: Flask) docker:
 
-   `docker run --rm -p 5000:5000 --env FLASK_APP=__init__ --env REACT_APP_API_URL=http://localhost --env REACT_APP_PORT_NUMBER="3000" server flask run --host=0.0.0.0`
+   `docker run --rm -p 5000:5000 --env FLASK_APP=__init__ server flask run --host=0.0.0.0`
 
 - Run Server (Production: Gunicorn) docker:
 
-   `docker run --rm -p 5000:5000 --workdir /server --env REACT_APP_API_URL=http://localhost --env REACT_APP_PORT_NUMBER="3000" server gunicorn -w 4 --bind 0.0.0.0:5000 app:application`
+   `docker run --rm -p 5000:5000 --workdir /server server gunicorn -w 4 --bind 0.0.0.0:5000 app:application`
 
 Please note that the container for the frontend can only be run using docker-compose due to the nginx settings. If you want to run the frontend separately, navigate to the `web` directory and use:
 `yarn start`.

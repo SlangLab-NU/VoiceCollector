@@ -13,9 +13,6 @@ services:
     build:
       context: .
       dockerfile: dockerfiles/Dockerfile.server
-    environment:
-      REACT_APP_API_URL: http://localhost
-      REACT_APP_PORT_NUMBER: "3000"
     working_dir: /server
     command: gunicorn -w 4 --bind 0.0.0.0:5000 app:application
     container_name: server-container
@@ -27,6 +24,9 @@ services:
     build:
       context: .
       dockerfile: dockerfiles/Dockerfile.web
+    environment:
+      REACT_APP_API_URL: http://localhost
+      REACT_APP_PORT_NUMBER: "3000"
     container_name: web-container
     image: web
     ports:
