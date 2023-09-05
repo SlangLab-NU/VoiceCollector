@@ -26,7 +26,7 @@ services:
       context: .
       dockerfile: dockerfiles/Dockerfile.web
     environment:
-      REACT_APP_API_URL: http://localhost
+      REACT_APP_API_URL: host.docker.internal
       REACT_APP_PORT_NUMBER: "3000"
     container_name: web-container
     image: web
