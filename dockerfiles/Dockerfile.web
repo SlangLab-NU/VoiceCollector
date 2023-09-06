@@ -16,7 +16,6 @@ COPY ./web/src ./src
 COPY ./web/public ./public
 
 # Set environment variables for React app
-ENV REACT_APP_API_URL='http://localhost'
 ENV REACT_APP_PORT_NUMBER='3000'
 
 # Install dependencies
