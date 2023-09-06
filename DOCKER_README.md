@@ -20,6 +20,10 @@ docker build -f ./dockerfiles/Dockerfile.web -t web .
 
 ## Running the Application
 
+We use docker-compose to bring up services in one step. Before that, you need to change REACT_APP_API_URL and REACT_APP_PORT_NUMBER in web section as needed in the docker-compose.dev.yml and docker-compose.prod.yml files.
+
+For REACT_APP_API_URL, you have to serve it via https or access the api via localhost otherwise the service will not work.
+
 Use docker-compose to run the containers simultaneously:
 
 - For development (Flask):
