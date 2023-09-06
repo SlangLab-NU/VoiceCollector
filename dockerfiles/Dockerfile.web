@@ -16,7 +16,7 @@ COPY ./web/src ./src
 COPY ./web/public ./public
 
 # Set environment variables for React app
-ENV REACT_APP_PORT_NUMBER='3000'
+ENV REACT_APP_PORT_NUMBER_EXTERNAL='443'
 
 # Install dependencies
 RUN yarn install
