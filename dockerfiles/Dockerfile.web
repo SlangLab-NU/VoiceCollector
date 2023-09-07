@@ -14,10 +14,14 @@ COPY ./web/package.json ./
 COPY ./web/yarn.lock ./
 COPY ./web/src ./src
 COPY ./web/public ./public
+COPY ./web/create-env-file.sh ./create-env-file.sh
 
 # Set environment variables for React app
-ENV REACT_APP_PORT_NUMBER_EXTERNAL='443'
+ARG REACT_APP_SCHEME
+ARG REACT_APP_PORT_NUMBER_EXTERNAL
 
+RUN sh create-env-file.sh REACT_APP_SCHEME=$REACT_APP_SCHEME \
+	REACT_APP_PORT_NUMBER_EXTERNAL=$REACT_APP_PORT_NUMBER_EXTERNAL
 # Install dependencies
 RUN yarn install
 

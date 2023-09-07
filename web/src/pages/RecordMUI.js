@@ -27,7 +27,7 @@ export default function RecordMUI() {
   const [allowSubmit, setAllowSubmit] = useState(false);
 
   // Retrieves the api url and port number and combines them into one const
-  const appApiUrlandPort = "https://" + window.location.hostname + ':' + process.env.REACT_APP_PORT_NUMBER_EXTERNAL;
+  const appApiUrlandPort = process.env.REACT_APP_SCHEME + window.location.hostname + ':' + process.env.REACT_APP_PORT_NUMBER_EXTERNAL;
 
   const fetchData = async () => {
     try {
