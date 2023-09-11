@@ -13,34 +13,56 @@ This is a step-by-step instructions for installing Docker Desktop, building Dock
 From the root directory, where the three Dockerfiles (`Dockerfile.minio`, `Dockerfile.server`, and `Dockerfile.web`) are located, build the Docker images using the following commands:
 
 ```
-docker build -f Dockerfile.minio -t minio .
-docker build -f Dockerfile.server -t server .
-docker build -f Dockerfile.web -t web .
+docker build -f ./dockerfiles/Dockerfile.minio -t minio .
+docker build -f ./dockerfiles/Dockerfile.server -t server .
+docker build -f ./dockerfiles/Dockerfile.web -t web .
 ```
 
 ## Running the Application
 
-Use docker-compose to build and run the containers simultaneously:
-`docker-compose up -d`
+We use docker-compose to bring up services in one step. Before that, you need to change REACT_APP_API_URL and REACT_APP_PORT_NUMBER in web section as needed in the docker-compose.dev.yml and docker-compose.prod.yml files.
 
-- The -d flag can be omitted if you want to view the logs from the command line console. The logs can also be viewed from the Docker Desktop app.
+For REACT_APP_API_URL, you have to serve it via https or access the api via localhost otherwise the service will not work.
+
+Use docker-compose to run the containers simultaneously:
+
+- For development (Flask):
+
+   `docker-compose -f docker-compose.dev.yml up -d`
+
+- For production (Gunicorn):
+
+   `docker-compose -f docker-compose.prod.yml up -d`
+
+- The `-d` flag can be omitted if you want to view the logs from the command line console. The logs can also be viewed from the Docker Desktop app.
 
 - Access the app at http://localhost:3000.
 
+- The `--build` flag can be added at the end to build and run in one command.
+
 ## Stopping the Application
 
-To stop the containers, run the following command:
-`docker-compose down`
+To stop the containers, run the following commands:
+```
+docker-compose -f docker-compose.dev.yml down
+docker-compose -f docker-compose.prod.yml down
+```
 
 ## Running Container Separately
 
-Alternatively, the MinIO and Server containers can be ran separately:
+Currently, only the MinIO and Server containers can be ran separately:
 
-1. Run MinIO docker:
+- Run MinIO docker:
+
    `docker run --rm -p 9000:9000 minio`
 
-2. Run server docker:
-   `docker run --rm -p 5000:5000 server`
+- Run Server (Development: Flask) docker:
 
-Please note that the container for the frontend can only be run using docker-compose. If you want to run the frontend separately, navigate to the `web` directory and use:
+   `docker run --rm -p 5000:5000 --env FLASK_APP=__init__ server flask run --host=0.0.0.0`
+
+- Run Server (Production: Gunicorn) docker:
+
+   `docker run --rm -p 5000:5000 --workdir /server server gunicorn -w 4 --bind 0.0.0.0:5000 app:application`
+
+Please note that the container for the frontend can only be run using docker-compose due to the nginx settings. If you want to run the frontend separately, navigate to the `web` directory and use:
 `yarn start`.

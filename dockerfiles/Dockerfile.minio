@@ -27,7 +27,7 @@ RUN echo '#!/bin/sh' >> /start_minio.sh && \
     echo '  fi' >> /start_minio.sh && \
     echo '  sleep 2' >> /start_minio.sh && \
     echo 'done' >> /start_minio.sh && \
-    echo 'mc alias set myminio http://localhost:9000 $MINIO_ROOT_USER $MINIO_ROOT_PASSWORD' >> /start_minio.sh && \
+    echo 'mc alias set myminio http://minio-container:9000 $MINIO_ROOT_USER $MINIO_ROOT_PASSWORD' >> /start_minio.sh && \
     echo 'mc mb myminio/local-s3' >> /start_minio.sh && \
     echo 'tail -f /dev/null' >> /start_minio.sh && \
     chmod +x /start_minio.sh

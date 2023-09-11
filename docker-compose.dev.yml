@@ -3,7 +3,7 @@ services:
   minio:
     build:
       context: .
-      dockerfile: Dockerfile.minio
+      dockerfile: dockerfiles/Dockerfile.minio
     container_name: minio-container
     image: minio
     ports:
@@ -12,7 +12,10 @@ services:
   server:
     build:
       context: .
-      dockerfile: Dockerfile.server
+      dockerfile: dockerfiles/Dockerfile.server
+    environment:
+      FLASK_APP: __init__.py
+    command: flask run --host=0.0.0.0
     container_name: server-container
     image: server
     ports:
@@ -21,7 +24,10 @@ services:
   web:
     build:
       context: .
-      dockerfile: Dockerfile.web
+      dockerfile: dockerfiles/Dockerfile.web
+      args:
+        REACT_APP_SCHEME: "http://"
+        REACT_APP_PORT_NUMBER: "3000"
     container_name: web-container
     image: web
     ports:
