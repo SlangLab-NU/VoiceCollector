@@ -164,5 +164,5 @@ F
 FC
 F.tar
 
-# no uploading certificate 
-./data/certbot
+# no uploading resources 
+./data

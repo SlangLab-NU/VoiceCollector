@@ -8,6 +8,8 @@ services:
     image: zhangtianyi9/voice-collector-minio:1.0.0
     ports:
       - "9000:9000"
+    volumes:
+      - ./data/voice:/data/local-s3
 
   server:
     build:
@@ -43,4 +45,4 @@ services:
     volumes:
       - ./data/certbot:/etc/letsencrypt
       - ./data/nginx:/var/www/certbot
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 24h & wait $${!}; done;'"
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
