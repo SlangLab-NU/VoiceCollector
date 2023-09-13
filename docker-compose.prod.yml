@@ -9,7 +9,7 @@ services:
     ports:
       - "9000:9000"
     volumes:
-      - ./data/voice:/data/local-s3
+      - ./data/voice:/data
 
   server:
     build:
