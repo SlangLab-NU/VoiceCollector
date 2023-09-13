@@ -10,3 +10,11 @@
 
 
 
+### Obtain certificate initially using certbot
+
+``` bash
+docker-compose -f docker-compose.prod.yml up web
+```
+``` bash
+docker-compose -f docker-compose.prod.yml run --entrypoint "certbot" certbot certonly --webroot --webroot-path=/var/www/certbot --email admin@happyprime.io --agree-tos --no-eff-email -d voicecollector.happyprime.io
+```
