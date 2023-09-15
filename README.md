@@ -19,7 +19,3 @@ Want to host this application on your platform and give it a whirl? Check out ou
 At Happy Prime, we're not just building a platform; we're fostering a community that believes in the power of inclusive voice recognition. If you're as excited about this as we are, dive in, explore our datasets, and see how our application can serve you.
 
 And always remember, every voice matters, and together we're making sure they are all recognized. Cheers to a world where technology understands everyone! 🥂
-
----
-
-This README now provides an inclusive introduction to your application and a clear direction for those who want to host it themselves.
