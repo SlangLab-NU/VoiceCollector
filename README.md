@@ -1,4 +1,4 @@
-## Welcome to Our Specialized Speech Collection Platform! 🎙️
+## Welcome to Voice Collector! 🎙️
 
 Hello there! We're thrilled to have you here. Our application is not just any ordinary data collection platform. We're on a mission to make voice recognition inclusive for everyone, especially for those with speech impairments.
 
