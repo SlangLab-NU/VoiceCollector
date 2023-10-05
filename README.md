@@ -1,14 +1,17 @@
 ## Welcome to Voice Collector! 🎙️
 
-Hello there! We're thrilled to have you here. Our application is not just any ordinary data collection platform. We're on a mission to make voice recognition inclusive for everyone, especially for those with speech impairments.
+Hello there! We're thrilled to have you here. We're on a mission to make voice recognition inclusive for everyone, especially for those with speech impairments.
 
-### **Why is Our Dataset Special? 🌟**
+### **About this app! 🌟**
+Voice Collector is a simple application designed to collect voice data. It comprises a web application and a backend server, working harmoniously to provide a seamless user experience.
 
-1. **A Heart for Impaired Speakers**: Our platform stands out because it focuses on impaired speakers, making sure their voices are heard and recognized.
+Web Application
 
-2. **A Treasure Trove of Data**: We're proud to offer a dataset packed with high-quality audio from dysarthria speakers, detailing different severity levels. As of now, this is the most extensive public dataset in this unique domain.
+The web application is built with React, a powerful JavaScript library for building user interfaces, and Material-UI, a popular React UI framework. The main component RecordMUI orchestrates the user interface, allowing users to navigate through prompts, record their responses, and submit recordings. It fetches data from the backend using Axios and manages various states to control the recording and submission process. The AudioRecorder component, imported from AudioRecorderCommon.js, handles audio recording through the browser, managing microphone permissions and providing feedback to the user through UI elements.
 
-3. **Powered by Cutting-Edge Tech**: We've embraced wav2vec 2.0, a top-notch pre-trained speech recognition model, to refine our validation process. This ensures pristine data quality and also provides additional insights like intelligibility scores.
+Backend Server
+
+The backend server is crafted using Flask, a lightweight WSGI web application framework in Python. It handles requests related to reference text, recording, receiving audio files, and validation of audio files. It consists of two main blueprints: Speak and Validate. The Speak blueprint handles the retrieval and submission of audio data. The Validate blueprint manages the validation pipeline to ensure the audio data is in the correct format and has appropriate volume and pauses. The server employs Minio for S3-compatible storage service to securely store the audio recordings. The backend functionalities are encapsulated into Docker containers which are orchestrated using Docker Compose, ensuring easy deployment and management.
 
 ### **Host It Yourself! 🛠️**
 
