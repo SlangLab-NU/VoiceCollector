@@ -165,4 +165,7 @@ FC
 F.tar
 
 # no uploading resources 
-data
+data/certbot/*
+data/nginx/*
+data/sqlite/*
+data/voice/*

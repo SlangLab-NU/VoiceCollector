@@ -21,6 +21,8 @@ services:
     image: zhangtianyi9/voice-collector-server:1.0.0
     ports:
       - "5000:5000"
+    volumes:
+      - ./data/sqlite:/server/db
 
   web:
     build:

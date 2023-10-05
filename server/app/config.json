@@ -12,7 +12,7 @@
         "subtype":"PCM_16"
     },
     "DATABASE":{
-        "database": "database.db",
+        "database": "../db/database.db",
         "schema": "schema.sql",
         "references": "references.txt",
         "db_type": "local"

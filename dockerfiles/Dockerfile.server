@@ -19,6 +19,7 @@ RUN apt-get update && apt-get install -y ffmpeg libavcodec-extra
 COPY ./server/requirements*.txt ./
 COPY ./server/app ./app
 
+RUN mkdir -p ./db
 # Install any needed packages specified in requirements.txt and initialize database
 RUN pip install -r requirements.txt
 RUN rm -rf /root/.cache/pip
