@@ -28,6 +28,7 @@ services:
       args:
         REACT_APP_SCHEME: "http://"
         REACT_APP_PORT_NUMBER: "3000"
+        REACT_APP_API_URL: "http://localhost:3000"
     container_name: web-container
     image: web
     ports:
