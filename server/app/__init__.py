@@ -1,7 +1,9 @@
 """
 Primary Flask app
 
+Backend API starts with "/api/v1"
 """
+
 import sqlite3
 from flask import Flask, jsonify, render_template
 from flask_cors import CORS

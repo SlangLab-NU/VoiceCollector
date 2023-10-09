@@ -11,6 +11,6 @@ blueprint = Blueprint('default', __name__, url_prefix="/")
 def get_scores():
     return jsonify(dict(msg="Welcome to VoiceCollector backend API."))
 
-@blueprint.route('/generate-csv', methods=['GET'])
+@blueprint.route('/get-csv', methods=['GET'])
 def generate_csv():
     return jsonify({'message': 'Hello, World!'})

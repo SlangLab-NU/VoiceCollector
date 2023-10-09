@@ -86,6 +86,17 @@ def get_records():
         error_message = str(e)
         return jsonify({"error": error_message}), 500
 
+@blueprint.route('/get_csv', methods=['GET'])
+def get_csv():
+    """Get containing paths to audio files and their corresponding transcriptions
+
+    Args:
+
+    Returns:
+        _type_: _description_
+    """
+    pass
+
 
 @blueprint.route('/write_record', methods=['POST'])
 def write_record_route():
