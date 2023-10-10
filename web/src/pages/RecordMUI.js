@@ -35,6 +35,7 @@ export default function RecordMUI() {
       const response = await axios.get(`${appApiUrlandPort}/api/v1/speak/get_reference`);
 
       const data = response.data;
+      console.log(data.length);
       setData(data);
       setSection(data[promptNum].section);
       setPrompt(data[promptNum].prompt);
@@ -107,9 +108,10 @@ export default function RecordMUI() {
     formData.append("audio", audioBlob, filename);
 
     setSubmitStatus("submitting");
+    console.log(window.location.hostname);
     try {
       const response = await fetch(`${appApiUrlandPort}/api/v1/speak/submit/` + filename, { method: 'POST', body: formData });
-
+      
       if(response.status === 200){
         setSubmitStatus("success");
       } else {

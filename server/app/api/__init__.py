@@ -14,5 +14,3 @@ api.register_blueprint(default)
 api.register_blueprint(speak_blueprint)
 api.register_blueprint(validate_blueprint)
 api.register_blueprint(format_blueprint)
-
-

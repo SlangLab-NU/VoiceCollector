@@ -13,6 +13,7 @@ from minio.error import S3Error
 from flask import Blueprint, current_app, jsonify, request
 
 from ..scripts import db_helper
+from ..scripts import get_csv
 from .format import convert_to_wav_handler
 from .validate import check_audio_format, check_volume_pause
 from ..log import logger
@@ -95,7 +96,7 @@ def get_csv():
     Returns:
         _type_: _description_
     """
-    pass
+    return jsonify({'message': 'Hello, 1test!'})
 
 
 @blueprint.route('/write_record', methods=['POST'])

@@ -70,7 +70,7 @@ def connect_to_local_db():
 
 def connect_to_db():
     """
-    Merges the db connections for ec2, S3 and local databases. Pulls db_type variable from config.json
+    Merges the db connections for S3 and local databases. Pulls db_type variable from config.json
     identifying which db type the connection is being made to and returns that connection
     """
     if db_type == "s3":
