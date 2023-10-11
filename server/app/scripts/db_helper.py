@@ -42,7 +42,7 @@ def connect_to_s3():
 
     # Read S3 configuration from environment variables
     s3_hostname = os.environ.get('S3_HOSTNAME')
-    s3_access_key = os.environ.get('S3_ACCESS_KEY')
+    s3_access_key =     ('S3_ACCESS_KEY')
     s3_secret_key = os.environ.get('S3_SECRET_KEY')
     s3_bucket = os.environ.get('S3_BUCKET')
     region_name = os.environ.get('REGION_NAME')
