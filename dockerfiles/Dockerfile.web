@@ -1,0 +1,49 @@
+# Build step #1: build the frontend
+
+# Use an official Node runtime as the base image
+FROM node:16-alpine as build
+
+# Set environment variables
+ENV PATH /web/node_modules/.bin:$PATH
+
+# Set working directory
+WORKDIR /web
+
+# Copy package.json and package-lock.json
+COPY ./web/package.json ./
+COPY ./web/yarn.lock ./
+COPY ./web/src ./src
+COPY ./web/public ./public
+COPY ./web/create-env-file.sh ./create-env-file.sh
+
+# Set environment variables for React app
+ARG REACT_APP_SCHEME
+ARG REACT_APP_PORT_NUMBER_EXTERNAL
+
+RUN sh create-env-file.sh REACT_APP_SCHEME=$REACT_APP_SCHEME \
+	REACT_APP_PORT_NUMBER_EXTERNAL=$REACT_APP_PORT_NUMBER_EXTERNAL
+# Install dependencies
+RUN yarn install
+
+# Build the app
+RUN yarn build
+
+# Build step #2: build the nginx container
+
+# Use an official nginx runtime as the base image
+FROM nginx:stable-alpine
+
+RUN mkdir -p /var/www/certbot
+# Remove default nginx static assets
+RUN rm -rf /usr/share/nginx/html/*
+
+# Copy the frontend build from the build stage
+COPY --from=build /web/build /usr/share/nginx/html
+
+# Expose port 80 and 443
+EXPOSE 80
+EXPOSE 443
+
+# Containers run nginx with global directives and daemon off
+ENTRYPOINT ["nginx", "-g", "daemon off;"]
+

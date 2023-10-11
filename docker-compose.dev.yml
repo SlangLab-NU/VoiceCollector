@@ -1,0 +1,40 @@
+version: "3"
+services:
+  minio:
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile.minio
+    container_name: minio-container
+    image: minio
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./data/voice:/data
+
+  server:
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile.server
+    environment:
+      FLASK_APP: __init__.py
+    command: flask run --host=0.0.0.0
+    container_name: server-container
+    image: server
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./data/sqlite:/server/db
+
+  web:
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile.web
+      args:
+        REACT_APP_SCHEME: "http://"
+        REACT_APP_PORT_NUMBER_EXTERNAL: "3000"
+    container_name: web-container
+    image: web
+    ports:
+      - "3000:80"
+    volumes:
+      - ./dockerfiles/nginx.default.conf:/etc/nginx/conf.d/default.conf
