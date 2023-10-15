@@ -24,6 +24,7 @@ services:
       - "5000:5000"
     volumes:
       - ./data/sqlite:/server/db
+      - ./server:/app  # Map the local 'server' directory to the '/app' directory inside the container
 
   web:
     build:
@@ -38,3 +39,4 @@ services:
       - "3000:80"
     volumes:
       - ./dockerfiles/nginx.default.conf:/etc/nginx/conf.d/default.conf
+      - ./web:/app   # Map the local 'web' directory to the '/app' directory inside the container

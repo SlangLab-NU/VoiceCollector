@@ -147,7 +147,7 @@ def get_reference():
 
 def get_records():
     """
-    Fetches references from the database and returns a list of records as dictionaries
+    Fetches references from the records and returns a list of records as dictionaries
     """
     connect = connect_to_local_db()
     cursor = connect.cursor()
