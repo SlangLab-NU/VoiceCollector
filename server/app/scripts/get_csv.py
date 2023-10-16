@@ -7,10 +7,12 @@ import json
 from dotenv import load_dotenv
 import os
 from minio import Minio
+from minio.error import S3Error
 import threading
 import sqlite3
 import pathlib
 from . import db_helper
+import csv
 
 try:
     # Try an absolute import first
@@ -35,6 +37,16 @@ try:
 except Exception as e:
     error_message = str(e)
     logger.error(f"error: {error_message}")
+
+client, s3_bucket = db_helper.connect_to_s3()
+
+current_dir = pathlib.Path(__file__).parent.resolve()
+tmp_dir = current_dir.parent.parent / f"tmp"
+logger.info(f"tmp_dir: {tmp_dir}")
+
+if not tmp_dir.exists():
+    tmp_dir.mkdir()
+    logger.info(f"get_csv: tmp_dir created")
 
 
 def map_audio_to_transcription(records, references):
@@ -64,3 +76,44 @@ def map_audio_to_transcription(records, references):
 mapped_table = map_audio_to_transcription(records, references)
 logger.info(f"mapped_table: {mapped_table}")
 
+
+
+for entry in mapped_table:
+    s3_url = entry['s3_url']
+    filename = entry['s3_url'].split(".")[0]
+    object_name = f"{filename}.wav"
+    filepath = f"{tmp_dir}/{object_name}"
+
+    logger.info(f's3_url:{s3_url}')
+    logger.info(f'filename:{filename}')
+    logger.info(f"object_name: {object_name}")
+    logger.info(f'filepath:{filepath}')
+
+    # Download file from S3 bucket
+    try:
+        client.fget_object(
+            bucket_name=s3_bucket,
+            object_name= object_name,
+            file_path=filepath,
+        )
+        entry['audio_path'] = filepath
+    except S3Error as e:
+        error_message = str(e)
+        logger.error(f"error: {error_message}")
+
+
+output_csv_path = f'{tmp_dir}/output.csv'
+# Create and write the data to the CSV file
+with open(output_csv_path, 'w', newline='') as csvfile:
+    fieldnames = ['audio_id', 'session_id', 's3_url', 'date', 'ref_id', 'transcription', 'audio_path']
+    writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+    # Write the CSV header
+    writer.writeheader()
+
+    # Write data for each entry in mapped_table
+    for entry in mapped_table:
+        writer.writerow(entry)
+
+# Log the path of the output CSV file
+logger.info(f"CSV file written to {output_csv_path}")
