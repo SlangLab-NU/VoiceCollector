@@ -13,7 +13,7 @@ from minio.error import S3Error
 from flask import Blueprint, current_app, jsonify, request
 
 from ..scripts import db_helper
-from ..scripts import get_csv
+from ..scripts.get_csv import generate_csv_file
 from .format import convert_to_wav_handler
 from .validate import check_audio_format, check_volume_pause
 from ..log import logger
@@ -90,6 +90,24 @@ def get_records():
     except Exception as e:
         error_message = str(e)
         return jsonify({"error": error_message}), 500
+    
+
+@blueprint.route('/get_csv')
+def get_csv():
+    """Get all csv
+
+    Args:
+
+    Returns:
+        _type_: _description_
+    """
+    
+    try:
+        csv_file_path = generate_csv_file()
+        return jsonify({'message': 'CSV file generation complete', 'csv_path': csv_file_path})
+    except Exception as e:
+        return jsonify({'message': 'CSV file generation failed', 'error': str(e)})
+
 
 
 @blueprint.route('/write_record', methods=['POST'])
