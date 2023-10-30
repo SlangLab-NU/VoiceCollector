@@ -24,7 +24,7 @@ services:
       - "5000:5000"
     volumes:
       - ./data/sqlite:/server/db
-
+      - ./data/voice/output:/tmp
 
   web:
     build:

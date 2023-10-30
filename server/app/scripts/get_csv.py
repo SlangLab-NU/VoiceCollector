@@ -59,7 +59,6 @@ def generate_csv_file():
     Raises:
     S3Error: If there is an error while interacting with the S3 bucket.
     """
-    
     try:
         references = db_helper.get_reference()
         logger.info(f"references: {references}")
@@ -77,7 +76,7 @@ def generate_csv_file():
     client, s3_bucket = db_helper.connect_to_s3()
 
     current_dir = pathlib.Path(__file__).parent.resolve()
-    tmp_dir = current_dir.parent.parent / f"tmp"
+    tmp_dir = current_dir.parent.parent.parent / f"tmp"
     logger.info(f"tmp_dir: {tmp_dir}")
 
     if not tmp_dir.exists():
@@ -110,7 +109,6 @@ def generate_csv_file():
         except S3Error as e:
             error_message = str(e)
             logger.error(f"error: {error_message}")
-
 
     output_csv_path = f'{tmp_dir}/output.csv'
     # Create and write the data to the CSV file
