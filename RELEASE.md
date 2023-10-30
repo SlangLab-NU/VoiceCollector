@@ -99,7 +99,7 @@ docker-compose -f docker-compose.prod.yml up -d
 verify the service is working by testing the web app and examine the logs in realtime:
 ``` bash
 docker-compose -f docker-compose.prod.yml logs -f
-
+```
 
 
 ## Generate a CSV File from VoiceCollector Data
@@ -117,3 +117,14 @@ To generate a CSV file containing paths to audio files and their corresponding t
 - SSH into the Cloud Server
 
 - Compile Docker: Ensure that Docker is installed on the cloud server. 
+
+- API Request via CLI
+``` bash
+curl -X GET http://localhost:5000/api/v1/speak/get_csv
+```
+
+- After accessing the endpoint, you will receive a response similar to the following:
+```
+{"csv_path":"/tmp/output.csv","message":"CSV file generation complete"}
+```
+Saved file will be stored in local folder `data/voice/output` 
