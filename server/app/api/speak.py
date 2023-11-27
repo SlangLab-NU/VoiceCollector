@@ -104,9 +104,9 @@ def get_csv():
     data_dir = '/data/voice/output'
     try:
         csv_file_path = generate_csv_file()
-        return jsonify({'message': 'CSV file generation complete', 'csv_path': data_dir})
+        return jsonify({'message': 'CSV file generation complete apiv2', 'csv_path': data_dir})
     except Exception as e:
-        return jsonify({'message': 'CSV file generation failed', 'error': str(e)})
+        return jsonify({'message': 'CSV file generation failed apiv2', 'error': str(e)})
 
 
 
