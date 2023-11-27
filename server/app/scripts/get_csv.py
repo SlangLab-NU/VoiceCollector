@@ -27,7 +27,7 @@ logger = logger.load_log()
 
 def map_audio_to_transcription(records, references):
     """
-    Map audio records to their corresponding8 transcriptions using references.
+    Map audio records to their corresponding transcriptions using references.
 
     Args:
         records (list): List of audio records (output of get_records()).
