@@ -27,7 +27,7 @@ logger = logger.load_log()
 
 def map_audio_to_transcription(records, references):
     """
-    Map audio records to their corresponding transcriptions using references.
+    Map audio records to their corresponding8 transcriptions using references.
 
     Args:
         records (list): List of audio records (output of get_records()).
@@ -77,12 +77,13 @@ def generate_csv_file():
 
     current_dir = pathlib.Path(__file__).parent.resolve()
     tmp_dir = current_dir.parent.parent.parent / f"tmp"
+    data_out_dir = "/data/voice/output"
+
     logger.info(f"tmp_dir: {tmp_dir}")
 
     if not tmp_dir.exists():
         tmp_dir.mkdir()
         logger.info(f"get_csv: tmp_dir created")
-
 
     mapped_table = map_audio_to_transcription(records, references)
     logger.info(f"mapped_table: {mapped_table}")
@@ -105,7 +106,7 @@ def generate_csv_file():
                 object_name= object_name,
                 file_path=filepath,
             )
-            entry['audio_path'] = filepath
+            entry['audio_path'] = f"{data_out_dir}/{object_name}"
         except S3Error as e:
             error_message = str(e)
             logger.error(f"error: {error_message}")

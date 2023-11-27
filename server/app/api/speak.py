@@ -101,10 +101,10 @@ def get_csv():
     Returns:
         _type_: _description_
     """
-    out_dir = '/VoiceCollector/data/voice/output'
+    data_dir = '/data/voice/output'
     try:
         csv_file_path = generate_csv_file()
-        return jsonify({'message': 'CSV file generation complete', 'csv_path': out_dir})
+        return jsonify({'message': 'CSV file generation complete', 'csv_path': data_dir})
     except Exception as e:
         return jsonify({'message': 'CSV file generation failed', 'error': str(e)})
 
