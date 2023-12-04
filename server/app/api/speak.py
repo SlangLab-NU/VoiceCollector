@@ -13,6 +13,7 @@ from minio.error import S3Error
 from flask import Blueprint, current_app, jsonify, request
 
 from ..scripts import db_helper
+from ..scripts.get_csv import generate_csv_file
 from .format import convert_to_wav_handler
 from .validate import check_audio_format, check_volume_pause
 from ..log import logger
@@ -50,6 +51,10 @@ blueprint = Blueprint('speak', __name__, url_prefix="/speak")
 # References get written to db here every time at start
 # db_helper.write_references_to_db()
 
+@blueprint.route('/')
+def get_scores():
+    return jsonify(dict(msg="Welcome to speaker route."))
+
 @blueprint.route('/get_reference')
 def get_reference_hanlder():
     """Get all reference texts
@@ -85,6 +90,24 @@ def get_records():
     except Exception as e:
         error_message = str(e)
         return jsonify({"error": error_message}), 500
+    
+
+@blueprint.route('/get_csv')
+def get_csv():
+    """Get all csv
+
+    Args:
+
+    Returns:
+        _type_: _description_
+    """
+    data_dir = '/data/voice/output'
+    try:
+        csv_file_path = generate_csv_file()
+        return jsonify({'message': 'CSV file generation complete apiv2', 'csv_path': data_dir})
+    except Exception as e:
+        return jsonify({'message': 'CSV file generation failed apiv2', 'error': str(e)})
+
 
 
 @blueprint.route('/write_record', methods=['POST'])

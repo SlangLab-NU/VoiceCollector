@@ -15,17 +15,22 @@ def create_db():
     config = json.loads(config_path.read_text())
     config = config["DATABASE"]
 
-    connection = sqlite3.connect(config['database'])
+    
 
     schema_path = current_dir / config['schema']
+    db_path = config['database']
     
-    with open(schema_path) as f:
-        connection.executescript(f.read())
+    if not pathlib.Path(db_path).exists():
+        connection = sqlite3.connect(config['database'])
+        with open(schema_path) as f:
+            connection.executescript(f.read())
 
-    cursor = connection.cursor()
+        cursor = connection.cursor()
 
-    connection.commit()
-    connection.close()
+        connection.commit()
+        connection.close()
+    else:
+        print("Database file already exists. Skipping creation.")
 
 
 create_db()

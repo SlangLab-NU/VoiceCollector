@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: dockerfiles/Dockerfile.minio
     container_name: minio-container
-    image: zhangtianyi9/voice-collector-minio:1.0.0
+    image: zhangtianyi9/voice-collector-minio:1.1.0
     ports:
       - "9000:9000"
     volumes:
@@ -18,12 +18,12 @@ services:
     working_dir: /server
     command: gunicorn -w 4 --bind 0.0.0.0:5000 app:application
     container_name: server-container
-    image: zhangtianyi9/voice-collector-server:1.0.0
+    image: zhangtianyi9/voice-collector-server:1.1.0
     ports:
       - "5000:5000"
     volumes:
       - ./data/sqlite:/server/db
-
+      - ./data/voice/output:/tmp
   web:
     build:
       context: .
@@ -32,7 +32,7 @@ services:
         REACT_APP_SCHEME: "https://"
         REACT_APP_PORT_NUMBER_EXTERNAL: 443
     container_name: web-container
-    image: zhangtianyi9/voice-collector-web:1.0.0
+    image: zhangtianyi9/voice-collector-web:1.1.0
     ports:
       - "80:80"
       - "443:443"
